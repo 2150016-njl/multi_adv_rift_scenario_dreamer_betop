@@ -1,0 +1,11 @@
+policy_name: 'expert'
+policy_type: 'rule-based'
+model_type: 'ego'
+results_folder_path: ''
+obs_type: 'ego_simple_obs'
+ego_obs_dim: 3
+ego_action_dim: 3
+
+save_freq: 10
+buffer_capacity: 10000
+buffer_start_training: 100

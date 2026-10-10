@@ -1,0 +1,43 @@
+type: "attention"
+obs_type: "plant"
+attention_score: AllLayer
+topk: 4 #1
+viz_attn_map: False
+
+train:
+  spawn_radius: 50             # search radius for each location in spawning BV
+  traffic_intensity: 0.6        # traffic intensity
+  activate_radius: 150          # BV activation radius
+  coord_interval: 60            # spawing interval between two BVs
+  search_radius: 60            # search radius in selecting CBV candidates
+  max_interaction_fov: 150      # max FOV for interaction
+  max_interaction_dis: 90       # max distance for interaction
+  min_interaction_dis_diff: 60  # delta distance between BV and ego aheading to the same goal
+  max_route_len: 400            # max route length for training
+  max_ego_route_len: 100        # max ego route length in cumulative_distance calculation
+  max_agent_num: 3              # max number of CBVs
+  down_sample_step: 4           # down sample step ego rest route
+
+eval:
+  spawn_radius: 50
+  traffic_intensity: 0.6
+  activate_radius: 150
+  coord_interval: 60
+  search_radius: 60
+  max_interaction_fov: 150
+  max_interaction_dis: 90
+  min_interaction_dis_diff: 20
+  max_route_len: 400
+  max_ego_route_len: 50
+  max_agent_num: 2
+  down_sample_step: 4
+
+
+pretrained_model_path: 'rift/ego/model_ckpt/PlanT_state_encoder/checkpoints/state_encoder.ckpt'
+
+training:
+  max_NextRouteBBs: 2 # max 10 prevents really high ids if route is long
+
+network:
+  hf_checkpoint: "rift/ego/model_ckpt/PlanT_state_encoder/checkpoints/bert-medium"
+  embd_pdrop: 0.1

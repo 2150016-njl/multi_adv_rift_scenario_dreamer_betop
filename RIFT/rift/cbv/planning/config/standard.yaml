@@ -1,0 +1,10 @@
+policy_name: 'standard'
+policy_type: 'rule-based'
+
+obs_type: 'cbv_no_obs'
+
+# not useful
+buffer_capacity: 100
+
+save_freq: 50
+gamma: 0.99

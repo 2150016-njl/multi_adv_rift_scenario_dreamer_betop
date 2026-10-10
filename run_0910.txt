@@ -1,0 +1,356 @@
+(base) ➜  RIFT export ROOT=/zeron-vepfs/tjqc/njl/multi_adv_rift_scenario_dreamer_betop
+export CARLA_ROOT=/zeron-vepfs/tjqc/njl/carla
+export PY=/zeron-vepfs/tjqc/njl/conda_envs/rift/bin/python
+export PYTHONPATH=$ROOT/RIFT:$ROOT/scenario-dreamer:$CARLA_ROOT/PythonAPI:$CARLA_ROOT/PythonAPI/carla:$CARLA_ROOT/PythonAPI/carla/dist/carla-0.9.15-py3.7-linux-x86_64.egg
+export HV_DATA=$ROOT/data/hv_init
+(base) ➜  RIFT cd $ROOT/RIFT
+$PY scripts/audit_high_value_init_pipeline.py
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "high_value_init_default_disabled",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "rift_env_only_activates_hv_when_enabled",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "generator_proposal_requires_target_mask",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "rift_hd_map_dir_uses_hd_map_subdir",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "rift_speed_limits_dir_uses_speed_limits_subdir",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "runner_can_set_rift_asset_dirs_from_cli",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "collect_hv_init_mode_uses_rift_runner",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "collect_only_does_not_load_generator_or_register_cbv",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "save_bev_does_not_require_sensor_render",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "bev_video_can_be_saved_without_sensor_images",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "high_value_init_saves_viz",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "rift_validation_default_is_audit",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no_rift_fallback_after_hv_attempt",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "model_outputs_target_mask_logits",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "scenario_dreamer_default_backbone_is_autoencoder",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "rift_scene_exports_map_lanes_for_scenario_dreamer_adapter",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "scenario_dreamer_adapter_builds_native_graph_data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "scenario_dreamer_wrapper_returns_target_mask",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "rift_labeler_uses_original_candidate_logic",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "rift_labeler_does_not_reimplement_trace_route",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "rift_candidate_logic_only_adds_diagnostics",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "debug_generator_does_not_force_select_without_rift_label",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "invalid_model_proposal_is_dumped_not_fallbacked",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "base_cbv_exports_interaction_meta",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dynamic_cbv_locked_after_success",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "debug_generator_is_explicit_smoke_only",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "rift_labeled_scene_dataset_builder_exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "high_value_head_training_script_exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "offline_high_value_eval_script_exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "online_high_value_summary_script_exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "ego_policy_registry_is_lazy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "cbv_policy_registry_is_lazy",
+      "passed": true,
+      "detail": ""
+    }
+  ]
+}
+(base) ➜  RIFT runuser -u riftuser -- bash -lc '
+export ROOT=/zeron-vepfs/tjqc/njl/multi_adv_rift_scenario_dreamer_betop
+export CARLA_ROOT=/zeron-vepfs/tjqc/njl/carla
+export PY=/zeron-vepfs/tjqc/njl/conda_envs/rift/bin/python
+export PYTHONPATH=$ROOT/RIFT:$ROOT/scenario-dreamer:$CARLA_ROOT/PythonAPI:$CARLA_ROOT/PythonAPI/carla:$CARLA_ROOT/PythonAPI/carla/dist/carla-0.9.15-py3.7-linux-x86_64.egg
+
+cd $ROOT/RIFT
+mkdir -p $ROOT/data/hv_init/rift_labeled_scenes_dev10
+
+CUDA_VISIBLE_DEVICES=0 $PY scripts/run.py \
+  --mode collect_hv_init \
+  --routes rift/scenario/route/drivetransformer_bench2drive_dev10.xml \
+  --ego_cfg pdm_lite.yaml \
+  --cbv_cfg rift_pluto.yaml \
+  --no_resume \
+  -rep 1 \
+  --rift_hd_map_dir $ROOT/RIFT/data/map_data/HD-Map \
+  --rift_speed_limits_dir $ROOT/RIFT/data/speed_limits/Speed-Limits \
+  --hv_init_dump_dir $ROOT/data/hv_init/rift_labeled_scenes_dev10
+'
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+/zeron-vepfs/tjqc/njl/conda_envs/rift/lib/python3.8/site-packages/skimage/util/dtype.py:27: DeprecationWarning: `np.bool8` is a deprecated alias for `np.bool_`.  (Deprecated NumPy 1.24)
+  np.bool8: (False, True),
+/zeron-vepfs/tjqc/njl/conda_envs/rift/lib/python3.8/site-packages/lightning/fabric/__init__.py:41: Deprecated call to `pkg_resources.declare_namespace('lightning.fabric')`.
+Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+/zeron-vepfs/tjqc/njl/conda_envs/rift/lib/python3.8/site-packages/pkg_resources/__init__.py:2563: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('lightning')`.
+Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+  declare_namespace(parent)
+/zeron-vepfs/tjqc/njl/conda_envs/rift/lib/python3.8/site-packages/lightning/pytorch/__init__.py:37: Deprecated call to `pkg_resources.declare_namespace('lightning.pytorch')`.
+Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+/zeron-vepfs/tjqc/njl/conda_envs/rift/lib/python3.8/site-packages/pkg_resources/__init__.py:2563: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('lightning')`.
+Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+  declare_namespace(parent)
+>> Using GPU device 0
+>> Running Carla without GPU!
+>> Starting Carla: /zeron-vepfs/tjqc/njl/carla/CarlaUE4.sh -nosound -carla-rpc-port=30000 -nullrhi
+4.26.2-0+++UE4+Release-4.26 522 0
+Disabling core dumps.
+>> load world success, attempts=0
+>> traffic_manager port:50000 init success, try_time=0
+>> ----------------------------------------
+>> ----------------------------------------
+>> Logging to /zeron-vepfs/tjqc/njl/multi_adv_rift_scenario_dreamer_betop/RIFT/log/collect_hv_init/pdm_lite-rift_pluto-rule-seed0
+>> ----------------------------------------
+>> High-value initial-state label collection mode
+>> Mode: collect_hv_init
+>> Ego planning method: pdm_lite
+>> CBV planning method: rift_pluto
+>> CBV recognition method: rule
+>> ----------------------------------------
+>> Parsing scenario route and data
+/zeron-vepfs/tjqc/njl/multi_adv_rift_scenario_dreamer_betop/RIFT/rift/scenario/tools/route_parser.py:134: DeprecationWarning: This method will be removed in future versions.  Use 'list(elem)' or iteration over elem instead.
+  for elem in scenario.getchildren():
+>> Finish Eval data loader preparation
+>> Initializing carla world: Town03
+>> Finish scenario initialization
+>> Loading scenario: RouteScenario_25378
+>> WARNING: Not all actors were spawned
+>> Successfully spawning 14 Autopilot vehicles
+>> High-value init collect-only dumped 0 interactive labels
+>> HV init collect progress: [1/10] collected=1 two_positive=0 time=1.73s
+>> Finish Cleaning
+>> ----------------------------------------
+>> Initializing carla world: Town04
+>> Finish scenario initialization
+>> Loading scenario: RouteScenario_27494
+>> WARNING: Not all actors were spawned
+>> Successfully spawning 27 Autopilot vehicles
+>> High-value init collect-only dumped 0 interactive labels
+>> HV init collect progress: [2/10] collected=1 two_positive=0 time=1.47s
+>> Finish Cleaning
+>> ----------------------------------------
+>> Initializing carla world: Town05
+>> Finish scenario initialization
+>> Loading scenario: RouteScenario_25381
+>> WARNING: Not all actors were spawned
+>> Successfully spawning 26 Autopilot vehicles
+>> High-value init collect-only dumped 0 interactive labels
+>> HV init collect progress: [3/10] collected=1 two_positive=0 time=1.58s
+>> Finish Cleaning
+>> ----------------------------------------
+>> Initializing carla world: Town11
+WARNING: Traffic light 5376 overlaps a driving lane. Disabling collision...
+WARNING: Traffic light 5387 overlaps a driving lane. Disabling collision...
+WARNING: Traffic light 5515 overlaps a driving lane. Disabling collision...
+WARNING: Traffic light 5495 overlaps a driving lane. Disabling collision...
+WARNING: Traffic light 5400 overlaps a driving lane. Disabling collision...
+WARNING: Traffic light 5377 overlaps a driving lane. Disabling collision...
+>> Finish scenario initialization
+>> Loading scenario: RouteScenario_25424
+>> WARNING: Not all actors were spawned
+>> Successfully spawning 6 Autopilot vehicles
+>> High-value init collect-only dumped 0 interactive labels
+>> HV init collect progress: [4/10] collected=1 two_positive=0 time=2.10s
+>> Finish Cleaning
+>> ----------------------------------------
+>> Initializing carla world: Town12
+>> Finish scenario initialization
+>> Loading scenario: RouteScenario_2091
+>> WARNING: Not all actors were spawned
+>> Successfully spawning 14 Autopilot vehicles
+>> High-value init collect-only dumped 3 interactive labels
+>> HV init collect progress: [5/10] collected=1 two_positive=1 time=5.27s
+>> Finish Cleaning
+>> ----------------------------------------
+>> Loading scenario: RouteScenario_17569
+>> WARNING: Not all actors were spawned
+>> Successfully spawning 16 Autopilot vehicles
+>> High-value init collect-only dumped 0 interactive labels
+>> HV init collect progress: [6/10] collected=1 two_positive=0 time=11.71s
+>> Finish Cleaning
+>> ----------------------------------------
+>> Initializing carla world: Town13
+WARNING: Traffic sign 22181 overlaps a driving lane. Disabling collision...
+>> Finish scenario initialization
+>> Loading scenario: RouteScenario_3514
+>> WARNING: Not all actors were spawned
+>> Successfully spawning 9 Autopilot vehicles
+>> High-value init collect-only dumped 0 interactive labels
+>> HV init collect progress: [7/10] collected=1 two_positive=0 time=8.15s
+>> Finish Cleaning
+>> ----------------------------------------
+>> Loading scenario: RouteScenario_3255
+>> WARNING: Not all actors were spawned
+>> Successfully spawning 8 Autopilot vehicles
+>> High-value init collect-only dumped 0 interactive labels
+>> HV init collect progress: [8/10] collected=1 two_positive=0 time=6.05s
+>> Finish Cleaning
+>> ----------------------------------------
+>> Initializing carla world: Town15
+>> Finish scenario initialization
+>> Loading scenario: RouteScenario_26405
+>> WARNING: Not all actors were spawned
+>> Successfully spawning 17 Autopilot vehicles
+>> High-value init collect-only dumped 0 interactive labels
+>> HV init collect progress: [9/10] collected=1 two_positive=0 time=1.46s
+>> Finish Cleaning
+>> ----------------------------------------
+>> Loading scenario: RouteScenario_28198
+>> WARNING: Not all actors were spawned
+>> Successfully spawning 17 Autopilot vehicles
+>> High-value init collect-only dumped 0 interactive labels
+>> HV init collect progress: [10/10] collected=1 two_positive=0 time=1.54s
+>> Finish Cleaning
+>> ----------------------------------------
+>> Successfully sent SIGKILL to process group 216038
+
+runuser -u riftuser -- bash -lc '
+export ROOT=/zeron-vepfs/tjqc/njl/multi_adv_rift_scenario_dreamer_betop
+export CARLA_ROOT=/zeron-vepfs/tjqc/njl/carla
+export PY=/zeron-vepfs/tjqc/njl/conda_envs/rift/bin/python
+export PYTHONPATH=$ROOT/RIFT:$ROOT/scenario-dreamer:$CARLA_ROOT/PythonAPI:$CARLA_ROOT/PythonAPI/carla:$CARLA_ROOT/PythonAPI/carla/dist/carla-0.9.15-py3.7-linux-x86_64.egg
+
+cd $ROOT/RIFT
+mkdir -p $ROOT/data/hv_init/rift_labeled_scenes_train
+
+CUDA_VISIBLE_DEVICES=0 $PY scripts/run.py \
+  --mode collect_hv_init \
+  --routes rift/scenario/route/bench2drive220.xml \
+  --ego_cfg pdm_lite.yaml \
+  --cbv_cfg rift_pluto.yaml \
+  --no_resume \
+  -rep 1 \
+  --rift_hd_map_dir $ROOT/RIFT/data/map_data/HD-Map \
+  --rift_speed_limits_dir $ROOT/RIFT/data/speed_limits/Speed-Limits \
+  --hv_init_dump_dir $ROOT/data/hv_init/rift_labeled_scenes_train
+'
+
+(base) �  scenario-dreamer $PY build_high_value_init_dataset.py \
+>   --dump_dir $ROOT/data/hv_init/rift_labeled_scenes_train \
+>   --output_dir $ROOT/data/hv_init/dataset \
+>   --target_count 2 \
+>   --augmentations_per_scene 4 \
+>   --seed 0
+{
+  "num_dumps": 219,
+  "num_valid_scenes": 219,
+  "num_positive_scenes": 63,
+  "num_skipped_not_enough_positive": 156,
+  "num_train_records": 240,
+  "num_val_records": 12
+}

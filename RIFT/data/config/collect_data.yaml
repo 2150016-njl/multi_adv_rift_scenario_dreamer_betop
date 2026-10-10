@@ -1,0 +1,6 @@
+data_path: 'data/offline_dataset'
+buffer_capacity: 200
+ego_obs_type: 'ego_normal_obs'
+ego_obs_dim: 18  # (3 vehicle) * 6 dimensions state
+ego_obs_shape: [3, 6]
+ego_action_dim: 2  # when collecting data, only store the first two actions (acc, steer)

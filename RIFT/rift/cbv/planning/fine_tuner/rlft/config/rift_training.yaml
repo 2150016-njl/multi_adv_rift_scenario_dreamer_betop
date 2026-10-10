@@ -1,0 +1,36 @@
+hydra:
+  run:
+    dir: ${output_dir}
+  output_subdir: ${output_dir}/code/hydra           # Store hydra's config breakdown here for debugging
+
+defaults:
+
+  # Lightning
+  - lightning: custom_lightning
+  # Datamodule
+  - datamodule: rift_datamodule
+  # Trainer
+  - custom_trainer: rift_trainer
+
+
+# Mandatory parameters
+py_func: train
+frame_rate: 10
+epochs: 16
+warmup_epochs: 3
+lr: 1e-4
+cl_lr_decay: 0.9
+min_lr: 1e-6
+weight_decay: 1e-5
+checkpoint:
+trainable_layers:
+  - "planning_decoder.pi_head"
+
+# wandb settings
+wandb:
+  dir: ${output_dir}
+  mode: offline
+  project: RIFT
+  group: 'train_cbv-${name}'
+  log_model: false
+  resume: false

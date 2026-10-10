@@ -1,0 +1,12 @@
+name: 'normal'
+need_image: True
+
+data_keys:
+  - collect_ego_actions
+  - collect_ego_obs
+  - collect_ego_next_obs
+  - collect_ego_min_dis
+  - collect_ego_collide
+  - collect_ego_terminal
+  - camera_image_path
+

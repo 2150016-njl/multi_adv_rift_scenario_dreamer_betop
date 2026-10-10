@@ -1,0 +1,15 @@
+policy_name: 'expert_disturb'
+policy_type: 'rule-based'
+model_type: 'ego'
+results_folder_path: ''
+obs_type: 'ego_simple_obs'
+ego_obs_dim: 3
+ego_action_dim: 3
+
+throttle_disturb: [-0.5, 0.5]
+steer_disturb: [-0.2, 0.2]
+brake_disturb: [-0.5, 0.5]
+
+save_freq: 10
+buffer_capacity: 10000
+buffer_start_training: 100

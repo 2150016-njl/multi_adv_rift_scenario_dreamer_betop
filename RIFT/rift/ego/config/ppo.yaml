@@ -1,0 +1,40 @@
+policy_name: 'ppo'
+policy_type: 'rl'
+model_path: 'rift/ego/model_ckpt/ppo'
+model_type: 'ego'
+results_folder_path: ''
+
+# parameters for ego policy
+obs_type: 'ego_normal_obs'
+ego_action_dim: 2
+ego_obs_dim: 24  # (3 vehicle + 1 route) * 6 dimensions state
+ego_obs_shape: [4, 6]
+
+
+wandb:
+  project: 'RIFT'
+  base_group: 'train_ego'
+  mode: 'online'
+
+data_keys:
+ - ego_actions
+ - ego_actions_log_prob
+ - ego_obs
+ - ego_next_obs
+ - ego_reward
+ - ego_terminal
+
+dims: [256, 256]
+
+save_freq: 50
+buffer_capacity: 1024
+
+clip_epsilon: 0.2
+gamma: 0.99
+train_repeat_times: 4
+
+policy_lr: 2.0e-4
+value_lr: 2.0e-4
+batch_size: 256
+lambda_gae_adv: 0.98
+lambda_entropy: 0.01

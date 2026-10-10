@@ -1,0 +1,39 @@
+policy_name: 'ppo'
+policy_type: 'rl'
+
+wandb:
+  project: 'RIFT'
+  base_group: 'train_cbv'
+  mode: 'online'
+
+obs_type: 'cbv_normal_obs'
+CBV_obs_dim: 24  # 4*6 - (actor number + route_info) * actor info dim
+CBV_obs_shape: [4, 6]
+CBV_action_dim: 2
+
+data_keys:
+ - CBVs_actions
+ - CBVs_actions_log_prob
+ - CBVs_obs
+ - CBVs_next_obs
+ - CBVs_reward
+ - CBVs_terminated
+ - CBVs_done
+
+# for PPO policy model
+model_path: 'rift/cbv/planning/model_ckpt/ppo'
+model_type: 'cbv'
+dims: [256, 256]
+
+save_freq: 50
+buffer_capacity: 4096
+
+clip_epsilon: 0.2
+gamma: 0.98
+train_repeat_times: 4
+
+policy_lr: 1.0e-5  # finetune learning rate
+value_lr: 1.0e-5  # finetune learning rate
+batch_size: 256
+lambda_gae_adv: 0.98
+lambda_entropy: 0.01

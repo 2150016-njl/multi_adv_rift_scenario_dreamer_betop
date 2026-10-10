@@ -1,0 +1,11 @@
+type: rlft-ppo
+train_batch_size: 256
+val_batch_size: 256
+shuffle: true
+num_workers: 0  # TODO 0 for no multiprocessing
+pin_memory: True
+persistent_workers: False
+train_ratio: 0.9
+
+gamma: 0.98
+lambda_gae_adv: 0.98

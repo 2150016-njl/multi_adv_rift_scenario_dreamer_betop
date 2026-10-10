@@ -1,0 +1,46 @@
+policy_name: 'sft_pluto'
+policy_type: 'il'  # CBV action related
+
+obs_type: 'cbv_sft_pluto_obs'
+
+reward_model: 'dense' # dense or sparse or none
+
+data_keys:
+ - CBVs_actions
+ - CBVs_teacher_infos
+ - CBVs_obs
+ - CBVs_next_obs
+ - CBVs_reward
+ - CBVs_terminated
+ - CBVs_done
+
+# buffer related
+buffer_capacity: 4096
+# training related
+save_freq: 50
+
+# sft config_path
+sft_config_path: 'config'
+sft_config_name: 'sft_training.yaml'
+
+# unique for pluto model
+ckpt_path: 'rift/cbv/planning/model_ckpt/pluto/pluto_1M_aux_cil.ckpt'  # for pretraining
+model_path: 'rift/cbv/planning/model_ckpt/sft_pluto'  # for saving the model
+model_type: 'cbv'
+use_prediction: False
+topk: 10
+
+obs:
+  max_agent: 48
+  radius: 120  # aligned with the radius in the pluto model
+  history_horizon: 2.0
+  sample_interval: 0.1
+
+CBV_action_dim: 3  # throttle, steer, brake 
+
+# teacher model related
+teacher_model:
+  target_speed: 10.0  # m/s stay close to pluto model output 
+
+
+

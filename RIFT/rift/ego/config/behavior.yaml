@@ -1,0 +1,11 @@
+policy_name: 'behavior'
+policy_type: 'rule-based'
+model_type: 'ego'
+results_folder_path: ''
+obs_type: 'ego_no_obs'
+ego_action_dim: 3
+behavior: 'aggressive'  # ["cautious", "normal", "aggressive"]
+
+save_freq: 10
+buffer_capacity: 10000
+buffer_start_training: 100
