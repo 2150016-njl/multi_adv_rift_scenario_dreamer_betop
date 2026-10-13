@@ -1,0 +1,39 @@
+{
+  "schema_version": "v5_delivery_audit_1",
+  "what_was_implemented": [
+    "HD-map/ego-route candidate construction shared by offline and online",
+    "CARLA-specific two-agent joint categorical+Gaussian raw-state generator",
+    "Intrinsic directed-lane coordinate chart, no generated x/y/yaw/speed repair",
+    "V4C RIFT-labeled offline data reuse, stronger-target/representation/OBB filtering",
+    "Canonical content/episode split auditing",
+    "CPU representation chart oracle and candidate condition-parity audit",
+    "Training checkpoint selection by heldout single full S1 per condition",
+    "S1 offline raw feasibility and static route-progress PROXY",
+    "Strict CARLA/RIFT runner reusing existing one-shot evaluator",
+    "Provenance and fail-closed contract checks"
+  ],
+  "tests_executed": {
+    "python_syntax_compile": "PASS",
+    "bash_syntax": "PASS",
+    "static_strict_contract": "PASS",
+    "cpu_unit_tests": "9 PASS",
+    "synthetic_dataset_train_val_test_builder": "PASS (12/6/6 synthetic records)",
+    "synthetic_cpu_training": "PASS (2 epochs, toy data only)",
+    "synthetic_full_s1_eval": "PASS (six one-sample test records)",
+    "synthetic_representation_oracle": "PASS (max position error approx 1.2e-5m)",
+    "synthetic_readiness_gate": "FAILED as intended; weak untrained model must NOT be deployed"
+  },
+  "not_yet_executed": [
+    "Actual V4C dataset eligibility/coverage statistics",
+    "GPU V5 training on real RIFT labels",
+    "Held-out real V5 S1 pass thresholds",
+    "Actual CARLA spawn and native RIFT CBVs_recog() activation"
+  ],
+  "known_limitations": [
+    "Map/ego-route interaction anchors are static local geometric proxies, not RIFT GlobalRoutePlanner.trace_route exact graph routes",
+    "V5 may reject too many V4C records if strong labels or directed approach/anchor geometry are not representable in 64m FOV",
+    "Fixed Tesla Model 3 OBB dimensions in offline metric are approximations and cannot certify CARLA spawn",
+    "No empirical real-world guarantee that new architecture outperforms frozen V2+legacy baseline",
+    "Any CARLA online success and native green must be tested by user on their server"
+  ]
+}

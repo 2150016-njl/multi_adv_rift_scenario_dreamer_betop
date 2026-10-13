@@ -477,10 +477,12 @@ class RouteConditionedHighValueLDM:
             lane_latents,
             data,
         )
-        agent_samples, lane_samples = self._unnormalize_scene(agent_samples, lane_samples)
+        # Strict raw S1 deployment: inverse normalization is mathematical, not
+        # clipping. Any off-range x/y/speed remains visible and can fail in CARLA.
+        agent_samples = self._unnormalize_agents_raw_for_spawn(agent_samples)
         generated = decoded_sd_agents_to_hv_states(agent_samples, context_count, target_count)
         if self.clamp_generated_states:
-            generated = self._clamp_hv_states(generated)
+            raise ValueError("raw-state generation forbids post-sample clamping")
         return {
             "schema_version": "hv_init_generated_scene_v1",
             "generation_mode": self.mode,
@@ -535,6 +537,26 @@ class RouteConditionedHighValueLDM:
             self.cfg_ldm.dataset.lane_latents_mean,
             self.cfg_ldm.dataset.lane_latents_std,
         )
+
+    def _unnormalize_agents_raw_for_spawn(self, values: torch.Tensor) -> torch.Tensor:
+        """Inverse-transform AE agent states without clipping any predicted field.
+
+        AE format is [x,y,speed,cos_yaw,sin_yaw,length,width].  Fixed
+        blueprint dimensions are handled by CARLA, not this decoder.
+        """
+        cfg = self.cfg_ldm.dataset
+        fov = float(cfg.fov)
+        def inv(v, lo, hi):
+            return (v + 1.0) * (float(hi) - float(lo)) / 2.0 + float(lo)
+        return torch.stack([
+            inv(values[:, 0], -fov / 2.0, fov / 2.0),
+            inv(values[:, 1], -fov / 2.0, fov / 2.0),
+            inv(values[:, 2], cfg.min_speed, cfg.max_speed),
+            values[:, 3],
+            values[:, 4],
+            inv(values[:, 5], cfg.min_length, cfg.max_length),
+            inv(values[:, 6], cfg.min_width, cfg.max_width),
+        ], dim=-1)
 
     def _unnormalize_scene(self, agent_samples: torch.Tensor, lane_samples: torch.Tensor):
         return unnormalize_scene(

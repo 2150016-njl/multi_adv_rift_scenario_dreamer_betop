@@ -1,0 +1,34 @@
+
+SEED 0  success=True stage=None lanes=0 route_points=137 map_mode=legacy
+ HV0 local=(-12.90,+1.34) yaw=+2.3deg v=0.03m/s HDmap_centerline=-m ego_route=14.966m CARLA_driving_waypoint=1.340m CARLA_heading_diff=2.329deg accepted=True attempted=True
+ HV1 local=(+21.13,-3.24) yaw=+0.9deg v=1.04m/s HDmap_centerline=-m ego_route=3.244m CARLA_driving_waypoint=3.244m CARLA_heading_diff=0.911deg accepted=True attempted=True
+ WARNING: snapshot has zero usable HD Map lane centerlines; inspect HD Map query and fallback
+
+SEED 1  success=False stage=spawn lanes=0 route_points=137 map_mode=legacy
+ HV0 local=(+21.15,+23.25) yaw=-70.2deg v=2.26m/s HDmap_centerline=-m ego_route=23.249m CARLA_driving_waypoint=23.249m CARLA_heading_diff=70.197deg accepted=False attempted=True
+   spawn_error: SpawnRuntimeError: Failed to spawn actor vehicle.tesla.model3 at Location(x=-474.437042, y=3651.679932, z=364.843018) after 1 attempts
+ HV1 local=(+13.80,-24.32) yaw=+93.7deg v=2.80m/s HDmap_centerline=-m ego_route=24.323m CARLA_driving_waypoint=-m CARLA_heading_diff=-deg accepted=False attempted=False
+ WARNING: snapshot has zero usable HD Map lane centerlines; inspect HD Map query and fallback
+
+SEED 2  success=True stage=None lanes=0 route_points=137 map_mode=legacy
+ HV0 local=(-13.51,+1.53) yaw=+2.6deg v=0.01m/s HDmap_centerline=-m ego_route=15.585m CARLA_driving_waypoint=1.533m CARLA_heading_diff=2.598deg accepted=True attempted=True
+ HV1 local=(+20.74,-2.65) yaw=+1.1deg v=1.25m/s HDmap_centerline=-m ego_route=2.654m CARLA_driving_waypoint=2.654m CARLA_heading_diff=1.122deg accepted=True attempted=True
+ WARNING: snapshot has zero usable HD Map lane centerlines; inspect HD Map query and fallback
+
+SEED 3  success=False stage=spawn lanes=0 route_points=137 map_mode=legacy
+ HV0 local=(+12.58,+19.89) yaw=-68.8deg v=3.20m/s HDmap_centerline=-m ego_route=19.890m CARLA_driving_waypoint=19.890m CARLA_heading_diff=68.751deg accepted=False attempted=True
+   spawn_error: SpawnRuntimeError: Failed to spawn actor vehicle.tesla.model3 at Location(x=-477.761993, y=3660.262451, z=364.980194) after 1 attempts
+ HV1 local=(+6.99,-22.12) yaw=+92.6deg v=3.35m/s HDmap_centerline=-m ego_route=22.121m CARLA_driving_waypoint=-m CARLA_heading_diff=-deg accepted=False attempted=False
+ WARNING: snapshot has zero usable HD Map lane centerlines; inspect HD Map query and fallback
+
+SEED 4  success=False stage=spawn lanes=0 route_points=137 map_mode=legacy
+ HV0 local=(+15.43,+20.52) yaw=-58.7deg v=2.68m/s HDmap_centerline=-m ego_route=20.516m CARLA_driving_waypoint=20.516m CARLA_heading_diff=58.686deg accepted=False attempted=True
+   spawn_error: SpawnRuntimeError: Failed to spawn actor vehicle.tesla.model3 at Location(x=-477.147736, y=3657.416504, z=364.934875) after 1 attempts
+ HV1 local=(+4.95,-23.38) yaw=+93.4deg v=2.23m/s HDmap_centerline=-m ego_route=23.384m CARLA_driving_waypoint=-m CARLA_heading_diff=-deg accepted=False attempted=False
+ WARNING: snapshot has zero usable HD Map lane centerlines; inspect HD Map query and fallback
+
+SEED 5  success=False stage=spawn lanes=0 route_points=137 map_mode=legacy
+ HV0 local=(-13.38,+0.04) yaw=+2.1deg v=0.73m/s HDmap_centerline=-m ego_route=15.381m CARLA_driving_waypoint=0.044m CARLA_heading_diff=2.127deg accepted=True attempted=True
+ HV1 local=(+24.04,-15.74) yaw=+92.7deg v=3.74m/s HDmap_centerline=-m ego_route=15.737m CARLA_driving_waypoint=15.737m CARLA_heading_diff=92.746deg accepted=False attempted=True
+   spawn_error: SpawnRuntimeError: Failed to spawn actor vehicle.tesla.model3 at Location(x=-513.434998, y=3648.953125, z=364.796539) after 1 attempts
+ WARNING: snapshot has zero usable HD Map lane centerlines; inspect HD Map query and fallback

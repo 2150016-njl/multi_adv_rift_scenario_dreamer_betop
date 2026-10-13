@@ -1197,3 +1197,22 @@ find "$EVAL" -maxdepth 2 -type f \( -name '*.json' -o -name '*.jsonl' \) -printf
 
 这样可以避免重复出现“训练已完成但 train JSONL 为 0”、“ego 路线跑完但 generator 未 import”、
 “S4 oracle 被误当线上结果”或“未 spawn 却解读 green ratio”的历史错误。
+
+### 16.11 V4C C0/C2 逐样本 sampling-contract 对比
+
+新增只读脚本：
+
+```text
+scenario-dreamer/summarize_v4c_sampling_contract_comparison.py
+```
+
+它需要 C0/C2 各自的 `sampling_contract_512.json` 与对应 `_rows.jsonl`，输出：
+
+1. AE oracle / training-time noisy-x0 / reverse-diffusion S1 三条路径分开的 x、y、heading、speed、
+   length、width 分布；
+2. speed/length/width 分别低于和高于 raw-state bounds 的 actor 数与比例；
+3. 同 `record_index`、同采样路径的 C2-C0 每指标差值，及 C2 lower/unchanged/higher 的逐样本计数；
+4. 仅 C2 reverse S1 内部 route proxy 与 feasibility metrics 的 Pearson/Spearman 描述性相关。
+
+它不生成样本、不过滤样本、不 clamp、不将相关性解释为因果。完整启动命令见下一轮交接中
+“Layer 1 / Sampling-contract”部分；输出应放到新的 handoff review 目录，不覆盖原始 audit。
