@@ -67,6 +67,14 @@ def actor_state_to_dict(actor: carla.Actor) -> Dict:
         "length": float(extent.x * 2.0),
         "width": float(extent.y * 2.0),
         "height": float(extent.z * 2.0),
+        "bounding_box": {
+            "offset_x":float(actor.bounding_box.location.x),
+            "offset_y":float(actor.bounding_box.location.y),
+            "offset_z":float(actor.bounding_box.location.z),
+            "yaw_deg":float(actor.bounding_box.rotation.yaw),
+            "pitch_deg":float(actor.bounding_box.rotation.pitch),
+            "roll_deg":float(actor.bounding_box.rotation.roll),
+        },
     }
 
 

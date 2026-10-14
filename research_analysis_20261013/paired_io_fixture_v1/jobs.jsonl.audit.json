@@ -1,0 +1,15 @@
+{
+  "requested_records": 1,
+  "written_jobs": 1,
+  "missing_record_indices": [],
+  "ambiguous_record_indices": [],
+  "counts": {
+    "files_scanned": 144
+  },
+  "candidate_mismatch_reasons": {},
+  "dataset_sha256": "078e03628301165ea356446e0accf76b1276ddea93666b834b87b8e103f45961",
+  "generated_sha256": "a55eb0a3682b91358d58d16cdd2ea134465138614cc509c9060ed1d2cd207529",
+  "manifest_sha256": "e5b8c04cd7ca64a8a7ca7a9affb3dde68710c719106ecc2c17d820ad4334dad6",
+  "selection": "fixed_dataset_prefix",
+  "passed": true
+}

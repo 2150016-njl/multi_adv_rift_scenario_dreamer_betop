@@ -1,0 +1,378 @@
+{
+  "schema_version": "hv_support_chain_audit_v1",
+  "source": "data/hv_init/datasets/inpainting_sparse_phase8_v3_fov64_hdmap_full/test.jsonl",
+  "processed_bytes_sha256": "dd319d2429d1a89df251a69f7b9605f83a3a1081e65434764c17ed2085c94108",
+  "selection": "file_prefix",
+  "max_records": 200,
+  "counts": {
+    "records": 200,
+    "already_filtered_v5_records": 0,
+    "records_with_native_anchor": 0,
+    "raw_map_actors": 395,
+    "raw_map_at_least_one": 200,
+    "raw_map_both": 195,
+    "candidate_geometry_actors": 300,
+    "candidate_geometry_at_least_one": 175,
+    "candidate_geometry_both": 125,
+    "candidate_upstream_actors": 300,
+    "candidate_upstream_at_least_one": 175,
+    "candidate_upstream_both": 125,
+    "candidate_anchor_actors": 300,
+    "candidate_anchor_at_least_one": 175,
+    "candidate_anchor_both": 125,
+    "chart_roundtrip_actors": 295,
+    "chart_roundtrip_at_least_one": 175,
+    "chart_roundtrip_both": 120,
+    "first_failure_none": 295,
+    "first_failure_candidate_geometry": 95,
+    "first_failure_raw_map": 5,
+    "first_failure_chart_roundtrip": 5
+  },
+  "rates_per_record": {
+    "raw_map_at_least_one": 1.0,
+    "raw_map_both": 0.975,
+    "candidate_geometry_at_least_one": 0.875,
+    "candidate_geometry_both": 0.625,
+    "candidate_upstream_at_least_one": 0.875,
+    "candidate_upstream_both": 0.625,
+    "candidate_anchor_at_least_one": 0.875,
+    "candidate_anchor_both": 0.625,
+    "chart_roundtrip_at_least_one": 0.875,
+    "chart_roundtrip_both": 0.6
+  },
+  "by_town": {
+    "Town11": {
+      "records": 15,
+      "raw_map_both": 15,
+      "candidate_geometry_both": 10,
+      "candidate_upstream_both": 10,
+      "candidate_anchor_both": 10,
+      "chart_roundtrip_both": 10
+    },
+    "Town12": {
+      "records": 120,
+      "raw_map_both": 115,
+      "candidate_geometry_both": 50,
+      "candidate_upstream_both": 50,
+      "candidate_anchor_both": 50,
+      "chart_roundtrip_both": 50
+    },
+    "Town15": {
+      "records": 65,
+      "raw_map_both": 65,
+      "candidate_geometry_both": 65,
+      "candidate_upstream_both": 65,
+      "candidate_anchor_both": 65,
+      "chart_roundtrip_both": 60
+    }
+  },
+  "failure_examples": [
+    {
+      "actors": [
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        },
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        }
+      ],
+      "candidate_count": 30,
+      "native_anchor_available": false,
+      "already_filtered_v5": false,
+      "scene_id": "RouteScenario_28243_idx19_rep0_frame100",
+      "town": "Town12"
+    },
+    {
+      "actors": [
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        },
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        }
+      ],
+      "candidate_count": 30,
+      "native_anchor_available": false,
+      "already_filtered_v5": false,
+      "scene_id": "RouteScenario_28243_idx19_rep0_frame100:sparse0",
+      "town": "Town12"
+    },
+    {
+      "actors": [
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        },
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        }
+      ],
+      "candidate_count": 30,
+      "native_anchor_available": false,
+      "already_filtered_v5": false,
+      "scene_id": "RouteScenario_28243_idx19_rep0_frame100:sparse1",
+      "town": "Town12"
+    },
+    {
+      "actors": [
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        },
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        }
+      ],
+      "candidate_count": 30,
+      "native_anchor_available": false,
+      "already_filtered_v5": false,
+      "scene_id": "RouteScenario_28243_idx19_rep0_frame100:sparse2",
+      "town": "Town12"
+    },
+    {
+      "actors": [
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        },
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        }
+      ],
+      "candidate_count": 30,
+      "native_anchor_available": false,
+      "already_filtered_v5": false,
+      "scene_id": "RouteScenario_28243_idx19_rep0_frame100:sparse3",
+      "town": "Town12"
+    },
+    {
+      "actors": [
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        },
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        }
+      ],
+      "candidate_count": 28,
+      "native_anchor_available": false,
+      "already_filtered_v5": false,
+      "scene_id": "RouteScenario_28243_idx19_rep0_frame105",
+      "town": "Town12"
+    },
+    {
+      "actors": [
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        },
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        }
+      ],
+      "candidate_count": 28,
+      "native_anchor_available": false,
+      "already_filtered_v5": false,
+      "scene_id": "RouteScenario_28243_idx19_rep0_frame105:sparse0",
+      "town": "Town12"
+    },
+    {
+      "actors": [
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        },
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        }
+      ],
+      "candidate_count": 28,
+      "native_anchor_available": false,
+      "already_filtered_v5": false,
+      "scene_id": "RouteScenario_28243_idx19_rep0_frame105:sparse1",
+      "town": "Town12"
+    },
+    {
+      "actors": [
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        },
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        }
+      ],
+      "candidate_count": 28,
+      "native_anchor_available": false,
+      "already_filtered_v5": false,
+      "scene_id": "RouteScenario_28243_idx19_rep0_frame105:sparse2",
+      "town": "Town12"
+    },
+    {
+      "actors": [
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        },
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        }
+      ],
+      "candidate_count": 28,
+      "native_anchor_available": false,
+      "already_filtered_v5": false,
+      "scene_id": "RouteScenario_28243_idx19_rep0_frame105:sparse3",
+      "town": "Town12"
+    },
+    {
+      "actors": [
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        },
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        }
+      ],
+      "candidate_count": 24,
+      "native_anchor_available": false,
+      "already_filtered_v5": false,
+      "scene_id": "RouteScenario_28243_idx19_rep0_frame110",
+      "town": "Town12"
+    },
+    {
+      "actors": [
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        },
+        {
+          "raw_map": true,
+          "candidate_geometry": false,
+          "candidate_upstream": false,
+          "candidate_anchor": false,
+          "chart_roundtrip": false,
+          "first_failure": "candidate_geometry"
+        }
+      ],
+      "candidate_count": 24,
+      "native_anchor_available": false,
+      "already_filtered_v5": false,
+      "scene_id": "RouteScenario_28243_idx19_rep0_frame110:sparse0",
+      "town": "Town12"
+    }
+  ],
+  "limits": [
+    "No native RIFT or CARLA spawn certification.",
+    "No score/OBB filter applied: support attribution, not training eligibility.",
+    "Filtered V5 rows cannot estimate coverage of rejected V4C records.",
+    "Without native anchors, candidate_anchor only repeats upstream support.",
+    "First-failure bins use this diagnostic order, not causal independence."
+  ]
+}

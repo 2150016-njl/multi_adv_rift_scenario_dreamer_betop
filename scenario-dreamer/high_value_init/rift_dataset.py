@@ -279,7 +279,11 @@ class HighValueSceneGraphBuilder:
             lane_polylines = [condition.get("ego_route", {}).get("polyline", [])]
         lanes = []
         lane_types = []
-        for polyline in lane_polylines:
+        lane_metadata=[]
+        metadata=condition.get('map',{}).get('lanes_v6',[])
+        if metadata and len(metadata)!=len(lane_polylines):
+            raise ValueError('lanes_v6 must align exactly with lane_polylines')
+        for original_index,polyline in enumerate(lane_polylines):
             xy = []
             for point in polyline:
                 if isinstance(point, dict):
@@ -292,24 +296,34 @@ class HighValueSceneGraphBuilder:
             if self._lane_inside_fov(lane):
                 lanes.append(lane)
                 lane_types.append(get_lane_type_onehot_nuplan("lane"))
+                lane_metadata.append(metadata[original_index] if metadata else {})
         if not lanes:
             lanes = [np.zeros((self.num_points_per_lane, 2), dtype=np.float32)]
             lane_types = [get_lane_type_onehot_nuplan("lane")]
+            lane_metadata=[{}]
         if len(lanes) > self.max_num_lanes:
             distances = np.asarray([np.linalg.norm(lane, axis=-1).min() for lane in lanes])
             keep = np.argsort(distances)[:self.max_num_lanes]
             lanes = [lanes[int(i)] for i in keep]
             lane_types = [lane_types[int(i)] for i in keep]
+            lane_metadata = [lane_metadata[int(i)] for i in keep]
         lane_states = np.asarray(lanes, dtype=np.float32)
         lane_types_arr = np.asarray(lane_types, dtype=np.float32)
-        lane_conn = self._lane_connections(lane_states.shape[0])
+        lane_conn = self._lane_connections(lane_states.shape[0],lane_metadata)
         return lane_states, lane_types_arr, lane_conn
 
-    def _lane_connections(self, num_lanes: int) -> np.ndarray:
+    def _lane_connections(self, num_lanes: int, lane_metadata=None) -> np.ndarray:
         edges = get_edge_index_complete_graph(num_lanes).t().tolist()
         rows = []
         for src, dst in edges:
-            rows.append(get_lane_connection_type_onehot_nuplan("self" if src == dst else "none"))
+            relation='self' if src==dst else 'none'
+            if src!=dst and lane_metadata:
+                a,b=lane_metadata[src],lane_metadata[dst]
+                # NuPlan labels the SOURCE relative to the RECEIVER:
+                # pre_adj[dst,src], suc_adj[dst,src]. A -> B is pred on A->B.
+                if b.get('lane_uid') in a.get('successors',[]):relation='pred'
+                elif b.get('lane_uid') in a.get('predecessors',[]):relation='succ'
+            rows.append(get_lane_connection_type_onehot_nuplan(relation))
         return np.asarray(rows, dtype=np.float32)
 
     def _lane_inside_fov(self, lane: np.ndarray) -> bool:

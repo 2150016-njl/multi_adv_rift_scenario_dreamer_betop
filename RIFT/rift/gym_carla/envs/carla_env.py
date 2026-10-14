@@ -131,9 +131,11 @@ class CarlaEnv(gym.Env):
             map_radius=float(env_params.get('hv_map_radius', env_params.get('hv_init_map_radius', 64.0))),
             max_route_points=int(env_params.get('hv_max_route_points', env_params.get('hv_init_max_route_points', 160))),
             max_map_lanes=int(env_params.get('hv_max_map_lanes', env_params.get('hv_init_max_map_lanes', 120))),
+            map_coordinate_mode=str(env_params.get('hv_snapshot_map_coordinate_mode','legacy')),
             candidate_fov=float(env_params.get('hv_sd_fov', 64.0)),
             forward_min_x=float(env_params.get('hv_generation_forward_min_x', 0.0)),
             target_fov_margin=float(env_params.get('hv_generation_target_fov_margin', 2.0)),
+            native_map_export=bool(env_params.get('hv_snapshot_native_map_export',False)),
             logger=logger,
         )
         if env_params.get('high_value_init', False):
@@ -217,15 +219,16 @@ class CarlaEnv(gym.Env):
             self.high_value_initializer is not None and
             self.high_value_initializer.should_lock_dynamic_cbv(self.high_value_init_result)
         ):
+            self._record_hv_recognition_step('legacy_initialization_lock',[])
             return
 
         # Skip CBV calculations if conditions are not met
-        if (
-            self.cbv_policy_type == 'rule-based' or
-            len(self.CBVs) >= self.cbv_recog_policy.max_agent_num or
-            self.time_step % 2 != 0 or
-            self.time_step <= 25
-        ):
+        gate_reason = ('rule_based_policy' if self.cbv_policy_type == 'rule-based' else
+                       'capacity_full' if len(self.CBVs) >= self.cbv_recog_policy.max_agent_num else
+                       'odd_step' if self.time_step % 2 != 0 else
+                       'warmup_le_25' if self.time_step <= 25 else None)
+        if gate_reason is not None:
+            self._record_hv_recognition_step(gate_reason,[])
             return
 
         # Select the candidate CBV
@@ -236,9 +239,19 @@ class CarlaEnv(gym.Env):
             self.rest_route_waypoints,
             self.red_light_state
         )
+        self._record_hv_recognition_step(None,CBVs)
 
         for CBV in CBVs:
             self._activate_CBV(CBV)
+
+    def _record_hv_recognition_step(self,reason,selected):
+        initializer=self.high_value_generation_initializer
+        if initializer is None:return
+        try:
+            initializer.record_normal_recognition_step(self.time_step,reason,self.cbv_recog_policy,selected)
+        except Exception as exc:
+            if self.logger:
+                self.logger.log('>> HV recognition telemetry failed: %s' % exc,color='yellow')
 
     def _activate_CBV(self, CBV):
         assert CBV.id not in self.CBVs, 'The selected CBV should not in the existing CBV list'

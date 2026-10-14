@@ -1,0 +1,119 @@
+{
+  "kind": "local_research_evidence_summary",
+  "date": "2026-10-13",
+  "sources": {
+    "v5_build": {
+      "path": "data\\hv_init\\datasets\\v5_joint_raw_strong_20261012\\dataset_audit.json",
+      "sha256": "6586caed5275f4663e789a762da8a5f5209e7862ffe2e7ddf1d326bc4331f7db"
+    },
+    "v5_coverage_prefix1000": {
+      "path": "data\\hv_init\\datasets\\v5_joint_raw_strong_20261012\\candidate_coverage_probe1000.json",
+      "sha256": "4523a20dff5a6644b2019a7393afcd029edb450d03062bd04614ea222074563a"
+    },
+    "v5_representation": {
+      "path": "data\\hv_init\\datasets\\v5_joint_raw_strong_20261012\\representation_diagnostic_unready.json",
+      "sha256": "7f003146087827e330b9ff1067d38d6836222dbf1c77627fe150bf3a757775ca"
+    },
+    "v4c_c0": {
+      "path": "data\\hv_init\\eval\\v4c_sampling_contract_identifiability_20261010\\c0_sampling_contract_test512.json",
+      "sha256": "c7b4c571bcd32fc0c6681a17f43c82eac9f216f4c9ece97ccae85cde3c5db58e"
+    },
+    "v4c_c2": {
+      "path": "data\\hv_init\\eval\\v4c_sampling_contract_identifiability_20261010\\c2_sampling_contract_test512.json",
+      "sha256": "2cd2428debc9df16b5ede8965e9dd1562503a2eeb44d4b1e030a096008d5b8e6"
+    },
+    "v4c_c2_rows128": {
+      "path": "data\\hv_init\\eval\\v4c_sampling_contract_identifiability_20261010\\c2_sampling_contract_test128_rows.jsonl",
+      "sha256": "6264243fa39af017cfbc2602e343a31884e143f3eabc498cc91ed06d47376880"
+    }
+  },
+  "derived": {
+    "v5_funnel": {
+      "train": {
+        "input": 16362,
+        "written": 519,
+        "acceptance": 0.03171983865053172,
+        "after_score": 7969,
+        "candidate_stage_input": 7622,
+        "candidate_assignment_rate_given_prior_filters": 0.06992915245342429
+      },
+      "val": {
+        "input": 2005,
+        "written": 36,
+        "acceptance": 0.017955112219451373,
+        "after_score": 836,
+        "candidate_stage_input": 636,
+        "candidate_assignment_rate_given_prior_filters": 0.05660377358490566
+      },
+      "test": {
+        "input": 2039,
+        "written": 38,
+        "acceptance": 0.018636586562040217,
+        "after_score": 855,
+        "candidate_stage_input": 784,
+        "candidate_assignment_rate_given_prior_filters": 0.05102040816326531
+      }
+    },
+    "v4c_c0": {
+      "ae_oracle_true_target_latent": {
+        "position_l2": 1.3969102579139872,
+        "heading_abs": 0.7708096670485247,
+        "physical_invalid_rate": 0.953125,
+        "interaction_route_sync_within_threshold_rate": 1.0
+      },
+      "reverse_diffusion_condition_only_s1": {
+        "position_l2": 13.724089516093954,
+        "heading_abs": 0.42192244475882035,
+        "physical_invalid_rate": 0.09765625,
+        "interaction_route_sync_within_threshold_rate": 0.8662109375
+      },
+      "training_time_noisy_true_target_x0": {
+        "position_l2": 7.162406668881886,
+        "heading_abs": 0.1718981240173889,
+        "physical_invalid_rate": 0.1005859375,
+        "interaction_route_sync_within_threshold_rate": 0.998046875
+      }
+    },
+    "v4c_c2": {
+      "ae_oracle_true_target_latent": {
+        "position_l2": 1.3969104956631782,
+        "heading_abs": 0.7708098361108568,
+        "physical_invalid_rate": 0.953125,
+        "interaction_route_sync_within_threshold_rate": 1.0
+      },
+      "reverse_diffusion_condition_only_s1": {
+        "position_l2": 9.111603084485978,
+        "heading_abs": 0.2913658661509544,
+        "physical_invalid_rate": 0.2451171875,
+        "interaction_route_sync_within_threshold_rate": 0.98046875
+      },
+      "training_time_noisy_true_target_x0": {
+        "position_l2": 5.8236843306222,
+        "heading_abs": 0.1644262517822881,
+        "physical_invalid_rate": 0.166015625,
+        "interaction_route_sync_within_threshold_rate": 0.9970703125
+      }
+    },
+    "v4c_c2_rows128_invalid_components": {
+      "ae_oracle_true_target_latent": {
+        "actors": 256,
+        "length_out_of_bounds": 243,
+        "width_out_of_bounds": 239
+      },
+      "training_time_noisy_true_target_x0": {
+        "actors": 256,
+        "length_out_of_bounds": 43,
+        "width_out_of_bounds": 26
+      },
+      "reverse_diffusion_condition_only_s1": {
+        "actors": 256,
+        "length_out_of_bounds": 60
+      }
+    }
+  },
+  "limits": [
+    "Historical artifacts were re-read, models were not rerun.",
+    "V4C original train/val/test jsonl and model weights are absent locally.",
+    "Size-invalid is a model schema metric; strict spawn uses a fixed CARLA blueprint."
+  ]
+}

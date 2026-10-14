@@ -140,6 +140,8 @@ if __name__ == '__main__':
                         help='Optional route ids/subsets accepted by RouteParser, e.g. "0", "0-9", "0,4,8".')
     # agent-related
     parser.add_argument('--cbv_recog', '-recog', type=str, default='rule', choices=['rule', 'attention'])
+    parser.add_argument('--cbv_attention_checkpoint',type=str,default=None)
+    parser.add_argument('--cbv_attention_hf_dir',type=str,default=None)
     parser.add_argument('--ego_cfg', type=str, default='expert.yaml')
     parser.add_argument('--pretrain_ego', '-pre_ego', type=str, default='pdm_lite', choices=['pdm_lite', 'plant', 'expert'])
     parser.add_argument('--pretrain_cbv', '-pre_cbv', type=str, default='standard', choices=['ppo', 'standard', 'frea', 'fppo_rs'])
@@ -243,6 +245,10 @@ if __name__ == '__main__':
     parser.add_argument('--hv_max_map_lanes', type=int, default=120)
     parser.add_argument('--hv_snapshot_map_coordinate_mode', choices=['legacy', 'right_handed'], default='legacy',
                         help='Snapshot HD-map coordinate convention. Use right_handed only with a matching V3 model.')
+    parser.add_argument('--hv_snapshot_native_map_export',action='store_true',default=False,
+                        help='Observation-only separate native_map_lanes XYZ/width/directed topology export.')
+    parser.add_argument('--hv_collection_traffic_intensity',type=float,default=None,
+                        help='collect_hv_generation only: background spawn intensity, e.g. 0.2 for sparse traffic.')
     parser.add_argument('--hv_generation_dump_dir', '--hv_dump_dir', dest='hv_generation_dump_dir', type=str, default=None)
     parser.add_argument('--hv_generation_lifecycle_telemetry', action='store_true', default=False,
                         help='Append observation-only generated-actor lifecycle events to the HV dump directory.')

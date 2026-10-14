@@ -1,0 +1,114 @@
+{
+  "schema_version": "hv_support_chain_audit_v1",
+  "source": "data/hv_init/datasets/v5_joint_raw_strong_20261012/train.jsonl",
+  "processed_bytes_sha256": "2e9ec04509cfd05a97e4481800f7748f93fd0a60a9b9799cc05af6a4fd32704b",
+  "selection": "all_records",
+  "max_records": 0,
+  "counts": {
+    "records": 519,
+    "already_filtered_v5_records": 519,
+    "records_with_native_anchor": 0,
+    "raw_map_actors": 1038,
+    "raw_map_at_least_one": 519,
+    "raw_map_both": 519,
+    "candidate_geometry_actors": 1038,
+    "candidate_geometry_at_least_one": 519,
+    "candidate_geometry_both": 519,
+    "candidate_upstream_actors": 1038,
+    "candidate_upstream_at_least_one": 519,
+    "candidate_upstream_both": 519,
+    "candidate_anchor_actors": 1038,
+    "candidate_anchor_at_least_one": 519,
+    "candidate_anchor_both": 519,
+    "chart_roundtrip_actors": 1038,
+    "chart_roundtrip_at_least_one": 519,
+    "chart_roundtrip_both": 519,
+    "first_failure_none": 1038
+  },
+  "rates_per_record": {
+    "raw_map_at_least_one": 1.0,
+    "raw_map_both": 1.0,
+    "candidate_geometry_at_least_one": 1.0,
+    "candidate_geometry_both": 1.0,
+    "candidate_upstream_at_least_one": 1.0,
+    "candidate_upstream_both": 1.0,
+    "candidate_anchor_at_least_one": 1.0,
+    "candidate_anchor_both": 1.0,
+    "chart_roundtrip_at_least_one": 1.0,
+    "chart_roundtrip_both": 1.0
+  },
+  "by_town": {
+    "Town03": {
+      "records": 5,
+      "raw_map_both": 5,
+      "candidate_geometry_both": 5,
+      "candidate_upstream_both": 5,
+      "candidate_anchor_both": 5,
+      "chart_roundtrip_both": 5
+    },
+    "Town04": {
+      "records": 3,
+      "raw_map_both": 3,
+      "candidate_geometry_both": 3,
+      "candidate_upstream_both": 3,
+      "candidate_anchor_both": 3,
+      "chart_roundtrip_both": 3
+    },
+    "Town05": {
+      "records": 206,
+      "raw_map_both": 206,
+      "candidate_geometry_both": 206,
+      "candidate_upstream_both": 206,
+      "candidate_anchor_both": 206,
+      "chart_roundtrip_both": 206
+    },
+    "Town06": {
+      "records": 7,
+      "raw_map_both": 7,
+      "candidate_geometry_both": 7,
+      "candidate_upstream_both": 7,
+      "candidate_anchor_both": 7,
+      "chart_roundtrip_both": 7
+    },
+    "Town10HD": {
+      "records": 215,
+      "raw_map_both": 215,
+      "candidate_geometry_both": 215,
+      "candidate_upstream_both": 215,
+      "candidate_anchor_both": 215,
+      "chart_roundtrip_both": 215
+    },
+    "Town12": {
+      "records": 40,
+      "raw_map_both": 40,
+      "candidate_geometry_both": 40,
+      "candidate_upstream_both": 40,
+      "candidate_anchor_both": 40,
+      "chart_roundtrip_both": 40
+    },
+    "Town13": {
+      "records": 38,
+      "raw_map_both": 38,
+      "candidate_geometry_both": 38,
+      "candidate_upstream_both": 38,
+      "candidate_anchor_both": 38,
+      "chart_roundtrip_both": 38
+    },
+    "Town15": {
+      "records": 5,
+      "raw_map_both": 5,
+      "candidate_geometry_both": 5,
+      "candidate_upstream_both": 5,
+      "candidate_anchor_both": 5,
+      "chart_roundtrip_both": 5
+    }
+  },
+  "failure_examples": [],
+  "limits": [
+    "No native RIFT or CARLA spawn certification.",
+    "No score/OBB filter applied: support attribution, not training eligibility.",
+    "Filtered V5 rows cannot estimate coverage of rejected V4C records.",
+    "Without native anchors, candidate_anchor only repeats upstream support.",
+    "First-failure bins use this diagnostic order, not causal independence."
+  ]
+}

@@ -40,6 +40,7 @@ def audit(dump_dir: Path, simulator_exit_code=None):
                'spawn_success':bool(result.get('success')),
                'failure_stage':result.get('failure_stage'),
                'skipped':bool(result.get('skipped')),
+               'generation_frame':result.get('frame_id'),
                'spawned_ids':[int(i) for i in result.get('spawned_actor_ids',[])],
                'green_ids':[]}
         if attempted:
@@ -121,6 +122,7 @@ def audit(dump_dir: Path, simulator_exit_code=None):
         scenes.append(row)
     green_events=0
     events_by_actor=Counter()
+    recognition_by_scene={}
     lifecycle_path=dump_dir/'lifecycle.jsonl'
     if lifecycle_path.exists():
         for lineno, line in enumerate(lifecycle_path.read_text().splitlines(),1):
@@ -132,16 +134,32 @@ def audit(dump_dir: Path, simulator_exit_code=None):
             if e.get('event')=='rift_cbv_activated':
                 key=(str(e.get('scene_id')), int(e['actor_id']))
                 events_by_actor[key]+=1
+            if e.get('event')=='normal_recognition_step':
+                sid=str(e.get('scene_id'))
+                counts=recognition_by_scene.setdefault(sid,Counter())
+                counts['actor_step_observations']+=1
+                if e.get('gate_reason') is not None:
+                    counts['gated_'+str(e['gate_reason'])]+=1
+                else:
+                    counts['evaluated_actor_steps']+=1
+                    counts['native_candidate_actor_steps']+=e.get('native_candidate') is True
+                    counts['selected_actor_steps']+=e.get('selected_by_normal_recognizer') is True
+                    counts['attention_observed_actor_steps']+=e.get('attention') is not None
     for row in scenes:
         row['green_ids']=[x for x in row['spawned_ids']
                           if (row['scene_id'],x) in events_by_actor]
         row['at_least_one_green']=bool(row['green_ids'])
         green_events+=int(row['at_least_one_green'] and row['attempted'])
+        row['normal_recognition']=dict(recognition_by_scene.get(row['scene_id'],{}))
     attempted_rows=[r for r in scenes if r['attempted']]
     eligible_rows=[r for r in scenes if not r['skipped']]
     spawn_rows=[r for r in eligible_rows if r['spawn_success']]
     completed = simulator_exit_code == 0 if simulator_exit_code is not None else None
+    evaluation_status=('not_started_runner_failed' if not dump_files and simulator_exit_code not in (None,0) else
+                       'no_request_evidence' if not dump_files else
+                       'runner_failed' if completed is False else 'completed' if completed else 'completion_unknown')
     return {
+        'evaluation_status':evaluation_status,
         'schema_version':'hv_strict_one_shot_audit_v2',
         'simulator_exit_code':simulator_exit_code,
         'simulator_completed':completed,
@@ -152,6 +170,13 @@ def audit(dump_dir: Path, simulator_exit_code=None):
         'num_skipped_pre_generation':sum(r['skipped'] for r in scenes),
         'num_both_spawned':len(spawn_rows),
         'num_at_least_one_native_green':green_events,
+        # Lifecycle activation can occur after traffic has evolved. It cannot
+        # certify route interaction at the generated initial state.
+        'native_green_evidence_phase':'eventual_lifecycle_activation',
+        'initial_native_interaction_evaluated':False,
+        'initial_native_interaction_rate':None,
+        'normal_recognition_telemetry_present':bool(recognition_by_scene),
+        'normal_recognition_actor_step_counts':dict(sum(recognition_by_scene.values(),Counter())),
         # Primary end-to-end denominator also counts import/model-load failures.
         # A crash before normal CBVs_recog() makes green-rate unknown,
         # not zero.  Only a completed evaluation has a meaningful rate.
@@ -180,6 +205,8 @@ def main():
         args.output_json.parent.mkdir(parents=True,exist_ok=True)
         args.output_json.write_text(json.dumps(result,indent=2,ensure_ascii=False))
     if result['contract_errors']:
+        if result['evaluation_status']=='not_started_runner_failed':
+            raise SystemExit('NOT EVALUATED: runner failed before generation; inspect runner.log (no model success/failure rate)')
         raise SystemExit('FAIL: strict single-shot contract violated')
     if args.min_native_green_rate is not None:
         rate=result['native_green_rate_per_eligible_request']

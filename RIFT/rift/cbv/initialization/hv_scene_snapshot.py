@@ -9,6 +9,7 @@ separate route/conflict approximation.
 """
 
 import json
+import hashlib
 import math
 import os
 from pathlib import Path
@@ -58,6 +59,7 @@ class HighValueSceneSnapshotter:
             candidate_fov: float = 64.0,
             forward_min_x: float = 0.0,
             target_fov_margin: float = 2.0,
+            native_map_export: bool = False,
             logger=None):
         self.actor_radius = float(actor_radius)
         self.map_radius = float(map_radius)
@@ -76,6 +78,9 @@ class HighValueSceneSnapshotter:
         self.logger = logger
         self.labeler = RiftInteractionLabeler(logger=logger)
         self._last_map_lane_diagnostics = {}
+        self.native_map_export=bool(native_map_export)
+        self._native_geometry=None
+        self._native_world_identity=None
 
     def build(
             self,
@@ -154,6 +159,22 @@ class HighValueSceneSnapshotter:
         }
         if extra:
             payload["extra"] = extra
+        if self.native_map_export:
+            from high_value_init.audit_physics_geometry import MapGeometry
+            world=ego_vehicle.get_world();world_map=world.get_map()
+            identity=(world_map.name,getattr(world,'id',None))
+            if self._native_world_identity!=identity:
+                self._native_geometry=MapGeometry(world_map,1.)
+                self._native_world_identity=identity
+                self._native_map_sha=hashlib.sha256(world_map.to_opendrive().encode()).hexdigest()
+            snapshot=world.get_snapshot()
+            payload['native_map_lanes']=self._native_geometry.local_lanes(payload['ego'],radius=100.)
+            payload['native_map_metadata']={'coordinate_frame':'carla_world_xyz','resolution_m':1.,
+                'opendrive_sha256':self._native_map_sha,'map_name':world_map.name,
+                'sim_frame_id':int(snapshot.frame),'elapsed_seconds':float(snapshot.timestamp.elapsed_seconds)}
+            payload['collection_feasibility']={'saved_forward_positive_count':
+                forward_diagnostics.get('num_forward_rift_positive_agents'),
+                'absence_of_saved_positives_is_not_proven_infeasible':True}
         return payload
 
     def _forward_interaction_diagnostics(self, ego_vehicle, actors: List[Dict], labels: List[Dict]) -> Dict:

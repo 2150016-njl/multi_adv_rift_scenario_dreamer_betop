@@ -1,0 +1,117 @@
+{
+  "schema_version": "hv_forward_map_proxy_comparison_v1",
+  "dataset": "data/hv_init/datasets/inpainting_sparse_phase8_v3_fov64_hdmap_full/test.jsonl",
+  "dataset_sha256": "548e0351044ffa4329baf099603f9e1ec7bf1092df0e086f6a4e7da7f3a12a2c",
+  "generated_sources": {
+    "data/hv_init/eval/v2_v3_same_v3test_full_20261006/v2_raw_s1_generated.jsonl": "47a48b41aac4c645f07a9ff9319cfdcb64c46fb6f45244718d0ccb99278d0f62",
+    "data/hv_init/eval/v2_v3_same_v3test_full_20261006/v3_raw_s1_generated.jsonl": "8d8fad1af7e50b94ff5da84ad726613f9db324191ea00dd6b8e9519e384b2285"
+  },
+  "selection": "all_records",
+  "num_records": 3727,
+  "definition": "0<x<=fov/2, abs(y)<=fov/2; center-distance proxies only",
+  "results": {
+    "gt": {
+      "counts": {
+        "records": 3727,
+        "actors": 7454,
+        "x_nonpositive_actors": 2684,
+        "forward_fov_actors": 4770,
+        "both_in_forward_fov_records": 1412,
+        "at_least_one_in_forward_fov_records": 3358,
+        "forward_map_unknown_actors": 0,
+        "forward_centerline_gt_1.25_actors": 375,
+        "at_least_one_forward_centerline_le_1.25_records": 3278,
+        "both_forward_centerline_le_1.25_records": 1117,
+        "forward_centerline_gt_1.75_actors": 15,
+        "at_least_one_forward_centerline_le_1.75_records": 3358,
+        "both_forward_centerline_le_1.75_records": 1397,
+        "forward_centerline_gt_3.0_actors": 0,
+        "at_least_one_forward_centerline_le_3.0_records": 3358,
+        "both_forward_centerline_le_3.0_records": 1412,
+        "forward_centerline_gt_5.0_actors": 0,
+        "at_least_one_forward_centerline_le_5.0_records": 3358,
+        "both_forward_centerline_le_5.0_records": 1412,
+        "forward_stopped_le_0p1_actors": 378,
+        "forward_stopped_centerline_gt_1p75_actors": 0
+      },
+      "both_forward_fov_rate": 0.3788569895358197,
+      "forward_centerline_gt_1p75_rate": 0.0031446540880503146,
+      "forward_centerline_distance_m": {
+        "p50": 0.14413220506456226,
+        "p90": 1.107620972168537,
+        "p99": 1.6127722901509804
+      }
+    },
+    "v2_raw_s1_generated": {
+      "counts": {
+        "records": 3727,
+        "actors": 7454,
+        "x_nonpositive_actors": 3058,
+        "forward_fov_actors": 4396,
+        "both_in_forward_fov_records": 921,
+        "at_least_one_in_forward_fov_records": 3475,
+        "forward_map_unknown_actors": 0,
+        "forward_centerline_gt_1.25_actors": 2250,
+        "at_least_one_forward_centerline_le_1.25_records": 1915,
+        "both_forward_centerline_le_1.25_records": 231,
+        "forward_centerline_gt_1.75_actors": 1706,
+        "at_least_one_forward_centerline_le_1.75_records": 2338,
+        "both_forward_centerline_le_1.75_records": 352,
+        "forward_centerline_gt_3.0_actors": 1313,
+        "at_least_one_forward_centerline_le_3.0_records": 2646,
+        "both_forward_centerline_le_3.0_records": 437,
+        "forward_centerline_gt_5.0_actors": 884,
+        "at_least_one_forward_centerline_le_5.0_records": 2961,
+        "both_forward_centerline_le_5.0_records": 551,
+        "forward_stopped_le_0p1_actors": 294,
+        "forward_stopped_centerline_gt_1p75_actors": 160
+      },
+      "both_forward_fov_rate": 0.2471156426079957,
+      "forward_centerline_gt_1p75_rate": 0.3880800727934486,
+      "forward_centerline_distance_m": {
+        "p50": 1.2825808294827208,
+        "p90": 10.495301411048308,
+        "p99": 23.40861578551225
+      }
+    },
+    "v3_raw_s1_generated": {
+      "counts": {
+        "records": 3727,
+        "actors": 7454,
+        "x_nonpositive_actors": 2301,
+        "forward_fov_actors": 5153,
+        "both_in_forward_fov_records": 1551,
+        "at_least_one_in_forward_fov_records": 3602,
+        "forward_map_unknown_actors": 0,
+        "forward_centerline_gt_1.25_actors": 3052,
+        "at_least_one_forward_centerline_le_1.25_records": 1813,
+        "both_forward_centerline_le_1.25_records": 288,
+        "forward_centerline_gt_1.75_actors": 2486,
+        "at_least_one_forward_centerline_le_1.75_records": 2223,
+        "both_forward_centerline_le_1.75_records": 444,
+        "forward_centerline_gt_3.0_actors": 1886,
+        "at_least_one_forward_centerline_le_3.0_records": 2593,
+        "both_forward_centerline_le_3.0_records": 674,
+        "forward_centerline_gt_5.0_actors": 1259,
+        "at_least_one_forward_centerline_le_5.0_records": 2981,
+        "both_forward_centerline_le_5.0_records": 913,
+        "forward_stopped_le_0p1_actors": 254,
+        "forward_stopped_centerline_gt_1p75_actors": 136
+      },
+      "both_forward_fov_rate": 0.416152401395224,
+      "forward_centerline_gt_1p75_rate": 0.48243741509800114,
+      "forward_centerline_distance_m": {
+        "p50": 1.6466278557567398,
+        "p90": 8.519060561105203,
+        "p99": 16.663793734539915
+      }
+    }
+  },
+  "limitations": [
+    "Fixed centerline thresholds are NOT actual road polygons or lane widths.",
+    "Missing map is unknown, never a pass.",
+    "No CARLA preview, raw spawn, elevation, OBB or native interaction verification.",
+    "Different generated states need not match the original GT lane.",
+    "Stopped states are not automatically parked or invalid."
+  ]
+}

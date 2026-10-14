@@ -1,10 +1,12 @@
 """Tests for no false spawn-fidelity alarms or misleading green rate on crash."""
 import importlib.util
+import io
 import json
 import math
 import struct
 import tempfile
 import unittest
+from unittest.mock import MagicMock
 from pathlib import Path
 
 PATH=Path(__file__).resolve().parent/'audit_hv_one_shot_results.py'
@@ -109,5 +111,48 @@ class TestRuntimeAudit(unittest.TestCase):
         summary=audit_mod.audit(self.path,simulator_exit_code=0)
         self.assertEqual(summary['num_at_least_one_native_green'],1)
         self.assertEqual(summary['native_green_rate_per_eligible_request'],1.0)
+        self.assertEqual(summary['native_green_evidence_phase'],
+                         'eventual_lifecycle_activation')
+        self.assertFalse(summary['initial_native_interaction_evaluated'])
+        self.assertIsNone(summary['initial_native_interaction_rate'])
+
+class TestEvidencePhase(unittest.TestCase):
+    """No disk I/O: a later lifecycle event never certifies initial interaction."""
+
+    def test_late_green_does_not_certify_initial_state(self):
+        states = [[10., 0., 0., 3., 4.6, 1.9, 1.],
+                  [20., 0., 0., 3., 4.6, 1.9, 1.]]
+        transforms = [{'x':s[0], 'y':s[1], 'yaw_deg':0.} for s in states]
+        record = {
+            'scene': {'ego': {'x':0., 'y':0., 'yaw_deg':0.}},
+            'proposal': {'generated_agent_states':states},
+            'result': {
+                'scene_id':'initial', 'success':True, 'generator_called':True,
+                'generation_max_attempts':1, 'generation_attempts':[{}],
+                'rift_audit_status':'deferred_to_normal_cbvs_recog',
+                'spawned_actor_ids':[101, 102],
+                'spawn_attempts':[
+                    {'index':i, 'generated_local_state':s,
+                     'raw_world_transform':transforms[i],
+                     'spawn_transform':transforms[i]}
+                    for i, s in enumerate(states)],
+            },
+        }
+        dump = MagicMock()
+        dump.name = 'initial_online_generation.json'
+        dump.open.return_value = io.StringIO(json.dumps(record))
+        directory = MagicMock()
+        directory.glob.return_value = [dump]
+        lifecycle = directory.__truediv__.return_value
+        lifecycle.exists.return_value = True
+        lifecycle.read_text.return_value = json.dumps({
+            'event':'rift_cbv_activated', 'scene_id':'initial',
+            'actor_id':101, 'frame_id':100})+'\n'
+        result = audit_mod.audit(directory, simulator_exit_code=0)
+        self.assertEqual(result['contract_errors'], [])
+        self.assertEqual(result['native_green_rate_per_eligible_request'], 1.)
+        self.assertFalse(result['initial_native_interaction_evaluated'])
+        self.assertIsNone(result['initial_native_interaction_rate'])
+
 
 if __name__=='__main__':unittest.main()

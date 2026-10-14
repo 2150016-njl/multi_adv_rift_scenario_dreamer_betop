@@ -1,0 +1,390 @@
+{
+  "requested_records": 5,
+  "written_jobs": 0,
+  "missing_record_indices": [],
+  "ambiguous_record_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "ambiguity_details": {
+    "0": [
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\a.json",
+        "snapshot_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+        "snapshot_replay_sha256": "fcbebd9bae7774d18d131fd45d32cfe23f75c99d7d7013fb10ddd0a123f259bc",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": [
+          6431,
+          6433,
+          6436,
+          6434
+        ]
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\b.json",
+        "snapshot_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+        "snapshot_replay_sha256": "fcbebd9bae7774d18d131fd45d32cfe23f75c99d7d7013fb10ddd0a123f259bc",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": [
+          6431,
+          6433,
+          6436,
+          6434
+        ]
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\c_distinct_fleet.json",
+        "snapshot_sha256": "9a273014d814b21018e7c71471df37b88604de4832acaa0da40020b18d5f67c2",
+        "snapshot_replay_sha256": "5881e71255807fa7b492a26513886b3ff9b6f12f43dad5b869ab16a358161971",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": [
+          6431,
+          6433,
+          6436,
+          6434
+        ]
+      }
+    ],
+    "1": [
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\a.json",
+        "snapshot_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+        "snapshot_replay_sha256": "fcbebd9bae7774d18d131fd45d32cfe23f75c99d7d7013fb10ddd0a123f259bc",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": []
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\b.json",
+        "snapshot_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+        "snapshot_replay_sha256": "fcbebd9bae7774d18d131fd45d32cfe23f75c99d7d7013fb10ddd0a123f259bc",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": []
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\c_distinct_fleet.json",
+        "snapshot_sha256": "9a273014d814b21018e7c71471df37b88604de4832acaa0da40020b18d5f67c2",
+        "snapshot_replay_sha256": "5881e71255807fa7b492a26513886b3ff9b6f12f43dad5b869ab16a358161971",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": []
+      }
+    ],
+    "2": [
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\a.json",
+        "snapshot_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+        "snapshot_replay_sha256": "fcbebd9bae7774d18d131fd45d32cfe23f75c99d7d7013fb10ddd0a123f259bc",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": [
+          6431
+        ]
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\b.json",
+        "snapshot_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+        "snapshot_replay_sha256": "fcbebd9bae7774d18d131fd45d32cfe23f75c99d7d7013fb10ddd0a123f259bc",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": [
+          6431
+        ]
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\c_distinct_fleet.json",
+        "snapshot_sha256": "9a273014d814b21018e7c71471df37b88604de4832acaa0da40020b18d5f67c2",
+        "snapshot_replay_sha256": "5881e71255807fa7b492a26513886b3ff9b6f12f43dad5b869ab16a358161971",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": [
+          6431
+        ]
+      }
+    ],
+    "3": [
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\a.json",
+        "snapshot_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+        "snapshot_replay_sha256": "fcbebd9bae7774d18d131fd45d32cfe23f75c99d7d7013fb10ddd0a123f259bc",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": [
+          6431,
+          6433
+        ]
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\b.json",
+        "snapshot_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+        "snapshot_replay_sha256": "fcbebd9bae7774d18d131fd45d32cfe23f75c99d7d7013fb10ddd0a123f259bc",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": [
+          6431,
+          6433
+        ]
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\c_distinct_fleet.json",
+        "snapshot_sha256": "9a273014d814b21018e7c71471df37b88604de4832acaa0da40020b18d5f67c2",
+        "snapshot_replay_sha256": "5881e71255807fa7b492a26513886b3ff9b6f12f43dad5b869ab16a358161971",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": [
+          6431,
+          6433
+        ]
+      }
+    ],
+    "4": [
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\a.json",
+        "snapshot_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+        "snapshot_replay_sha256": "fcbebd9bae7774d18d131fd45d32cfe23f75c99d7d7013fb10ddd0a123f259bc",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": [
+          6431,
+          6433,
+          6436
+        ]
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\b.json",
+        "snapshot_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+        "snapshot_replay_sha256": "fcbebd9bae7774d18d131fd45d32cfe23f75c99d7d7013fb10ddd0a123f259bc",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": [
+          6431,
+          6433,
+          6436
+        ]
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\c_distinct_fleet.json",
+        "snapshot_sha256": "9a273014d814b21018e7c71471df37b88604de4832acaa0da40020b18d5f67c2",
+        "snapshot_replay_sha256": "5881e71255807fa7b492a26513886b3ff9b6f12f43dad5b869ab16a358161971",
+        "target_actor_ids": [
+          6437,
+          6432
+        ],
+        "context_actor_ids": [
+          6431,
+          6433,
+          6436
+        ]
+      }
+    ]
+  },
+  "exact_replay_equivalent_duplicates": {},
+  "unresolved_reference_records": {
+    "0": {
+      "scene_id": "RouteScenario_1711_idx9_rep0_frame0",
+      "target": {
+        "generated_agent_states": [
+          [
+            -24.001901003137156,
+            -7.070400854777836e-06,
+            2.956108809987954e-05,
+            0.09440494943452402,
+            2.350175619125366,
+            0.7662330269813538,
+            1.0
+          ],
+          [
+            -33.18434719715348,
+            -8.821597507843726e-05,
+            4.8735847948450056e-05,
+            0.09468353502776383,
+            2.350175619125366,
+            0.7662330269813538,
+            1.0
+          ]
+        ]
+      }
+    },
+    "1": {
+      "scene_id": "RouteScenario_1711_idx9_rep0_frame0:sparse0",
+      "context_sampling": {
+        "sparse_context_copy_index": 0
+      },
+      "target": {
+        "generated_agent_states": [
+          [
+            -24.001901003137156,
+            -7.070400854777836e-06,
+            2.956108809987954e-05,
+            0.09440494943452402,
+            2.350175619125366,
+            0.7662330269813538,
+            1.0
+          ],
+          [
+            -33.18434719715348,
+            -8.821597507843726e-05,
+            4.8735847948450056e-05,
+            0.09468353502776383,
+            2.350175619125366,
+            0.7662330269813538,
+            1.0
+          ]
+        ]
+      }
+    },
+    "2": {
+      "scene_id": "RouteScenario_1711_idx9_rep0_frame0:sparse1",
+      "context_sampling": {
+        "sparse_context_copy_index": 1
+      },
+      "target": {
+        "generated_agent_states": [
+          [
+            -24.001901003137156,
+            -7.070400854777836e-06,
+            2.956108809987954e-05,
+            0.09440494943452402,
+            2.350175619125366,
+            0.7662330269813538,
+            1.0
+          ],
+          [
+            -33.18434719715348,
+            -8.821597507843726e-05,
+            4.8735847948450056e-05,
+            0.09468353502776383,
+            2.350175619125366,
+            0.7662330269813538,
+            1.0
+          ]
+        ]
+      }
+    },
+    "3": {
+      "scene_id": "RouteScenario_1711_idx9_rep0_frame0:sparse2",
+      "context_sampling": {
+        "sparse_context_copy_index": 2
+      },
+      "target": {
+        "generated_agent_states": [
+          [
+            -24.001901003137156,
+            -7.070400854777836e-06,
+            2.956108809987954e-05,
+            0.09440494943452402,
+            2.350175619125366,
+            0.7662330269813538,
+            1.0
+          ],
+          [
+            -33.18434719715348,
+            -8.821597507843726e-05,
+            4.8735847948450056e-05,
+            0.09468353502776383,
+            2.350175619125366,
+            0.7662330269813538,
+            1.0
+          ]
+        ]
+      }
+    },
+    "4": {
+      "scene_id": "RouteScenario_1711_idx9_rep0_frame0:sparse3",
+      "context_sampling": {
+        "sparse_context_copy_index": 3
+      },
+      "target": {
+        "generated_agent_states": [
+          [
+            -24.001901003137156,
+            -7.070400854777836e-06,
+            2.956108809987954e-05,
+            0.09440494943452402,
+            2.350175619125366,
+            0.7662330269813538,
+            1.0
+          ],
+          [
+            -33.18434719715348,
+            -8.821597507843726e-05,
+            4.8735847948450056e-05,
+            0.09468353502776383,
+            2.350175619125366,
+            0.7662330269813538,
+            1.0
+          ]
+        ]
+      }
+    }
+  },
+  "mismatch_examples": {
+    "0": [],
+    "1": [],
+    "2": [],
+    "3": [],
+    "4": []
+  },
+  "debug_snapshot_files": {
+    "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994": "research_analysis_20261013\\followup_pairing_io_v2\\intentional_ambiguity.jsonl.debug_snapshots\\a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994.json",
+    "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72": "research_analysis_20261013\\followup_pairing_io_v2\\intentional_ambiguity.jsonl.debug_snapshots\\7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72.json",
+    "9a273014d814b21018e7c71471df37b88604de4832acaa0da40020b18d5f67c2": "research_analysis_20261013\\followup_pairing_io_v2\\intentional_ambiguity.jsonl.debug_snapshots\\9a273014d814b21018e7c71471df37b88604de4832acaa0da40020b18d5f67c2.json"
+  },
+  "sparse_variant_records": 4,
+  "counts": {
+    "files_scanned": 3
+  },
+  "candidate_mismatch_reasons": {},
+  "dataset_sha256": "87859caac8afa8e6ba672b37c96aa2c0441086ae50296439a5920f5262ed5eb8",
+  "generated_sha256": "041f0a410b716fa5d65a5a8a68f76f536c381e6213b9d31e37fc3ca997bda1aa",
+  "manifest_sha256": null,
+  "manifest_path": null,
+  "partial_manifest_path": "research_analysis_20261013\\followup_pairing_io_v2\\intentional_ambiguity.jsonl.partial.jsonl",
+  "partial_manifest_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "snapshot_directory": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw",
+  "selection": "prefix",
+  "selected_dataset_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "selection_seed": 0,
+  "passed": false
+}

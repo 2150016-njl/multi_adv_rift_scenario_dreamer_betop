@@ -1096,6 +1096,25 @@ class HighValueGeneratedSceneInitializer:
                 "post_spawn_observation_error": f"{type(exc).__name__}: {exc}",
             }
 
+    def record_normal_recognition_step(self, frame_id, gate_reason, policy, selected):
+        """Record the actual normal pipeline call; never invoke a recognizer."""
+        if not self.lifecycle_telemetry:
+            return
+        debug=getattr(policy,'last_candidate_debug',{}) if gate_reason is None else {}
+        attention=getattr(getattr(policy,'AttnModel',None),'last_selection_debug',None) if gate_reason is None else None
+        candidate_ids=set(debug.get('candidate_actor_ids',[]))
+        selected_ids={int(a.id) for a in selected}
+        for actor_id,state in list(self._generated_actor_lifecycle.items()):
+            if state.get('terminal',False):continue
+            self._append_lifecycle_event({
+                'event':'normal_recognition_step','scene_id':state.get('scene_id'),
+                'actor_id':actor_id,'frame_id':frame_id,'phase':'evolved_online_state',
+                'gate_reason':gate_reason,
+                'native_candidate':actor_id in candidate_ids if gate_reason is None else None,
+                'selected_by_normal_recognizer':actor_id in selected_ids if gate_reason is None else None,
+                'candidate_debug':debug,'attention':attention,
+            })
+
     def observe_generated_actor_lifecycle(
             self,
             frame_id: int,

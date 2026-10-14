@@ -1,0 +1,94 @@
+{
+  "requested_records": 5,
+  "written_jobs": 5,
+  "missing_record_indices": [],
+  "ambiguous_record_indices": [],
+  "ambiguity_details": {},
+  "exact_replay_equivalent_duplicates": {
+    "0": [
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\a.json",
+        "snapshot_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+        "snapshot_replay_sha256": "e132c13b3a0d9a28ba1cc2f37090006e71005f779899fb01f5e7ecb271f03243"
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\b.json",
+        "snapshot_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+        "snapshot_replay_sha256": "e132c13b3a0d9a28ba1cc2f37090006e71005f779899fb01f5e7ecb271f03243"
+      }
+    ],
+    "1": [
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\a.json",
+        "snapshot_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+        "snapshot_replay_sha256": "e132c13b3a0d9a28ba1cc2f37090006e71005f779899fb01f5e7ecb271f03243"
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\b.json",
+        "snapshot_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+        "snapshot_replay_sha256": "e132c13b3a0d9a28ba1cc2f37090006e71005f779899fb01f5e7ecb271f03243"
+      }
+    ],
+    "2": [
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\a.json",
+        "snapshot_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+        "snapshot_replay_sha256": "e132c13b3a0d9a28ba1cc2f37090006e71005f779899fb01f5e7ecb271f03243"
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\b.json",
+        "snapshot_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+        "snapshot_replay_sha256": "e132c13b3a0d9a28ba1cc2f37090006e71005f779899fb01f5e7ecb271f03243"
+      }
+    ],
+    "3": [
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\a.json",
+        "snapshot_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+        "snapshot_replay_sha256": "e132c13b3a0d9a28ba1cc2f37090006e71005f779899fb01f5e7ecb271f03243"
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\b.json",
+        "snapshot_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+        "snapshot_replay_sha256": "e132c13b3a0d9a28ba1cc2f37090006e71005f779899fb01f5e7ecb271f03243"
+      }
+    ],
+    "4": [
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\a.json",
+        "snapshot_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+        "snapshot_replay_sha256": "e132c13b3a0d9a28ba1cc2f37090006e71005f779899fb01f5e7ecb271f03243"
+      },
+      {
+        "snapshot_path": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw\\b.json",
+        "snapshot_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+        "snapshot_replay_sha256": "e132c13b3a0d9a28ba1cc2f37090006e71005f779899fb01f5e7ecb271f03243"
+      }
+    ]
+  },
+  "unresolved_reference_records": {},
+  "mismatch_examples": {},
+  "debug_snapshot_files": {},
+  "sparse_variant_records": 4,
+  "counts": {
+    "files_scanned": 2
+  },
+  "candidate_mismatch_reasons": {},
+  "dataset_sha256": "87859caac8afa8e6ba672b37c96aa2c0441086ae50296439a5920f5262ed5eb8",
+  "generated_sha256": "041f0a410b716fa5d65a5a8a68f76f536c381e6213b9d31e37fc3ca997bda1aa",
+  "manifest_sha256": "0a906e6187298f0fde9037964b8d7fc2fafc2361c7ed705afb099b0f91d5eaaa",
+  "manifest_path": "research_analysis_20261013\\followup_pairing_io_v2\\jobs.jsonl",
+  "partial_manifest_path": null,
+  "partial_manifest_sha256": null,
+  "snapshot_directory": "C:\\Users\\Lenovo\\Desktop\\pycharm_project\\multi_adv_rift_scenario_dreamer_betop\\research_analysis_20261013\\followup_pairing_io_v2\\raw",
+  "selection": "prefix",
+  "selected_dataset_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "selection_seed": 0,
+  "passed": true
+}

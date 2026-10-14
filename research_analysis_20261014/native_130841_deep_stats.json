@@ -1,0 +1,276 @@
+{
+  "input_sha256": {
+    "v2": "b841860b8d6faeac33c43cf165a68f603839886c60d84ed8fe97daf049f913f8",
+    "v3": "d5209ed0b2bebe9fe154d66f34600ad9ebbd348ecb342ca99a5ad0dc3028d498"
+  },
+  "models": {
+    "v2": {
+      "scenes": 95,
+      "cohorts": {
+        "raw_pool": {
+          "actors": 1100,
+          "front": 350,
+          "x_nonpositive": 393,
+          "front_center_driving": 346,
+          "front_preview_driving": 349,
+          "front_native": 119,
+          "front_native_occupancy_clear": 115,
+          "front_native_candidate_covered": 75,
+          "front_native_approach_covered": 59,
+          "front_native_approach_unknown": 1,
+          "funnel": {
+            "native_false": 230,
+            "native_true": 119,
+            "preview_false": 1
+          },
+          "scenes_at_least_one": 82,
+          "scenes_at_least_two": 33,
+          "front_center_preview_native_cross": {
+            "110": 228,
+            "111": 118,
+            "010": 2,
+            "000": 1,
+            "011": 1
+          }
+        },
+        "selected_gt": {
+          "actors": 190,
+          "front": 110,
+          "x_nonpositive": 80,
+          "front_center_driving": 109,
+          "front_preview_driving": 110,
+          "front_native": 110,
+          "front_native_occupancy_clear": 106,
+          "front_native_candidate_covered": 70,
+          "front_native_approach_covered": 54,
+          "front_native_approach_unknown": 1,
+          "funnel": {
+            "native_true": 110
+          },
+          "scenes_at_least_one": 82,
+          "scenes_at_least_two": 28,
+          "front_center_preview_native_cross": {
+            "111": 109,
+            "011": 1
+          }
+        },
+        "generated": {
+          "actors": 190,
+          "front": 109,
+          "x_nonpositive": 81,
+          "front_center_driving": 54,
+          "front_preview_driving": 60,
+          "front_native": 17,
+          "front_native_occupancy_clear": 17,
+          "front_native_candidate_covered": 10,
+          "front_native_approach_covered": 7,
+          "front_native_approach_unknown": 0,
+          "funnel": {
+            "native_false": 43,
+            "preview_false": 49,
+            "native_true": 17
+          },
+          "scenes_at_least_one": 17,
+          "scenes_at_least_two": 0,
+          "front_center_preview_native_cross": {
+            "110": 38,
+            "000": 49,
+            "010": 5,
+            "111": 16,
+            "011": 1
+          }
+        }
+      },
+      "towns": {
+        "Town04": {
+          "scenes": 12,
+          "raw_pool": 12,
+          "selected_gt": 12,
+          "generated": 0
+        },
+        "Town11": {
+          "scenes": 5,
+          "raw_pool": 5,
+          "selected_gt": 5,
+          "generated": 0
+        },
+        "Town12": {
+          "scenes": 28,
+          "raw_pool": 23,
+          "selected_gt": 23,
+          "generated": 5
+        },
+        "Town13": {
+          "scenes": 28,
+          "raw_pool": 26,
+          "selected_gt": 26,
+          "generated": 6
+        },
+        "Town15": {
+          "scenes": 22,
+          "raw_pool": 16,
+          "selected_gt": 16,
+          "generated": 6
+        }
+      },
+      "front_preview_native_rejections": {
+        "junction_heading": 7,
+        "no_interaction_waypoint": 27,
+        "distance": 9
+      },
+      "interaction_failure_details": {
+        "no_targets_ahead": 10,
+        "best_diff_gt20": 17
+      },
+      "front_center_preview_native_occupancy_scenes": 16,
+      "generated_success_given_saved_front_positive": [
+        16,
+        82
+      ],
+      "generated_success_without_saved_front_positive": [
+        1,
+        13
+      ],
+      "candidate_condition_sources": {
+        "manifest": 95
+      },
+      "known_graph_roots": 94,
+      "scenes_with_approaches": 94
+    },
+    "v3": {
+      "scenes": 95,
+      "cohorts": {
+        "raw_pool": {
+          "actors": 1100,
+          "front": 350,
+          "x_nonpositive": 393,
+          "front_center_driving": 346,
+          "front_preview_driving": 349,
+          "front_native": 119,
+          "front_native_occupancy_clear": 115,
+          "front_native_candidate_covered": 75,
+          "front_native_approach_covered": 59,
+          "front_native_approach_unknown": 1,
+          "funnel": {
+            "native_false": 230,
+            "native_true": 119,
+            "preview_false": 1
+          },
+          "scenes_at_least_one": 82,
+          "scenes_at_least_two": 33,
+          "front_center_preview_native_cross": {
+            "110": 228,
+            "111": 118,
+            "010": 2,
+            "000": 1,
+            "011": 1
+          }
+        },
+        "selected_gt": {
+          "actors": 190,
+          "front": 110,
+          "x_nonpositive": 80,
+          "front_center_driving": 109,
+          "front_preview_driving": 110,
+          "front_native": 110,
+          "front_native_occupancy_clear": 106,
+          "front_native_candidate_covered": 70,
+          "front_native_approach_covered": 54,
+          "front_native_approach_unknown": 1,
+          "funnel": {
+            "native_true": 110
+          },
+          "scenes_at_least_one": 82,
+          "scenes_at_least_two": 28,
+          "front_center_preview_native_cross": {
+            "111": 109,
+            "011": 1
+          }
+        },
+        "generated": {
+          "actors": 190,
+          "front": 114,
+          "x_nonpositive": 75,
+          "front_center_driving": 56,
+          "front_preview_driving": 59,
+          "front_native": 29,
+          "front_native_occupancy_clear": 29,
+          "front_native_candidate_covered": 16,
+          "front_native_approach_covered": 9,
+          "front_native_approach_unknown": 0,
+          "funnel": {
+            "preview_false": 55,
+            "native_false": 30,
+            "native_true": 29
+          },
+          "scenes_at_least_one": 28,
+          "scenes_at_least_two": 1,
+          "front_center_preview_native_cross": {
+            "000": 54,
+            "110": 29,
+            "010": 1,
+            "011": 3,
+            "111": 26,
+            "100": 1
+          }
+        }
+      },
+      "towns": {
+        "Town04": {
+          "scenes": 12,
+          "raw_pool": 12,
+          "selected_gt": 12,
+          "generated": 3
+        },
+        "Town11": {
+          "scenes": 5,
+          "raw_pool": 5,
+          "selected_gt": 5,
+          "generated": 0
+        },
+        "Town12": {
+          "scenes": 28,
+          "raw_pool": 23,
+          "selected_gt": 23,
+          "generated": 4
+        },
+        "Town13": {
+          "scenes": 28,
+          "raw_pool": 26,
+          "selected_gt": 26,
+          "generated": 16
+        },
+        "Town15": {
+          "scenes": 22,
+          "raw_pool": 16,
+          "selected_gt": 16,
+          "generated": 5
+        }
+      },
+      "front_preview_native_rejections": {
+        "no_interaction_waypoint": 19,
+        "distance": 5,
+        "junction_heading": 6
+      },
+      "interaction_failure_details": {
+        "best_diff_gt20": 14,
+        "no_targets_ahead": 5
+      },
+      "front_center_preview_native_occupancy_scenes": 25,
+      "generated_success_given_saved_front_positive": [
+        27,
+        82
+      ],
+      "generated_success_without_saved_front_positive": [
+        1,
+        13
+      ],
+      "candidate_condition_sources": {
+        "manifest": 95
+      },
+      "known_graph_roots": 94,
+      "scenes_with_approaches": 94
+    }
+  },
+  "selected_gt_identical_between_models": true
+}

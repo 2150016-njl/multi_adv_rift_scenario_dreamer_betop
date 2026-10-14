@@ -1,0 +1,1917 @@
+{
+  "source_pair_report": "research_analysis_20261013\\followup_pairing_io_v2\\intentional_ambiguity.jsonl.audit.json",
+  "records": {
+    "0": {
+      "comparisons": [
+        {
+          "a_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+          "b_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+          "different_components": [],
+          "first_differences": []
+        },
+        {
+          "a_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+          "b_sha256": "9a273014d814b21018e7c71471df37b88604de4832acaa0da40020b18d5f67c2",
+          "different_components": [
+            "actors"
+          ],
+          "first_differences": [
+            {
+              "path": ".actors",
+              "a": [
+                {
+                  "pose": {
+                    "type_id": "vehicle.lincoln.mkz_2017",
+                    "x": -536.3806762695312,
+                    "y": 3703.342529296875,
+                    "z": 365.163818359375,
+                    "yaw_deg": 179.98606872558594,
+                    "pitch_deg": 0.25672629475593567,
+                    "roll_deg": 5.085223165224306e-05,
+                    "vx": 1.968435935850721e-05,
+                    "vy": -0.00033928247285075486,
+                    "vz": 0.009213181212544441,
+                    "speed_mps": 0.009219447278745562,
+                    "length": 4.901683330535889,
+                    "width": 2.128324270248413,
+                    "height": 1.5107464790344238
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.5054626464844,
+                    "y": 3696.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.46881103515625,
+                    "y": 3706.10986328125,
+                    "z": 365.3424987792969,
+                    "yaw_deg": -90.22640991210938,
+                    "pitch_deg": -1.0417814254760742,
+                    "roll_deg": -0.00036622266634367406,
+                    "vx": 0.0001975199847947806,
+                    "vy": -0.0015175137668848038,
+                    "vz": 0.09467116743326187,
+                    "speed_mps": 0.09468353502776383,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.mini.cooper_s_2021",
+                    "x": -497.7454833984375,
+                    "y": 3636.926513671875,
+                    "z": 364.3064270019531,
+                    "yaw_deg": -90.2291488647461,
+                    "pitch_deg": -0.9032241702079773,
+                    "roll_deg": 0.00011431313760112971,
+                    "vx": -0.00017455888155382127,
+                    "vy": -0.0005215122946538031,
+                    "vz": 0.03136239945888519,
+                    "speed_mps": 0.03136722087937162,
+                    "length": 4.552699089050293,
+                    "width": 2.097072124481201,
+                    "height": 1.7671663761138916
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.ford.ambulance",
+                    "x": -497.2628479003906,
+                    "y": 3710.839599609375,
+                    "z": 365.4371032714844,
+                    "yaw_deg": -76.1620864868164,
+                    "pitch_deg": -0.8102038502693176,
+                    "roll_deg": -0.2738037109375,
+                    "vx": 0.001958303852006793,
+                    "vy": -0.001642822870053351,
+                    "vz": 0.13732916116714478,
+                    "speed_mps": 0.13735294801288678,
+                    "length": 6.36564302444458,
+                    "width": 2.3511743545532227,
+                    "height": 2.431375741958618
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.carlamotors.european_hgv",
+                    "x": -497.8655090332031,
+                    "y": 3606.927978515625,
+                    "z": 363.803466796875,
+                    "yaw_deg": -90.22917938232422,
+                    "pitch_deg": -0.8802132606506348,
+                    "roll_deg": -0.0002136286930181086,
+                    "vx": 5.412970494944602e-06,
+                    "vy": -0.0031971007119864225,
+                    "vz": 0.20990246534347534,
+                    "speed_mps": 0.2099268121025318,
+                    "length": 7.935710430145264,
+                    "width": 2.8910882472991943,
+                    "height": 3.4619433879852295
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                }
+              ],
+              "b": [
+                {
+                  "pose": {
+                    "type_id": "vehicle.lincoln.mkz_2017",
+                    "x": -536.3806762695312,
+                    "y": 3703.342529296875,
+                    "z": 365.163818359375,
+                    "yaw_deg": 179.98606872558594,
+                    "pitch_deg": 0.25672629475593567,
+                    "roll_deg": 5.085223165224306e-05,
+                    "vx": 1.968435935850721e-05,
+                    "vy": -0.00033928247285075486,
+                    "vz": 0.009213181212544441,
+                    "speed_mps": 0.009219447278745562,
+                    "length": 4.901683330535889,
+                    "width": 2.128324270248413,
+                    "height": 1.5107464790344238
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.5054626464844,
+                    "y": 3696.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.46881103515625,
+                    "y": 3706.10986328125,
+                    "z": 365.3424987792969,
+                    "yaw_deg": -90.22640991210938,
+                    "pitch_deg": -1.0417814254760742,
+                    "roll_deg": -0.00036622266634367406,
+                    "vx": 0.0001975199847947806,
+                    "vy": -0.0015175137668848038,
+                    "vz": 0.09467116743326187,
+                    "speed_mps": 0.09468353502776383,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.mini.cooper_s_2021",
+                    "x": -497.7454833984375,
+                    "y": 3636.926513671875,
+                    "z": 364.3064270019531,
+                    "yaw_deg": -90.2291488647461,
+                    "pitch_deg": -0.9032241702079773,
+                    "roll_deg": 0.00011431313760112971,
+                    "vx": -0.00017455888155382127,
+                    "vy": -0.0005215122946538031,
+                    "vz": 0.03136239945888519,
+                    "speed_mps": 0.03136722087937162,
+                    "length": 4.552699089050293,
+                    "width": 2.097072124481201,
+                    "height": 1.7671663761138916
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.ford.ambulance",
+                    "x": -497.2628479003906,
+                    "y": 3710.839599609375,
+                    "z": 365.4371032714844,
+                    "yaw_deg": -76.1620864868164,
+                    "pitch_deg": -0.8102038502693176,
+                    "roll_deg": -0.2738037109375,
+                    "vx": 0.001958303852006793,
+                    "vy": -0.001642822870053351,
+                    "vz": 0.13732916116714478,
+                    "speed_mps": 0.13735294801288678,
+                    "length": 6.36564302444458,
+                    "width": 2.3511743545532227,
+                    "height": 2.431375741958618
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.carlamotors.european_hgv",
+                    "x": -497.8655090332031,
+                    "y": 3606.927978515625,
+                    "z": 363.803466796875,
+                    "yaw_deg": -90.22917938232422,
+                    "pitch_deg": -0.8802132606506348,
+                    "roll_deg": -0.0002136286930181086,
+                    "vx": 5.412970494944602e-06,
+                    "vy": -0.0031971007119864225,
+                    "vz": 0.20990246534347534,
+                    "speed_mps": 0.2099268121025318,
+                    "length": 7.935710430145264,
+                    "width": 2.8910882472991943,
+                    "height": 3.4619433879852295
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -397.5054626464844,
+                    "y": 3796.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {}
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "unavailable_sources": []
+    },
+    "1": {
+      "comparisons": [
+        {
+          "a_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+          "b_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+          "different_components": [],
+          "first_differences": []
+        },
+        {
+          "a_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+          "b_sha256": "9a273014d814b21018e7c71471df37b88604de4832acaa0da40020b18d5f67c2",
+          "different_components": [
+            "actors"
+          ],
+          "first_differences": [
+            {
+              "path": ".actors",
+              "a": [
+                {
+                  "pose": {
+                    "type_id": "vehicle.lincoln.mkz_2017",
+                    "x": -536.3806762695312,
+                    "y": 3703.342529296875,
+                    "z": 365.163818359375,
+                    "yaw_deg": 179.98606872558594,
+                    "pitch_deg": 0.25672629475593567,
+                    "roll_deg": 5.085223165224306e-05,
+                    "vx": 1.968435935850721e-05,
+                    "vy": -0.00033928247285075486,
+                    "vz": 0.009213181212544441,
+                    "speed_mps": 0.009219447278745562,
+                    "length": 4.901683330535889,
+                    "width": 2.128324270248413,
+                    "height": 1.5107464790344238
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.5054626464844,
+                    "y": 3696.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.46881103515625,
+                    "y": 3706.10986328125,
+                    "z": 365.3424987792969,
+                    "yaw_deg": -90.22640991210938,
+                    "pitch_deg": -1.0417814254760742,
+                    "roll_deg": -0.00036622266634367406,
+                    "vx": 0.0001975199847947806,
+                    "vy": -0.0015175137668848038,
+                    "vz": 0.09467116743326187,
+                    "speed_mps": 0.09468353502776383,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.mini.cooper_s_2021",
+                    "x": -497.7454833984375,
+                    "y": 3636.926513671875,
+                    "z": 364.3064270019531,
+                    "yaw_deg": -90.2291488647461,
+                    "pitch_deg": -0.9032241702079773,
+                    "roll_deg": 0.00011431313760112971,
+                    "vx": -0.00017455888155382127,
+                    "vy": -0.0005215122946538031,
+                    "vz": 0.03136239945888519,
+                    "speed_mps": 0.03136722087937162,
+                    "length": 4.552699089050293,
+                    "width": 2.097072124481201,
+                    "height": 1.7671663761138916
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.ford.ambulance",
+                    "x": -497.2628479003906,
+                    "y": 3710.839599609375,
+                    "z": 365.4371032714844,
+                    "yaw_deg": -76.1620864868164,
+                    "pitch_deg": -0.8102038502693176,
+                    "roll_deg": -0.2738037109375,
+                    "vx": 0.001958303852006793,
+                    "vy": -0.001642822870053351,
+                    "vz": 0.13732916116714478,
+                    "speed_mps": 0.13735294801288678,
+                    "length": 6.36564302444458,
+                    "width": 2.3511743545532227,
+                    "height": 2.431375741958618
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.carlamotors.european_hgv",
+                    "x": -497.8655090332031,
+                    "y": 3606.927978515625,
+                    "z": 363.803466796875,
+                    "yaw_deg": -90.22917938232422,
+                    "pitch_deg": -0.8802132606506348,
+                    "roll_deg": -0.0002136286930181086,
+                    "vx": 5.412970494944602e-06,
+                    "vy": -0.0031971007119864225,
+                    "vz": 0.20990246534347534,
+                    "speed_mps": 0.2099268121025318,
+                    "length": 7.935710430145264,
+                    "width": 2.8910882472991943,
+                    "height": 3.4619433879852295
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                }
+              ],
+              "b": [
+                {
+                  "pose": {
+                    "type_id": "vehicle.lincoln.mkz_2017",
+                    "x": -536.3806762695312,
+                    "y": 3703.342529296875,
+                    "z": 365.163818359375,
+                    "yaw_deg": 179.98606872558594,
+                    "pitch_deg": 0.25672629475593567,
+                    "roll_deg": 5.085223165224306e-05,
+                    "vx": 1.968435935850721e-05,
+                    "vy": -0.00033928247285075486,
+                    "vz": 0.009213181212544441,
+                    "speed_mps": 0.009219447278745562,
+                    "length": 4.901683330535889,
+                    "width": 2.128324270248413,
+                    "height": 1.5107464790344238
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.5054626464844,
+                    "y": 3696.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.46881103515625,
+                    "y": 3706.10986328125,
+                    "z": 365.3424987792969,
+                    "yaw_deg": -90.22640991210938,
+                    "pitch_deg": -1.0417814254760742,
+                    "roll_deg": -0.00036622266634367406,
+                    "vx": 0.0001975199847947806,
+                    "vy": -0.0015175137668848038,
+                    "vz": 0.09467116743326187,
+                    "speed_mps": 0.09468353502776383,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.mini.cooper_s_2021",
+                    "x": -497.7454833984375,
+                    "y": 3636.926513671875,
+                    "z": 364.3064270019531,
+                    "yaw_deg": -90.2291488647461,
+                    "pitch_deg": -0.9032241702079773,
+                    "roll_deg": 0.00011431313760112971,
+                    "vx": -0.00017455888155382127,
+                    "vy": -0.0005215122946538031,
+                    "vz": 0.03136239945888519,
+                    "speed_mps": 0.03136722087937162,
+                    "length": 4.552699089050293,
+                    "width": 2.097072124481201,
+                    "height": 1.7671663761138916
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.ford.ambulance",
+                    "x": -497.2628479003906,
+                    "y": 3710.839599609375,
+                    "z": 365.4371032714844,
+                    "yaw_deg": -76.1620864868164,
+                    "pitch_deg": -0.8102038502693176,
+                    "roll_deg": -0.2738037109375,
+                    "vx": 0.001958303852006793,
+                    "vy": -0.001642822870053351,
+                    "vz": 0.13732916116714478,
+                    "speed_mps": 0.13735294801288678,
+                    "length": 6.36564302444458,
+                    "width": 2.3511743545532227,
+                    "height": 2.431375741958618
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.carlamotors.european_hgv",
+                    "x": -497.8655090332031,
+                    "y": 3606.927978515625,
+                    "z": 363.803466796875,
+                    "yaw_deg": -90.22917938232422,
+                    "pitch_deg": -0.8802132606506348,
+                    "roll_deg": -0.0002136286930181086,
+                    "vx": 5.412970494944602e-06,
+                    "vy": -0.0031971007119864225,
+                    "vz": 0.20990246534347534,
+                    "speed_mps": 0.2099268121025318,
+                    "length": 7.935710430145264,
+                    "width": 2.8910882472991943,
+                    "height": 3.4619433879852295
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -397.5054626464844,
+                    "y": 3796.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {}
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "unavailable_sources": []
+    },
+    "2": {
+      "comparisons": [
+        {
+          "a_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+          "b_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+          "different_components": [],
+          "first_differences": []
+        },
+        {
+          "a_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+          "b_sha256": "9a273014d814b21018e7c71471df37b88604de4832acaa0da40020b18d5f67c2",
+          "different_components": [
+            "actors"
+          ],
+          "first_differences": [
+            {
+              "path": ".actors",
+              "a": [
+                {
+                  "pose": {
+                    "type_id": "vehicle.lincoln.mkz_2017",
+                    "x": -536.3806762695312,
+                    "y": 3703.342529296875,
+                    "z": 365.163818359375,
+                    "yaw_deg": 179.98606872558594,
+                    "pitch_deg": 0.25672629475593567,
+                    "roll_deg": 5.085223165224306e-05,
+                    "vx": 1.968435935850721e-05,
+                    "vy": -0.00033928247285075486,
+                    "vz": 0.009213181212544441,
+                    "speed_mps": 0.009219447278745562,
+                    "length": 4.901683330535889,
+                    "width": 2.128324270248413,
+                    "height": 1.5107464790344238
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.5054626464844,
+                    "y": 3696.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.46881103515625,
+                    "y": 3706.10986328125,
+                    "z": 365.3424987792969,
+                    "yaw_deg": -90.22640991210938,
+                    "pitch_deg": -1.0417814254760742,
+                    "roll_deg": -0.00036622266634367406,
+                    "vx": 0.0001975199847947806,
+                    "vy": -0.0015175137668848038,
+                    "vz": 0.09467116743326187,
+                    "speed_mps": 0.09468353502776383,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.mini.cooper_s_2021",
+                    "x": -497.7454833984375,
+                    "y": 3636.926513671875,
+                    "z": 364.3064270019531,
+                    "yaw_deg": -90.2291488647461,
+                    "pitch_deg": -0.9032241702079773,
+                    "roll_deg": 0.00011431313760112971,
+                    "vx": -0.00017455888155382127,
+                    "vy": -0.0005215122946538031,
+                    "vz": 0.03136239945888519,
+                    "speed_mps": 0.03136722087937162,
+                    "length": 4.552699089050293,
+                    "width": 2.097072124481201,
+                    "height": 1.7671663761138916
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.ford.ambulance",
+                    "x": -497.2628479003906,
+                    "y": 3710.839599609375,
+                    "z": 365.4371032714844,
+                    "yaw_deg": -76.1620864868164,
+                    "pitch_deg": -0.8102038502693176,
+                    "roll_deg": -0.2738037109375,
+                    "vx": 0.001958303852006793,
+                    "vy": -0.001642822870053351,
+                    "vz": 0.13732916116714478,
+                    "speed_mps": 0.13735294801288678,
+                    "length": 6.36564302444458,
+                    "width": 2.3511743545532227,
+                    "height": 2.431375741958618
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.carlamotors.european_hgv",
+                    "x": -497.8655090332031,
+                    "y": 3606.927978515625,
+                    "z": 363.803466796875,
+                    "yaw_deg": -90.22917938232422,
+                    "pitch_deg": -0.8802132606506348,
+                    "roll_deg": -0.0002136286930181086,
+                    "vx": 5.412970494944602e-06,
+                    "vy": -0.0031971007119864225,
+                    "vz": 0.20990246534347534,
+                    "speed_mps": 0.2099268121025318,
+                    "length": 7.935710430145264,
+                    "width": 2.8910882472991943,
+                    "height": 3.4619433879852295
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                }
+              ],
+              "b": [
+                {
+                  "pose": {
+                    "type_id": "vehicle.lincoln.mkz_2017",
+                    "x": -536.3806762695312,
+                    "y": 3703.342529296875,
+                    "z": 365.163818359375,
+                    "yaw_deg": 179.98606872558594,
+                    "pitch_deg": 0.25672629475593567,
+                    "roll_deg": 5.085223165224306e-05,
+                    "vx": 1.968435935850721e-05,
+                    "vy": -0.00033928247285075486,
+                    "vz": 0.009213181212544441,
+                    "speed_mps": 0.009219447278745562,
+                    "length": 4.901683330535889,
+                    "width": 2.128324270248413,
+                    "height": 1.5107464790344238
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.5054626464844,
+                    "y": 3696.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.46881103515625,
+                    "y": 3706.10986328125,
+                    "z": 365.3424987792969,
+                    "yaw_deg": -90.22640991210938,
+                    "pitch_deg": -1.0417814254760742,
+                    "roll_deg": -0.00036622266634367406,
+                    "vx": 0.0001975199847947806,
+                    "vy": -0.0015175137668848038,
+                    "vz": 0.09467116743326187,
+                    "speed_mps": 0.09468353502776383,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.mini.cooper_s_2021",
+                    "x": -497.7454833984375,
+                    "y": 3636.926513671875,
+                    "z": 364.3064270019531,
+                    "yaw_deg": -90.2291488647461,
+                    "pitch_deg": -0.9032241702079773,
+                    "roll_deg": 0.00011431313760112971,
+                    "vx": -0.00017455888155382127,
+                    "vy": -0.0005215122946538031,
+                    "vz": 0.03136239945888519,
+                    "speed_mps": 0.03136722087937162,
+                    "length": 4.552699089050293,
+                    "width": 2.097072124481201,
+                    "height": 1.7671663761138916
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.ford.ambulance",
+                    "x": -497.2628479003906,
+                    "y": 3710.839599609375,
+                    "z": 365.4371032714844,
+                    "yaw_deg": -76.1620864868164,
+                    "pitch_deg": -0.8102038502693176,
+                    "roll_deg": -0.2738037109375,
+                    "vx": 0.001958303852006793,
+                    "vy": -0.001642822870053351,
+                    "vz": 0.13732916116714478,
+                    "speed_mps": 0.13735294801288678,
+                    "length": 6.36564302444458,
+                    "width": 2.3511743545532227,
+                    "height": 2.431375741958618
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.carlamotors.european_hgv",
+                    "x": -497.8655090332031,
+                    "y": 3606.927978515625,
+                    "z": 363.803466796875,
+                    "yaw_deg": -90.22917938232422,
+                    "pitch_deg": -0.8802132606506348,
+                    "roll_deg": -0.0002136286930181086,
+                    "vx": 5.412970494944602e-06,
+                    "vy": -0.0031971007119864225,
+                    "vz": 0.20990246534347534,
+                    "speed_mps": 0.2099268121025318,
+                    "length": 7.935710430145264,
+                    "width": 2.8910882472991943,
+                    "height": 3.4619433879852295
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -397.5054626464844,
+                    "y": 3796.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {}
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "unavailable_sources": []
+    },
+    "3": {
+      "comparisons": [
+        {
+          "a_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+          "b_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+          "different_components": [],
+          "first_differences": []
+        },
+        {
+          "a_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+          "b_sha256": "9a273014d814b21018e7c71471df37b88604de4832acaa0da40020b18d5f67c2",
+          "different_components": [
+            "actors"
+          ],
+          "first_differences": [
+            {
+              "path": ".actors",
+              "a": [
+                {
+                  "pose": {
+                    "type_id": "vehicle.lincoln.mkz_2017",
+                    "x": -536.3806762695312,
+                    "y": 3703.342529296875,
+                    "z": 365.163818359375,
+                    "yaw_deg": 179.98606872558594,
+                    "pitch_deg": 0.25672629475593567,
+                    "roll_deg": 5.085223165224306e-05,
+                    "vx": 1.968435935850721e-05,
+                    "vy": -0.00033928247285075486,
+                    "vz": 0.009213181212544441,
+                    "speed_mps": 0.009219447278745562,
+                    "length": 4.901683330535889,
+                    "width": 2.128324270248413,
+                    "height": 1.5107464790344238
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.5054626464844,
+                    "y": 3696.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.46881103515625,
+                    "y": 3706.10986328125,
+                    "z": 365.3424987792969,
+                    "yaw_deg": -90.22640991210938,
+                    "pitch_deg": -1.0417814254760742,
+                    "roll_deg": -0.00036622266634367406,
+                    "vx": 0.0001975199847947806,
+                    "vy": -0.0015175137668848038,
+                    "vz": 0.09467116743326187,
+                    "speed_mps": 0.09468353502776383,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.mini.cooper_s_2021",
+                    "x": -497.7454833984375,
+                    "y": 3636.926513671875,
+                    "z": 364.3064270019531,
+                    "yaw_deg": -90.2291488647461,
+                    "pitch_deg": -0.9032241702079773,
+                    "roll_deg": 0.00011431313760112971,
+                    "vx": -0.00017455888155382127,
+                    "vy": -0.0005215122946538031,
+                    "vz": 0.03136239945888519,
+                    "speed_mps": 0.03136722087937162,
+                    "length": 4.552699089050293,
+                    "width": 2.097072124481201,
+                    "height": 1.7671663761138916
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.ford.ambulance",
+                    "x": -497.2628479003906,
+                    "y": 3710.839599609375,
+                    "z": 365.4371032714844,
+                    "yaw_deg": -76.1620864868164,
+                    "pitch_deg": -0.8102038502693176,
+                    "roll_deg": -0.2738037109375,
+                    "vx": 0.001958303852006793,
+                    "vy": -0.001642822870053351,
+                    "vz": 0.13732916116714478,
+                    "speed_mps": 0.13735294801288678,
+                    "length": 6.36564302444458,
+                    "width": 2.3511743545532227,
+                    "height": 2.431375741958618
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.carlamotors.european_hgv",
+                    "x": -497.8655090332031,
+                    "y": 3606.927978515625,
+                    "z": 363.803466796875,
+                    "yaw_deg": -90.22917938232422,
+                    "pitch_deg": -0.8802132606506348,
+                    "roll_deg": -0.0002136286930181086,
+                    "vx": 5.412970494944602e-06,
+                    "vy": -0.0031971007119864225,
+                    "vz": 0.20990246534347534,
+                    "speed_mps": 0.2099268121025318,
+                    "length": 7.935710430145264,
+                    "width": 2.8910882472991943,
+                    "height": 3.4619433879852295
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                }
+              ],
+              "b": [
+                {
+                  "pose": {
+                    "type_id": "vehicle.lincoln.mkz_2017",
+                    "x": -536.3806762695312,
+                    "y": 3703.342529296875,
+                    "z": 365.163818359375,
+                    "yaw_deg": 179.98606872558594,
+                    "pitch_deg": 0.25672629475593567,
+                    "roll_deg": 5.085223165224306e-05,
+                    "vx": 1.968435935850721e-05,
+                    "vy": -0.00033928247285075486,
+                    "vz": 0.009213181212544441,
+                    "speed_mps": 0.009219447278745562,
+                    "length": 4.901683330535889,
+                    "width": 2.128324270248413,
+                    "height": 1.5107464790344238
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.5054626464844,
+                    "y": 3696.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.46881103515625,
+                    "y": 3706.10986328125,
+                    "z": 365.3424987792969,
+                    "yaw_deg": -90.22640991210938,
+                    "pitch_deg": -1.0417814254760742,
+                    "roll_deg": -0.00036622266634367406,
+                    "vx": 0.0001975199847947806,
+                    "vy": -0.0015175137668848038,
+                    "vz": 0.09467116743326187,
+                    "speed_mps": 0.09468353502776383,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.mini.cooper_s_2021",
+                    "x": -497.7454833984375,
+                    "y": 3636.926513671875,
+                    "z": 364.3064270019531,
+                    "yaw_deg": -90.2291488647461,
+                    "pitch_deg": -0.9032241702079773,
+                    "roll_deg": 0.00011431313760112971,
+                    "vx": -0.00017455888155382127,
+                    "vy": -0.0005215122946538031,
+                    "vz": 0.03136239945888519,
+                    "speed_mps": 0.03136722087937162,
+                    "length": 4.552699089050293,
+                    "width": 2.097072124481201,
+                    "height": 1.7671663761138916
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.ford.ambulance",
+                    "x": -497.2628479003906,
+                    "y": 3710.839599609375,
+                    "z": 365.4371032714844,
+                    "yaw_deg": -76.1620864868164,
+                    "pitch_deg": -0.8102038502693176,
+                    "roll_deg": -0.2738037109375,
+                    "vx": 0.001958303852006793,
+                    "vy": -0.001642822870053351,
+                    "vz": 0.13732916116714478,
+                    "speed_mps": 0.13735294801288678,
+                    "length": 6.36564302444458,
+                    "width": 2.3511743545532227,
+                    "height": 2.431375741958618
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.carlamotors.european_hgv",
+                    "x": -497.8655090332031,
+                    "y": 3606.927978515625,
+                    "z": 363.803466796875,
+                    "yaw_deg": -90.22917938232422,
+                    "pitch_deg": -0.8802132606506348,
+                    "roll_deg": -0.0002136286930181086,
+                    "vx": 5.412970494944602e-06,
+                    "vy": -0.0031971007119864225,
+                    "vz": 0.20990246534347534,
+                    "speed_mps": 0.2099268121025318,
+                    "length": 7.935710430145264,
+                    "width": 2.8910882472991943,
+                    "height": 3.4619433879852295
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -397.5054626464844,
+                    "y": 3796.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {}
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "unavailable_sources": []
+    },
+    "4": {
+      "comparisons": [
+        {
+          "a_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+          "b_sha256": "7de6e9911bf3e1a9fce8a471c1313fa484508c12964d98c4dfd641f55e715b72",
+          "different_components": [],
+          "first_differences": []
+        },
+        {
+          "a_sha256": "a681d0a492690afbb4490e3bbfc3238615a6b9c1ff3276fc04ce59907c592994",
+          "b_sha256": "9a273014d814b21018e7c71471df37b88604de4832acaa0da40020b18d5f67c2",
+          "different_components": [
+            "actors"
+          ],
+          "first_differences": [
+            {
+              "path": ".actors",
+              "a": [
+                {
+                  "pose": {
+                    "type_id": "vehicle.lincoln.mkz_2017",
+                    "x": -536.3806762695312,
+                    "y": 3703.342529296875,
+                    "z": 365.163818359375,
+                    "yaw_deg": 179.98606872558594,
+                    "pitch_deg": 0.25672629475593567,
+                    "roll_deg": 5.085223165224306e-05,
+                    "vx": 1.968435935850721e-05,
+                    "vy": -0.00033928247285075486,
+                    "vz": 0.009213181212544441,
+                    "speed_mps": 0.009219447278745562,
+                    "length": 4.901683330535889,
+                    "width": 2.128324270248413,
+                    "height": 1.5107464790344238
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.5054626464844,
+                    "y": 3696.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.46881103515625,
+                    "y": 3706.10986328125,
+                    "z": 365.3424987792969,
+                    "yaw_deg": -90.22640991210938,
+                    "pitch_deg": -1.0417814254760742,
+                    "roll_deg": -0.00036622266634367406,
+                    "vx": 0.0001975199847947806,
+                    "vy": -0.0015175137668848038,
+                    "vz": 0.09467116743326187,
+                    "speed_mps": 0.09468353502776383,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.mini.cooper_s_2021",
+                    "x": -497.7454833984375,
+                    "y": 3636.926513671875,
+                    "z": 364.3064270019531,
+                    "yaw_deg": -90.2291488647461,
+                    "pitch_deg": -0.9032241702079773,
+                    "roll_deg": 0.00011431313760112971,
+                    "vx": -0.00017455888155382127,
+                    "vy": -0.0005215122946538031,
+                    "vz": 0.03136239945888519,
+                    "speed_mps": 0.03136722087937162,
+                    "length": 4.552699089050293,
+                    "width": 2.097072124481201,
+                    "height": 1.7671663761138916
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.ford.ambulance",
+                    "x": -497.2628479003906,
+                    "y": 3710.839599609375,
+                    "z": 365.4371032714844,
+                    "yaw_deg": -76.1620864868164,
+                    "pitch_deg": -0.8102038502693176,
+                    "roll_deg": -0.2738037109375,
+                    "vx": 0.001958303852006793,
+                    "vy": -0.001642822870053351,
+                    "vz": 0.13732916116714478,
+                    "speed_mps": 0.13735294801288678,
+                    "length": 6.36564302444458,
+                    "width": 2.3511743545532227,
+                    "height": 2.431375741958618
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.carlamotors.european_hgv",
+                    "x": -497.8655090332031,
+                    "y": 3606.927978515625,
+                    "z": 363.803466796875,
+                    "yaw_deg": -90.22917938232422,
+                    "pitch_deg": -0.8802132606506348,
+                    "roll_deg": -0.0002136286930181086,
+                    "vx": 5.412970494944602e-06,
+                    "vy": -0.0031971007119864225,
+                    "vz": 0.20990246534347534,
+                    "speed_mps": 0.2099268121025318,
+                    "length": 7.935710430145264,
+                    "width": 2.8910882472991943,
+                    "height": 3.4619433879852295
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                }
+              ],
+              "b": [
+                {
+                  "pose": {
+                    "type_id": "vehicle.lincoln.mkz_2017",
+                    "x": -536.3806762695312,
+                    "y": 3703.342529296875,
+                    "z": 365.163818359375,
+                    "yaw_deg": 179.98606872558594,
+                    "pitch_deg": 0.25672629475593567,
+                    "roll_deg": 5.085223165224306e-05,
+                    "vx": 1.968435935850721e-05,
+                    "vy": -0.00033928247285075486,
+                    "vz": 0.009213181212544441,
+                    "speed_mps": 0.009219447278745562,
+                    "length": 4.901683330535889,
+                    "width": 2.128324270248413,
+                    "height": 1.5107464790344238
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.5054626464844,
+                    "y": 3696.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -497.46881103515625,
+                    "y": 3706.10986328125,
+                    "z": 365.3424987792969,
+                    "yaw_deg": -90.22640991210938,
+                    "pitch_deg": -1.0417814254760742,
+                    "roll_deg": -0.00036622266634367406,
+                    "vx": 0.0001975199847947806,
+                    "vy": -0.0015175137668848038,
+                    "vz": 0.09467116743326187,
+                    "speed_mps": 0.09468353502776383,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.mini.cooper_s_2021",
+                    "x": -497.7454833984375,
+                    "y": 3636.926513671875,
+                    "z": 364.3064270019531,
+                    "yaw_deg": -90.2291488647461,
+                    "pitch_deg": -0.9032241702079773,
+                    "roll_deg": 0.00011431313760112971,
+                    "vx": -0.00017455888155382127,
+                    "vy": -0.0005215122946538031,
+                    "vz": 0.03136239945888519,
+                    "speed_mps": 0.03136722087937162,
+                    "length": 4.552699089050293,
+                    "width": 2.097072124481201,
+                    "height": 1.7671663761138916
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.ford.ambulance",
+                    "x": -497.2628479003906,
+                    "y": 3710.839599609375,
+                    "z": 365.4371032714844,
+                    "yaw_deg": -76.1620864868164,
+                    "pitch_deg": -0.8102038502693176,
+                    "roll_deg": -0.2738037109375,
+                    "vx": 0.001958303852006793,
+                    "vy": -0.001642822870053351,
+                    "vz": 0.13732916116714478,
+                    "speed_mps": 0.13735294801288678,
+                    "length": 6.36564302444458,
+                    "width": 2.3511743545532227,
+                    "height": 2.431375741958618
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.carlamotors.european_hgv",
+                    "x": -497.8655090332031,
+                    "y": 3606.927978515625,
+                    "z": 363.803466796875,
+                    "yaw_deg": -90.22917938232422,
+                    "pitch_deg": -0.8802132606506348,
+                    "roll_deg": -0.0002136286930181086,
+                    "vx": 5.412970494944602e-06,
+                    "vy": -0.0031971007119864225,
+                    "vz": 0.20990246534347534,
+                    "speed_mps": 0.2099268121025318,
+                    "length": 7.935710430145264,
+                    "width": 2.8910882472991943,
+                    "height": 3.4619433879852295
+                  },
+                  "label": {
+                    "is_interactive": false,
+                    "score": 0.0,
+                    "ego_route_index": null,
+                    "ego_distance": null,
+                    "cbv_distance": null,
+                    "distance_diff": null,
+                    "min_interaction_dis_diff": null,
+                    "interaction_waypoint": null
+                  }
+                },
+                {
+                  "pose": {
+                    "type_id": "vehicle.harley-davidson.low_rider",
+                    "x": -397.5054626464844,
+                    "y": 3796.927490234375,
+                    "z": 365.2048645019531,
+                    "yaw_deg": -90.22750854492188,
+                    "pitch_deg": -1.0369250774383545,
+                    "roll_deg": -0.0038146446458995342,
+                    "vx": 0.00015354881179518998,
+                    "vy": -0.0014950797194615006,
+                    "vz": 0.09439298510551453,
+                    "speed_mps": 0.09440494943452402,
+                    "length": 2.350175619125366,
+                    "width": 0.7662330269813538,
+                    "height": 1.6494941711425781
+                  },
+                  "label": {}
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "unavailable_sources": []
+    }
+  },
+  "historical_source_resolved": false,
+  "tolerances_relaxed": false
+}

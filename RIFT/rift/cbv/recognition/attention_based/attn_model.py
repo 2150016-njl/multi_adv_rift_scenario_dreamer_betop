@@ -24,6 +24,11 @@ from transformers import (
 
 class AttnModel(object):
     def __init__(self, config, logger):
+        config=dict(config,network=dict(config['network']))
+        if config.get('cbv_attention_checkpoint'):
+            config['pretrained_model_path']=config['cbv_attention_checkpoint']
+        if config.get('cbv_attention_hf_dir'):
+            config['network']['hf_checkpoint']=config['cbv_attention_hf_dir']
         self.config = config
         self.logger = logger
         self.obs_type = config['obs_type']
@@ -84,6 +89,15 @@ class AttnModel(object):
         # get the most relevant vehicle as the controlled background vehicle
         attn_vector = get_attn_norm_vehicles(self.config['attention_score'], data_car, attn_map)
         most_relevant_vehicles = self.get_most_relevant_vehicles(data_car_ids, data_car, attn_vector, topk=sample_length)
+        # Observation only: reuse the scores and selection already computed.
+        # This does not rerun inference or change ordering/tie handling.
+        self.last_selection_debug = {
+            'candidate_actor_ids':[int(v.id) for v in CBV_candidates],
+            'input_actor_ids':[int(v) for v in data_car_ids],
+            'attention_scores':[float(v) for v in attn_vector],
+            'selected_actor_ids':[int(v.id) for v in most_relevant_vehicles],
+            'available_slots':int(sample_length),
+        }
 
         if self.viz_attn_map:
             keep_vehicle_ids, _, keep_vehicle_attn = get_vehicleID_from_attn_scores(data_car_ids, data_car, self.config['topk'], attn_vector)

@@ -59,6 +59,11 @@ class RouteScenario():
         self.activate_radius = cbv_recog_policy.activate_radius
         self.coord_interval = cbv_recog_policy.coord_interval
         self.traffic_intensity = cbv_recog_policy.traffic_intensity
+        override=env_params.get('hv_collection_traffic_intensity')
+        if override is not None:
+            if self.mode!='collect_hv_generation' or not 0.<=float(override)<=1.:
+                raise ValueError('traffic intensity override requires collect_hv_generation and a value in [0,1]')
+            self.traffic_intensity=float(override)
 
         # Action
         self.EgoAction = EgoAction

@@ -182,6 +182,8 @@ class CarlaRunner:
             'hv_generation_fail_on_invalid': config.get('hv_generation_fail_on_invalid', True),
             'hv_generation_max_attempts': config.get('hv_generation_max_attempts', 8),
             'hv_generation_partial_context': config.get('hv_generation_partial_context', True),
+            'hv_snapshot_native_map_export':config.get('hv_snapshot_native_map_export',False),
+            'hv_collection_traffic_intensity':config.get('hv_collection_traffic_intensity'),
             'hv_generation_require_hidden_slots': config.get('hv_generation_require_hidden_slots', True),
             'hv_generation_hidden_slots': config.get('hv_generation_hidden_slots'),
             'hv_generation_hidden_forward_min': config.get('hv_generation_hidden_forward_min', 0.0),
@@ -543,6 +545,14 @@ class CarlaRunner:
                     if num_dumped >= max_snapshots_per_episode:
                         continue
                     snapshot = current_env.build_high_value_generation_snapshot(include_rift_labels=True)
+                    snapshot['collection_conditions']={
+                        'seed':self.config.get('seed'),'traffic_intensity':
+                            self.config.get('hv_collection_traffic_intensity') if self.config.get('hv_collection_traffic_intensity') is not None
+                            else float(self.cbv_recog_policy.traffic_intensity),
+                        'traffic_intensity_override':self.config.get('hv_collection_traffic_intensity'),
+                        'sample_interval_s':sample_interval_s,
+                        'zero_saved_forward_positive_is_not_proven_infeasible':True,
+                    }
                     forward_count = int((snapshot.get("diagnostics") or {}).get("num_forward_rift_positive_agents", 0))
                     if forward_count < min_forward_positive:
                         num_forward_rejected += 1

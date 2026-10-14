@@ -1,6 +1,7 @@
 """Build a v3 dataset with map-topology metadata while retaining v2 untouched."""
 
 import argparse
+import hashlib
 import json
 import math
 import sys
@@ -201,6 +202,9 @@ def main():
             break
         processed_files += 1
         scene = base.load_snapshot(path)
+        source_snapshot={'path':str(path.resolve()),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
+                         'scene_id':scene.get('scene_id'),'frame_id':scene.get('frame_id'),
+                         'worker':path.parent.name}
         snapshot_lanes = scene.get("map_lanes", []) or []
         use_hd_map = extractor is not None and (args.map_source == "hd_map" or not snapshot_lanes)
         if use_hd_map:
@@ -220,6 +224,7 @@ def main():
         for record in records:
             record = json.loads(json.dumps(record))
             record["schema_version"] = "hv_init_inpainting_v3"
+            record['source_snapshot']=source_snapshot
             record["condition"]["map"]["lanes_v3"] = lanes
             associations = [associate(state, lanes, args.default_lane_half_width) for state in record["target"]["generated_agent_states"]]
             if any(item["distance"] is None or item["distance"] > args.max_target_lane_distance for item in associations):
