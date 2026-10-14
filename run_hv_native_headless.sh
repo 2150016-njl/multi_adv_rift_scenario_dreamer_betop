@@ -9,18 +9,20 @@ CARLA_ROOT="${CARLA_ROOT:-$ROOT/carla}"
 PAIR="${HV_NATIVE_PAIR_REPORT:-$ROOT/data/hv_init/eval/snapshot_audit_20261013_160509_936449/v2_pairs100.jsonl.audit.json}"
 PORT="${HV_NATIVE_PORT:-31100}"
 [ "$(id -u)" = 0 ] || { echo 'Run this wrapper from the root terminal; it switches the full audit to riftuser.' >&2; exit 2; }
-for file in "$PY" "$ROOT/run_hv_native_diagnostics.py" "$CARLA_ROOT/CarlaUE4.sh" "$PAIR"; do
+FILES=("$PY" "$ROOT/run_hv_native_diagnostics.py" "$CARLA_ROOT/CarlaUE4.sh")
+if [[ " $* " != *" --v7-calibration-plan "* ]]; then FILES+=("$PAIR"); fi
+for file in "${FILES[@]}"; do
   [ -f "$file" ] || { echo "Missing: $file" >&2; exit 2; }
 done
 # Root prepares exactly one NEW output directory, not the existing evaluation
 # tree. The Python runner accepts it only while empty and owned by its user.
-OUT="$("$PY" - "$ROOT" <<'PY'
+OUT="$("$PY" - "$ROOT" "${HV_NATIVE_OUTPUT_ROOT:-$ROOT/data/hv_init/eval}" <<'PY'
 from pathlib import Path
 from datetime import datetime
 import os,pwd,sys
 user=pwd.getpwnam('riftuser')
 if user.pw_uid==0:raise SystemExit('riftuser must not have UID 0')
-out=Path(sys.argv[1])/'data/hv_init/eval'/('native_headless_'+datetime.now().strftime('%Y%m%d_%H%M%S_%f'))
+out=Path(sys.argv[2])/('native_headless_'+datetime.now().strftime('%Y%m%d_%H%M%S_%f'))
 out.mkdir(parents=True,exist_ok=False)
 os.chown(str(out),user.pw_uid,user.pw_gid)
 print(out)

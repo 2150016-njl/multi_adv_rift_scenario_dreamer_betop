@@ -171,6 +171,7 @@ def main():
                    help='Use the wrapper-created empty output directory owned by the audit user')
     p.add_argument('--startup-only',action='store_true',help='Validate RPC/world/map and stop; do not run scene audits')
     p.add_argument('--mainline',action='store_true',help='Run matched GT/V2/V3 diagnostics with automatic failure analysis')
+    p.add_argument('--v7-calibration-plan',type=Path,help='Run exact-record V7 GT/sedan calibration on a new owned server')
     p.add_argument('--with-physics',action='store_true',help='Opt into dynamic tick probes (disabled by default)')
     p.add_argument('--resume-batch-from',type=Path,help='Old mainline experiment directory; requires --mainline')
     p.add_argument('--render-mode',choices=('offscreen','nullrhi'),default='nullrhi',
@@ -178,6 +179,8 @@ def main():
     p.add_argument('--graphics-adapter',type=int,help='Vulkan adapter index, only for offscreen mode')
     p.add_argument('--use-existing-server',action='store_true',help='Only for an already ready, dedicated empty server')
     a=p.parse_args()
+    if a.v7_calibration_plan and (a.mainline or a.resume_batch_from or a.use_existing_server or a.with_physics):
+        p.error('--v7-calibration-plan requires a fresh owned server and cannot combine with mainline/resume/physics')
     if not 1<=a.port<=65533:p.error('--port must be between 1 and 65533')
     if a.auto_port and a.use_existing_server:p.error('--auto-port requires a new owned server')
     if not a.use_existing_server and set(range(a.port,a.port+3)).intersection(range(38000,38003)) and not a.auto_port:
@@ -209,16 +212,23 @@ def main():
     try:
         # Persist status BEFORE potentially slow network-filesystem reads.
         # Previously all of these checks ran while the output was still empty.
-        stage('checking_pair_report_path')
-        if not a.pair_report.is_file():raise FileNotFoundError(a.pair_report)
-        from prepare_hv_diagnostic_subset import validate_subset
-        stage('reading_pair_report')
-        report=json.loads(a.pair_report.read_text(encoding='utf-8'))
-        partial=a.pair_report.parent/Path(report['partial_manifest_path']).name
-        stage('reading_partial_manifest')
-        data=partial.read_bytes()
-        stage('validating_partial_manifest')
-        validate_subset(report,data)
+        if a.v7_calibration_plan:
+            stage('checking_v7_calibration_plan')
+            if not a.v7_calibration_plan.is_file():raise FileNotFoundError(a.v7_calibration_plan)
+            plan=json.loads(a.v7_calibration_plan.read_text(encoding='utf-8'))
+            if plan.get('schema_version')!='hv_v7_calibration_plan_v1' or not plan.get('jobs'):
+                raise ValueError('Invalid/empty V7 calibration plan')
+        else:
+            stage('checking_pair_report_path')
+            if not a.pair_report.is_file():raise FileNotFoundError(a.pair_report)
+            from prepare_hv_diagnostic_subset import validate_subset
+            stage('reading_pair_report')
+            report=json.loads(a.pair_report.read_text(encoding='utf-8'))
+            partial=a.pair_report.parent/Path(report['partial_manifest_path']).name
+            stage('reading_partial_manifest')
+            data=partial.read_bytes()
+            stage('validating_partial_manifest')
+            validate_subset(report,data)
         stage('checking_server_launch')
         if a.auto_port:
             requested_port=a.port
@@ -281,7 +291,11 @@ def main():
         status['status']='running'
         status['audit_started']=True
         save_status()
-        if a.mainline:
+        if a.v7_calibration_plan:
+            command=[sys.executable,'-u',str(root/'v7_cli.py'),'calibrate',
+                     '--plan',str(a.v7_calibration_plan),'--port',str(a.port),
+                     '--timeout','30','--dedicated-server','--output-dir',str(out/'v7_calibration')]
+        elif a.mainline:
             command=[sys.executable,'-u',str(root/'run_hv_mainline_batch.py'),
                      '--pair-report',str(a.pair_report),'--pool-records',str(a.pool_records),
                      '--native-records',str(a.native_records),'--probe-ticks',str(a.probe_ticks),
