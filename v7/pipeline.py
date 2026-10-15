@@ -260,6 +260,12 @@ def build(root,experiment,dataset,output,config):
         write_jsonl(output/'jobs.jsonl',jobs);write_jsonl(output/'map_alignment_rows.jsonl',map_rows)
         write_jsonl(output/'rows.jsonl',approach_rows)
         summary=summarize(map_rows,approach_rows)
+        summary['map_input_kind_counts']=dict(Counter(c['provenance']['map_input_kind'] for c in conditions))
+        summary['route_points_without_lane_match_total']=sum(r['route_points_without_lane_match'] for r in map_rows)
+        summary['calibrated_map_files_sha_bound']=sum(bool(c['provenance'].get('calibrated_map_sha256')) for c in conditions)
+        if calibrated_dir and (summary['map_input_kind_counts']!={'calibrated_carla_map':len(conditions)} or
+                               summary['calibrated_map_files_sha_bound']!=len(conditions)):
+            raise ValueError('Calibrated CARLA map provenance incomplete: no legacy fallback allowed')
         summary['p0']=freeze;summary['selected_records']=selection
         write_json(output/'summary.json',summary)
         write_json(output/'protocol_sha256.json',{name:sha(output/name) for name in ('conditions.jsonl','targets.jsonl','oracles.jsonl')})
@@ -290,16 +296,30 @@ def summarize(map_rows,rows):
             'v6_reported_true':sum(r['legacy']['v6']['reported'] is True for r in group),
             'v5_miss_reasons':dict(Counter(r['legacy']['v5_audit_geometry']['reason'] for r in group if r['legacy']['v5_audit_geometry']['reported'] is not True)),
             'v6_miss_reasons':dict(Counter(r['legacy']['v6']['reason'] for r in group if r['legacy']['v6']['reported'] is not True)),
+            'station_graph_status_counts':dict(Counter(r.get('station_audit',{}).get('status','missing') for r in group)),
+            'station_graph_supported_count':sum(r.get('station_audit',{}).get('status')=='supported' for r in group),
+            'station_graph_unknown_count':sum(r.get('station_audit',{}).get('status')=='unknown' for r in group),
             'legacy_v5_reproduction_mismatches':sum(r['legacy']['v5_audit_geometry']['reported'] is not r['legacy']['v5_audit_geometry']['recomputed'] for r in group),
             'legacy_v6_reproduction_mismatches':sum(r['legacy']['v6']['reported'] is not r['legacy']['v6']['recomputed'] for r in group)}
+    front_by_record={}
+    for r in rows:
+        if r['cohort']=='selected_gt' and r['front']:
+            front_by_record.setdefault(r['record_index'],[]).append(r)
+    station_scene={'front_scenes':len(front_by_record),
+        'front_scenes_at_least_one_station_graph_supported':sum(any(r.get('station_audit',{}).get('status')=='supported' for r in v) for v in front_by_record.values()),
+        'double_front_scenes':sum(len(v)>=2 for v in front_by_record.values()),
+        'double_front_scenes_both_station_graph_supported':sum(all(r.get('station_audit',{}).get('status')=='supported' for r in v) for v in front_by_record.values() if len(v)>=2)}
     return {'status':'diagnostic_complete','protocol':'hv_v7_three_file_v1','p1_complete':False,'p2_complete':False,
             'map_records':len(map_rows),'snapshot_sha_verified':sum(r['snapshot_status']=='sha_verified' for r in map_rows),
             'coordinate_max_error_m':max((r['coordinate_max_error_m'] for r in map_rows),default=None),
             'yaw_max_error_rad':max((r['yaw_max_error_rad'] for r in map_rows),default=None),
-            'groups':groups,'native_rerun':'not_run','fixed_sedan_calibration':'not_run',
+            'groups':groups,'station_graph_scene_counts':station_scene,
+            'station_audit_scope':'oracle_side_station_monotone_graph_only_not_physical_kinematic_or_sedan',
+            'native_rerun':'not_run','fixed_sedan_calibration':'not_run',
             'lane_chart':'not_implemented_pending_P2','training':'not_started',
             'limits':['Directed support is not lane-chart, sedan geometry, native rerun or spawn certification.',
-                      'Legacy export lacks station samples and may omit lane-change edges or boundary paths.',
+                      'Station audit is oracle-only diagnostics, not online candidate/condition input.',
+                      'Station progress-monotone connectivity is not a Model3 chart or dynamics certificate.',
                       'Unknown/failed map and spawn are not model negatives.']}
 
 

@@ -2,6 +2,7 @@
 import copy
 import json
 import math
+import hashlib
 from pathlib import Path
 from .io import initialize_run,write_json,write_jsonl,sha,resolve_source
 from .carla_map import export_directed_lanes
@@ -77,9 +78,38 @@ def calibrate(plan_path,output,host,port,timeout,dedicated,config):
                     client.set_timeout(max(300.,timeout))  # Map load has a distinct bounded budget.
                     engine.prepare(job['town']);world=engine.world
                     client.set_timeout(timeout)
-                    if engine.map_sha256!=job['opendrive_sha256']:
-                        raise ValueError('OpenDRIVE fingerprint mismatch: town=%s expected=%s actual=%s loaded_map=%s' %
-                            (job['town'],job['opendrive_sha256'],engine.map_sha256,world.get_map().name))
+                    # Independently fingerprint the LIVE world and the cached engine
+                    # reference. A Town11 name + Town15 hash must not be treated
+                    # as an expected/actual SHA of the *same* live map.
+                    live_map=world.get_map()
+                    live_sha=hashlib.sha256(live_map.to_opendrive().encode('utf-8')).hexdigest()
+                    engine_world_map_sha=hashlib.sha256(
+                        engine.world_map.to_opendrive().encode('utf-8')).hexdigest()
+                    engine_cached_sha=engine.map_sha256
+                    probe={'requested_town':job['town'],
+                           'loaded_world_map_name':live_map.name,
+                           'live_world_id':getattr(world,'id',None),
+                           'native_audit_cached_map_identity':repr(getattr(engine,'map_identity',None)),
+                           'expected_opendrive_sha256':job['opendrive_sha256'],
+                           'live_world_opendrive_sha256':live_sha,
+                           'native_audit_world_map_sha256':engine_world_map_sha,
+                           'native_audit_cached_opendrive_sha256':engine_cached_sha}
+                    if live_map.name.rsplit('/',1)[-1] != job['town']:
+                        probe['classification']='wrong_loaded_town'
+                    elif engine_world_map_sha!=live_sha:
+                        probe['classification']='engine_world_map_reference_disagrees_with_live_world'
+                    elif engine_cached_sha!=live_sha:
+                        probe['classification']='native_audit_cached_sha_stale'
+                    elif live_sha!=job['opendrive_sha256']:
+                        probe['classification']='live_world_opendrive_differs_from_plan'
+                    else:
+                        probe['classification']='verified_same_live_map_and_expected_sha'
+                    row['map_identity_probe']=probe
+                    progress('map_identity_verified' if probe['classification'].startswith('verified')
+                             else 'map_identity_mismatch',**probe)
+                    if probe['classification']!='verified_same_live_map_and_expected_sha':
+                        raise ValueError('OpenDRIVE identity verification failed: '+probe['classification'])
+                    # Never silently bypass SHA or regenerate the expected hash.
                     if list(world.get_actors().filter('vehicle.*')):raise ValueError('Dedicated world is not empty')
                     route,route_error=engine.resolve_route(scene['ego_route'])
                     progress('map_export')
@@ -192,8 +222,11 @@ def calibrate(plan_path,output,host,port,timeout,dedicated,config):
     disagreements=sum(bool(a['differences']) for r in results for a in r.get('native_comparisons',[]))
     write_json(output/'summary.json',{'planned_records':len(jobs),'written':len(results),
         'execution_error_records':sum(bool(r['errors']) for r in results),'model_failure_count':None,
-        'native_comparison_disagreements':disagreements,
+        'native_comparison_disagreements':None if map_only else disagreements,
+        'native_replay_status':'not_run' if map_only else 'run',
         'p1_complete':False,'physics':'not_run',
+        'identity_mismatch_records':sum(r.get('map_identity_probe',{}).get('classification') not in (None,
+            'verified_same_live_map_and_expected_sha') for r in results),
         'run_mode':run_mode, 'map_exported_records':sum(r.get('status')=='map_exported' for r in results),
         'meaning':'Map-only exports or GT/sedan calibration; no model evaluated; missing calibration unknown.'})
     if any(r['errors'] for r in results) or aborted or disagreements:

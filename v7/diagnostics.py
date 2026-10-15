@@ -3,6 +3,7 @@ import math
 import numpy as np
 from .coordinates import world_to_local,state_to_local,wrap,in_domain
 from .directed_map import lane_uid,project,directed_path
+from .station_audit import actor_station_audit
 
 
 def legacy_reasons(actor,old_condition,legacy_v6):
@@ -75,11 +76,19 @@ def inspect_actor(condition,actor,anchors,approaches):
     for wp in trace:
         uid=lane_uid(wp)
         if not ids or ids[-1]!=uid:ids.append(uid)
-    missing=[uid for uid in ids if uid not in nodes]
-    exported={(e['source'],e['destination']) for e in graph['edges']}
-    missing_edges=[{'source':a,'destination':b,
-                    'kind':'possible_lane_change_not_in_next_graph' if a.split(':')[:2]==b.split(':')[:2] else 'unexported_transition'}
-                   for a,b in zip(ids,ids[1:]) if (a,b) not in exported]
+    # Include BOTH terminal links: preview -> trace[0] and trace[-1] -> interaction.
+    # No GT/native trace is ever passed back to the condition graph builder.
+    full_trace=[uid for uid in [start]+ids+[end] if uid is not None]
+    joined=[]
+    for uid in full_trace:
+        if not joined or uid!=joined[-1]:joined.append(uid)
+    missing=[uid for uid in joined if uid not in nodes]
+    exported={(e['source'],e['destination']) for e in graph['edges']
+              if e.get('destination_exported',True)}
+    missing_edges=[{'source':a,'destination':b,'kind':
+                    'possible_lane_change_not_in_next_graph'
+                    if a.split(':')[:2]==b.split(':')[:2] else 'unexported_transition'}
+                   for a,b in zip(joined,joined[1:]) if (a,b) not in exported]
     path=directed_path(graph,start,end)
     anchor_match=[];anchor_projection=None
     if end in nodes and interaction:
@@ -122,6 +131,8 @@ def inspect_actor(condition,actor,anchors,approaches):
         if uid in nodes:
             q=project(nodes[uid]['centerline_world_xyz'],[wp[k] for k in ('x','y','z')])
             residuals.append(q['distance_xy_m'])
+    # GT-only station audit; never leaks into the condition or candidate builder.
+    station_audit=actor_station_audit(condition,actor,anchor_projection,anchor_match)
     # This is an upper-level topology/support check, NOT a legal state/chart certificate.
     return {'actor_id':actor['actor_id'],'historical_type_id':actor['type_id'],
             'front':actor['forward_fov'],'native_positive':native.get('native_candidate'),
@@ -142,4 +153,4 @@ def inspect_actor(condition,actor,anchors,approaches):
             'native_route_max_xy_residual_m':max(residuals) if residuals else None,
             'lane_chart_representability':'not_tested','fixed_sedan_geometry_compatible':None,
             'fixed_sedan_raw_spawn_accepted':None,
-            'new_native_replay_status':'not_run'}
+            'new_native_replay_status':'not_run','station_audit':station_audit}

@@ -193,6 +193,26 @@ def export_directed_lanes(world_map, ego, route_waypoints, radius_m=100.,
                       'successors': sorted(successors[lane_id]), 'predecessors': [],
                       'topology_source': 'CARLA global grid + route + topology endpoints; no target seeds'})
 
+    # Prevent zero-length XY segments reaching project()/heading estimation.
+    # Deterministic map-only cleanup; no actor pose or oracle used.
+    pruned_vertices=0
+    for lane in lanes:
+        xyz=lane['centerline']
+        selected=[0]
+        for i in range(1,len(xyz)):
+            p,q=xyz[selected[-1]],xyz[i]
+            if math.hypot(q[0]-p[0],q[1]-p[1])<1.e-4:
+                selected[-1]=i
+                pruned_vertices+=1
+            else:
+                selected.append(i)
+        if len(selected)<2:
+            raise ValueError('Degenerate native lane after near-zero XY cleanup: '+lane['lane_uid'])
+        for key in ('centerline','width_m','s_samples_m','yaw_samples_deg'):
+            lane[key]=[lane[key][i] for i in selected]
+        lane['max_station_gap_m']=max((abs(b-a) for a,b in zip(
+            lane['s_samples_m'],lane['s_samples_m'][1:])),default=0.)
+
     known = {r['lane_uid'] for r in lanes}
     for lane in lanes:
         lane['successors'] = sorted(s for s in lane['successors'] if s != lane['lane_uid'])
@@ -207,6 +227,7 @@ def export_directed_lanes(world_map, ego, route_waypoints, radius_m=100.,
                    'global_seed_count': len(global_seeds),'topology_seed_count': len(topology_seeds),
                    'route_seed_count': len(route_seeds),'waypoint_probe_count': len(checked),
                    'visited_samples': sum(len(v) for v in buckets.values()),
+                   'near_zero_xy_vertices_pruned':pruned_vertices,
                    'lane_count': len(lanes),'boundary_samples': boundary,
                    'typed_transitions': typed,
                    'lane_change_edges': [r for r in typed if r['kind'].startswith('lane_change_')],
