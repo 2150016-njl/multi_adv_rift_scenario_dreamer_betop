@@ -13,9 +13,9 @@ def actor_token(ego,actor):
             'velocity_local_xyz_mps':velocity_to_local(ego,velocity) if None not in velocity else None}
 
 
-def build_condition(record_id,observation,lanes,provenance,event=None):
+def build_condition(record_id,observation,lanes,provenance,event=None,map_evidence=None):
     ego=observation['ego']
-    graph=DirectedMapBuilder().build(lanes,ego,provenance.get('opendrive_sha256'))
+    graph=DirectedMapBuilder().build(lanes,ego,provenance.get('opendrive_sha256'),evidence=map_evidence)
     route_world=observation.get('ego_route')
     if route_world:
         points=world_to_local(ego,[[p[k] for k in ('x','y','z')] for p in route_world])

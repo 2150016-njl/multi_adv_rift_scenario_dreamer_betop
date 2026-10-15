@@ -33,7 +33,20 @@ def calibrate(plan_path,output,host,port,timeout,dedicated,config):
     from high_value_init.native_state_audit import NativeAudit,spawn_frozen_cohort,destroy_owned_without_tick
     from audit_hv_snapshot_experiment import json_compatible
     plan_path=Path(plan_path);output=Path(output)
-    plan=json.loads(plan_path.read_text(encoding='utf-8'))
+    # plan=json.loads(plan_path.read_text(encoding='utf-8'))
+    plan = json.loads(
+        plan_path.read_text(encoding='utf-8')
+    )
+
+    run_mode = plan.get('run_mode', 'full')
+
+    if run_mode not in ('full', 'map_only'):
+        raise ValueError(
+            'Unsupported V7 calibration run_mode: '
+            + str(run_mode)
+        )
+
+    map_only = run_mode == 'map_only'
     root=Path(__file__).resolve().parents[1]
     recog=resolve_source(plan['recognition_config'],root)
     if not recog or sha(recog)!=plan['recognition_config_sha256']:raise ValueError('Recognizer SHA mismatch')
@@ -64,88 +77,105 @@ def calibrate(plan_path,output,host,port,timeout,dedicated,config):
                     client.set_timeout(max(300.,timeout))  # Map load has a distinct bounded budget.
                     engine.prepare(job['town']);world=engine.world
                     client.set_timeout(timeout)
-                    if engine.map_sha256!=job['opendrive_sha256']:raise ValueError('OpenDRIVE fingerprint mismatch')
+                    if engine.map_sha256!=job['opendrive_sha256']:
+                        raise ValueError('OpenDRIVE fingerprint mismatch: town=%s expected=%s actual=%s loaded_map=%s' %
+                            (job['town'],job['opendrive_sha256'],engine.map_sha256,world.get_map().name))
                     if list(world.get_actors().filter('vehicle.*')):raise ValueError('Dedicated world is not empty')
                     route,route_error=engine.resolve_route(scene['ego_route'])
                     progress('map_export')
                     lanes,map_evidence=export_directed_lanes(engine.world_map,scene['ego'],route,planner=engine.grp)
+                    if not lanes:raise ValueError('CARLA map export returned no lanes')
+                    if map_evidence.get('export_schema_version')!='hv_v7_native_map_v2':
+                        raise ValueError('Unexpected CARLA map export schema')
                     write_json(output/('record_%s_map.json'%job['record_index']),{'lanes':lanes,'evidence':map_evidence,
-                               'opendrive_sha256':engine.map_sha256})
-                    from .condition_builder import build_condition
-                    from .approach_builder import ConflictAnchorBuilder,ApproachBuilder
-                    from .diagnostics import inspect_actor
-                    from .coordinates import state_to_local,in_domain
-                    selected_ids=set(job['target_actor_ids'])
-                    observation={'ego':scene['ego'],'ego_route':scene['ego_route'],
-                        'actors':[a for a in scene['agents'] if a['actor_id'] not in selected_ids],
-                        'existing_cbv_ids':None,'observation_view':'withheld_real_actor_all_remaining_recorded_traffic'}
-                    map_condition=build_condition('calibration:'+str(job['record_index']),observation,lanes,
-                        {'opendrive_sha256':engine.map_sha256,'source_sha256':job['snapshot_sha256']})
-                    map_condition['condition']['directed_map']['lane_change_edges_separate_evidence']=map_evidence['lane_change_edges']
-                    anchors=ConflictAnchorBuilder().build(map_condition)
-                    approaches=ApproachBuilder().build(map_condition,anchors)
-                    write_json(output/('record_%s_condition.json'%job['record_index']),map_condition)
-                    row.update(map_evidence=map_evidence,route_resolution_max_error_m=route_error)
-                    actors={a['actor_id']:a for a in scene['agents']}
-                    row['native_comparisons']=[]
-                    for reference in job['historical_gt']:
-                        progress('native_replay',source_actor_id=reference['actor_id'])
-                        pose=actors[reference['actor_id']]
-                        actual=engine.actor(scene,pose,route)
-                        geometry=engine.geometry(pose)
-                        row['native_comparisons'].append({'actor_id':pose['actor_id'],'historical_type_id':pose['type_id'],
-                            'historical_actor_native_positive':actual['native_candidate'],'native':actual,'road_geometry':geometry,
-                            'differences':compare_native(reference['native'],actual)})
-                        from .directed_map import lane_uid
-                        previous=reference['road_geometry']['preview_waypoint'];current=geometry['preview_waypoint']
-                        if bool(previous)!=bool(current) or previous and lane_uid(previous)!=lane_uid(current):
-                            row['native_comparisons'][-1]['differences'].append('preview_lane_identity_changed')
-                        state=state_to_local(scene['ego'],pose)
-                        row['native_comparisons'][-1]['fresh_map_alignment']=inspect_actor(map_condition,
-                            {'actor_id':pose['actor_id'],'type_id':pose['type_id'],'pose':pose,
-                             'local_state':state,'forward_fov':in_domain(state,True),
-                             'native':actual,'road_geometry':geometry},anchors,approaches)
-                    settings=world.get_settings();old_sync=settings.synchronous_mode;old_delta=settings.fixed_delta_seconds
-                    settings.synchronous_mode=True;settings.fixed_delta_seconds=.05;world.apply_settings(settings)
-                    frame=world.get_snapshot().frame
-                    points=engine.world_map.get_spawn_points()
-                    if not points:raise ValueError('No official geometry probe spawn point')
-                    probe=world.try_spawn_actor(world.get_blueprint_library().find(plan['fixed_blueprint']),points[0])
-                    if probe is None:raise ValueError('Single official blueprint geometry probe rejected; no retry')
-                    try:
-                        box=probe.bounding_box
-                        sedan_size=[2*box.extent.x,2*box.extent.y,2*box.extent.z]
-                        row['fixed_blueprint_box']={'type_id':probe.type_id,'size_lwh_m':sedan_size,
-                            'offset_xyz_m':[box.location.x,box.location.y,box.location.z],
-                            'probe_source':'official_map_spawn_point_0_geometry_only_not_GT_spawn'}
-                    finally:
-                        errors,ack=destroy_owned_without_tick(client,carla,[probe])
-                        row['blueprint_probe_cleanup']=ack
-                        if errors:aborted=True;raise RuntimeError(str(errors))
-                    selected=job['target_actor_ids'];context=[p for p in scene['agents'] if p['actor_id'] not in selected]
-                    gt=[actors[i] for i in selected]
-                    sedan=[dict(p,type_id=plan['fixed_blueprint'],length=sedan_size[0],width=sedan_size[1],height=sedan_size[2]) for p in gt]
-                    row['cohorts']={}
-                    for name,targets in [('historical_gt',gt),('fixed_sedan_same_raw_pose',sedan)]:
-                        progress('raw_spawn_cohort',cohort=name)
-                        result=spawn_frozen_cohort(world,carla,scene['ego'],context,targets,engine=engine,scene=scene)
-                        row['cohorts'][name]=result
-                        if result['cleanup_errors']:aborted=True;raise RuntimeError('Owned cleanup failed')
-                    row['fixed_sedan_labels']=[]
-                    fixed=row['cohorts']['fixed_sedan_same_raw_pose']
-                    for attempt in fixed['attempts']:
-                        if attempt['role']!='target':continue
-                        g=fixed['geometry_3d'].get(attempt['source_actor_id'],{})
-                        compatible=None
-                        if g and fixed['whole_scene_accepted']:
-                            compatible=(g['whole_road']['whole_box_in_sampled_driving_polygon'] and not g['peer_3d_overlap_ids'] and
-                                        not g['static_3d_box_overlaps'] and not g['static_query_errors'])
-                        row['fixed_sedan_labels'].append({'actor_id':attempt['source_actor_id'],
-                            'fixed_sedan_geometry_compatible':compatible,
-                            'fixed_sedan_raw_spawn_accepted':attempt['accepted'],
-                            'context_complete':fixed['context_complete']})
-                    if world.get_snapshot().frame!=frame:aborted=True;raise RuntimeError('Unexpected frame advancement')
-                    row.update(status='calibration_observed',physics='not_run',post_spawn_pose_corrections=False)
+                               'opendrive_sha256':engine.map_sha256,
+                               'snapshot_sha256':job['snapshot_sha256'],
+                               'record_index':job['record_index'], 'town':job['town']})
+
+                    row.update(map_evidence=map_evidence,route_resolution_max_error_m=route_error,
+                               opendrive_sha256=engine.map_sha256,
+                               snapshot_sha256=job['snapshot_sha256'])
+                    if map_only:
+                        progress('map_only_complete', exported_lanes=len(lanes))
+                        row.update(status='map_exported', native_replay='not_run',
+                                   fixed_sedan_calibration='not_run', physics='not_run')
+                    else:
+                        from .condition_builder import build_condition
+                        from .approach_builder import ConflictAnchorBuilder,ApproachBuilder
+                        from .diagnostics import inspect_actor
+                        from .coordinates import state_to_local,in_domain
+                        selected_ids=set(job['target_actor_ids'])
+                        observation={'ego':scene['ego'],'ego_route':scene['ego_route'],
+                            'actors':[a for a in scene['agents'] if a['actor_id'] not in selected_ids],
+                            'existing_cbv_ids':None,'observation_view':'withheld_real_actor_all_remaining_recorded_traffic'}
+                        map_condition=build_condition('calibration:'+str(job['record_index']),observation,lanes,
+                            {'opendrive_sha256':engine.map_sha256,'source_sha256':job['snapshot_sha256']},
+                            map_evidence=map_evidence)
+                        map_condition['condition']['directed_map']['lane_change_edges_separate_evidence']=map_evidence['lane_change_edges']
+                        anchors=ConflictAnchorBuilder().build(map_condition)
+                        approaches=ApproachBuilder().build(map_condition,anchors)
+                        write_json(output/('record_%s_condition.json'%job['record_index']),map_condition)
+                        row.update(map_evidence=map_evidence,route_resolution_max_error_m=route_error)
+                        actors={a['actor_id']:a for a in scene['agents']}
+                        row['native_comparisons']=[]
+                        for reference in job['historical_gt']:
+                            progress('native_replay',source_actor_id=reference['actor_id'])
+                            pose=actors[reference['actor_id']]
+                            actual=engine.actor(scene,pose,route)
+                            geometry=engine.geometry(pose)
+                            row['native_comparisons'].append({'actor_id':pose['actor_id'],'historical_type_id':pose['type_id'],
+                                'historical_actor_native_positive':actual['native_candidate'],'native':actual,'road_geometry':geometry,
+                                'differences':compare_native(reference['native'],actual)})
+                            from .directed_map import lane_uid
+                            previous=reference['road_geometry']['preview_waypoint'];current=geometry['preview_waypoint']
+                            if bool(previous)!=bool(current) or previous and lane_uid(previous)!=lane_uid(current):
+                                row['native_comparisons'][-1]['differences'].append('preview_lane_identity_changed')
+                            state=state_to_local(scene['ego'],pose)
+                            row['native_comparisons'][-1]['fresh_map_alignment']=inspect_actor(map_condition,
+                                {'actor_id':pose['actor_id'],'type_id':pose['type_id'],'pose':pose,
+                                 'local_state':state,'forward_fov':in_domain(state,True),
+                                 'native':actual,'road_geometry':geometry},anchors,approaches)
+                        settings=world.get_settings();old_sync=settings.synchronous_mode;old_delta=settings.fixed_delta_seconds
+                        settings.synchronous_mode=True;settings.fixed_delta_seconds=.05;world.apply_settings(settings)
+                        frame=world.get_snapshot().frame
+                        points=engine.world_map.get_spawn_points()
+                        if not points:raise ValueError('No official geometry probe spawn point')
+                        probe=world.try_spawn_actor(world.get_blueprint_library().find(plan['fixed_blueprint']),points[0])
+                        if probe is None:raise ValueError('Single official blueprint geometry probe rejected; no retry')
+                        try:
+                            box=probe.bounding_box
+                            sedan_size=[2*box.extent.x,2*box.extent.y,2*box.extent.z]
+                            row['fixed_blueprint_box']={'type_id':probe.type_id,'size_lwh_m':sedan_size,
+                                'offset_xyz_m':[box.location.x,box.location.y,box.location.z],
+                                'probe_source':'official_map_spawn_point_0_geometry_only_not_GT_spawn'}
+                        finally:
+                            errors,ack=destroy_owned_without_tick(client,carla,[probe])
+                            row['blueprint_probe_cleanup']=ack
+                            if errors:aborted=True;raise RuntimeError(str(errors))
+                        selected=job['target_actor_ids'];context=[p for p in scene['agents'] if p['actor_id'] not in selected]
+                        gt=[actors[i] for i in selected]
+                        sedan=[dict(p,type_id=plan['fixed_blueprint'],length=sedan_size[0],width=sedan_size[1],height=sedan_size[2]) for p in gt]
+                        row['cohorts']={}
+                        for name,targets in [('historical_gt',gt),('fixed_sedan_same_raw_pose',sedan)]:
+                            progress('raw_spawn_cohort',cohort=name)
+                            result=spawn_frozen_cohort(world,carla,scene['ego'],context,targets,engine=engine,scene=scene)
+                            row['cohorts'][name]=result
+                            if result['cleanup_errors']:aborted=True;raise RuntimeError('Owned cleanup failed')
+                        row['fixed_sedan_labels']=[]
+                        fixed=row['cohorts']['fixed_sedan_same_raw_pose']
+                        for attempt in fixed['attempts']:
+                            if attempt['role']!='target':continue
+                            g=fixed['geometry_3d'].get(attempt['source_actor_id'],{})
+                            compatible=None
+                            if g and fixed['whole_scene_accepted']:
+                                compatible=(g['whole_road']['whole_box_in_sampled_driving_polygon'] and not g['peer_3d_overlap_ids'] and
+                                            not g['static_3d_box_overlaps'] and not g['static_query_errors'])
+                            row['fixed_sedan_labels'].append({'actor_id':attempt['source_actor_id'],
+                                'fixed_sedan_geometry_compatible':compatible,
+                                'fixed_sedan_raw_spawn_accepted':attempt['accepted'],
+                                'context_complete':fixed['context_complete']})
+                        if world.get_snapshot().frame!=frame:aborted=True;raise RuntimeError('Unexpected frame advancement')
+                        row.update(status='calibration_observed',physics='not_run',post_spawn_pose_corrections=False)
                 except Exception as exc:
                     row.update(status='calibration_error');row['errors'].append('%s: %s'%(type(exc).__name__,exc))
                     with (output/'errors.log').open('a',encoding='utf-8') as error:error.write(str(row['errors'])+'\n')
@@ -164,6 +194,7 @@ def calibrate(plan_path,output,host,port,timeout,dedicated,config):
         'execution_error_records':sum(bool(r['errors']) for r in results),'model_failure_count':None,
         'native_comparison_disagreements':disagreements,
         'p1_complete':False,'physics':'not_run',
-        'meaning':'GT/sedan calibration only; no model was evaluated; missing calibration is unknown.'})
+        'run_mode':run_mode, 'map_exported_records':sum(r.get('status')=='map_exported' for r in results),
+        'meaning':'Map-only exports or GT/sedan calibration; no model evaluated; missing calibration unknown.'})
     if any(r['errors'] for r in results) or aborted or disagreements:
         raise SystemExit('Calibration incomplete/inconsistent; evidence preserved')

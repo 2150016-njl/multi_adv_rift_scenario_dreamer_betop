@@ -34,6 +34,18 @@ def main():
             p.add_argument('--snapshot-root',type=Path)
             p.add_argument('--record-indices',type=lambda s:[int(i) for i in s.split(',')])
             p.add_argument('--allow-ledger-reconstruction',action='store_true')
+            p.add_argument(
+                '--calibrated-map-dir',
+                type=Path,
+                default=None,
+                help='Directory containing verified record_*_map.json files.'
+            )
+
+            p.add_argument(
+                '--calibration-all-records',
+                action='store_true',
+                help='Prepare a map-only calibration plan for all selected records.'
+            )
         elif name=='calibrate':
             p.add_argument('--plan',type=Path,required=True)
             p.add_argument('--port',type=int,required=True)

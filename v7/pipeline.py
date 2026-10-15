@@ -120,6 +120,17 @@ def build(root,experiment,dataset,output,config):
     for model in ('v2','v3'):
         for suffix in ('_raw_s1.json','_raw_s1_generated.jsonl'):
             inputs[model+suffix]=eval_dir/(model+suffix)
+    calibrated_dir=config.get('calibrated_map_dir')
+    if calibrated_dir:
+        calibrated_dir=Path(calibrated_dir)
+        if not calibrated_dir.is_dir():raise FileNotFoundError('Calibrated map directory missing: '+str(calibrated_dir))
+        # Require ALL selected indices, no silent fallback to the old audit graph.
+        expected_indices=config.get('record_indices') or sorted(unique_index(read_jsonl(experiment/'v2_pairs.jsonl'),'pairs'))
+        if config.get('max_records'):expected_indices=expected_indices[:config['max_records']]
+        for idx in expected_indices:
+            path=calibrated_dir/('record_%s_map.json'%idx)
+            if not path.is_file():raise FileNotFoundError('Missing calibrated map for record %s: %s'%(idx,path))
+            inputs['calibrated_map_%s'%idx]=path
     hashes=initialize_run(output,config,inputs,config.get('expected_input_sha256'))
     native_summary=json.loads(inputs['native_summary'].read_text(encoding='utf-8'))
     if native_summary['config_sha256']!=hashes['recognizer']:
@@ -130,14 +141,40 @@ def build(root,experiment,dataset,output,config):
     pairs3=unique_index(read_jsonl(inputs['v3_manifest']),'v3 pairs')
     native=unique_index(read_jsonl(inputs['native_v2']),'native v2')
     native3=unique_index(read_jsonl(inputs['native_v3']),'native v3')
-    calibration_indices=[i for i in (2325,155,1532,160,40) if i in pairs]
-    plan={'schema_version':'hv_v7_calibration_plan_v1','carla_version':'0.9.15',
-        'recognition_config':str(inputs['recognizer']),'recognition_config_sha256':hashes['recognizer'],
-        'fixed_blueprint':'vehicle.tesla.model3','jobs':[
-            {'record_index':i,'snapshot_path':pairs[i]['snapshot_path'],'snapshot_sha256':pairs[i]['snapshot_sha256'],
-             'target_actor_ids':pairs[i]['target_actor_ids'],'town':native[i]['town'],
-             'opendrive_sha256':native[i]['carla_opendrive_sha256'],'historical_gt':native[i]['selected_gt']} for i in calibration_indices],
-        'status':'prepared_not_run','model_evaluation':False}
+    calibration_indices = (
+        sorted(pairs)
+        if config.get('calibration_all_records')
+        else [i for i in (2325, 155, 1532, 160, 40) if i in pairs]
+    )
+    plan = {
+        'schema_version': 'hv_v7_calibration_plan_v1',
+        'carla_version': '0.9.15',
+        'recognition_config': str(inputs['recognizer']),
+        'recognition_config_sha256': hashes['recognizer'],
+        'fixed_blueprint': 'vehicle.tesla.model3',
+
+        'run_mode': (
+            'map_only'
+            if config.get('calibration_all_records')
+            else 'full'
+        ),
+
+        'jobs': [
+            {
+                'record_index': i,
+                'snapshot_path': pairs[i]['snapshot_path'],
+                'snapshot_sha256': pairs[i]['snapshot_sha256'],
+                'target_actor_ids': pairs[i]['target_actor_ids'],
+                'town': native[i]['town'],
+                'opendrive_sha256': native[i]['carla_opendrive_sha256'],
+                'historical_gt': native[i]['selected_gt']
+            }
+            for i in calibration_indices
+        ],
+
+        'status': 'prepared_not_run',
+        'model_evaluation': False
+    }
     write_json(output/'calibration_plan.json',plan)
     selection=config.get('record_indices') or list(pairs)
     if len(set(selection))!=len(selection):raise ValueError('Duplicate selected record indices')
@@ -159,7 +196,22 @@ def build(root,experiment,dataset,output,config):
                 'snapshot_internal_idx':evidence.get('snapshot_internal_idx'),
                 'opendrive_sha256':row['carla_opendrive_sha256'],'observation_evidence':evidence,
                 'historical_ledger_sha256':hashes['native_v2']}
-            condition=build_condition(record_id,observation,row['audit_map_lanes'],provenance)
+            map_lanes=row['audit_map_lanes'];map_evidence=None
+            if calibrated_dir:
+                payload=json.loads((calibrated_dir/('record_%s_map.json'%idx)).read_text(encoding='utf-8'))
+                if payload.get('record_index')!=idx or payload.get('snapshot_sha256')!=pair['snapshot_sha256']:
+                    raise ValueError('Calibrated map record/snapshot identity mismatch for record %s'%idx)
+                if payload.get('opendrive_sha256')!=row['carla_opendrive_sha256'] or payload.get('town')!=row['town']:
+                    raise ValueError('Calibrated map OpenDRIVE/Town mismatch for record %s'%idx)
+                map_evidence=payload['evidence']
+                if map_evidence.get('export_schema_version')!='hv_v7_native_map_v2':
+                    raise ValueError('Unrecognized calibrated map schema for record %s'%idx)
+                map_lanes=payload['lanes']
+                provenance['map_input_kind']='calibrated_carla_map'
+                provenance['calibrated_map_sha256']=hashes['calibrated_map_%s'%idx]
+            else:
+                provenance['map_input_kind']='historical_audit_map'
+            condition=build_condition(record_id,observation,map_lanes,provenance,map_evidence=map_evidence)
             anchors=ConflictAnchorBuilder().build(condition)
             approaches=ApproachBuilder().build(condition,anchors)
             condition['condition'].update(conflict_anchors=anchors,approaches=approaches)
