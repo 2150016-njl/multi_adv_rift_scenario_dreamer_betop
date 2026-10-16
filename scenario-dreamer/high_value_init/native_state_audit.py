@@ -8,6 +8,7 @@ import copy
 import hashlib
 import math
 import struct
+import time
 import types
 
 
@@ -111,22 +112,68 @@ class NativeAudit:
         self.resolution, self.load_maps = float(resolution), bool(load_maps)
         self.world = self.world_map = self.grp = None
 
-    def prepare(self, town):
-        world = self.client.get_world()
-        name = world.get_map().name.rsplit('/',1)[-1]
-        if name != town:
+    def prepare(self, town, expected_sha256=None, readiness_timeout_s=120.):
+        """Load an exact map once, then poll *fresh* worlds before using its GRP.
+
+        CARLA load_world may return while get_world still exposes the previous
+        map. A town string alone is insufficient: compare the live OpenDRIVE
+        hash before binding the new graph. A failed transition never reuses a
+        cached planner or substitutes a different town.
+        """
+        target = str(town)
+        self.prepare_trace = []
+        current = self.client.get_world()
+        current_name = current.get_map().name.rsplit('/', 1)[-1]
+        requested_load = current_name != target
+        if requested_load:
             if not self.load_maps:
-                raise ValueError('Map mismatch %s != %s; use a dedicated server and --load-maps' % (name,town))
-            world = self.client.load_world(town)
-        world_map = world.get_map()
-        identity = (world_map.name, getattr(world,'id',None))
-        if self.world is None or getattr(self,'map_identity',None) != identity:
-            self.grp = self.grp_class(world_map, self.resolution)
-            self.map_identity = identity
-            self.map_sha256 = hashlib.sha256(world_map.to_opendrive().encode('utf-8')).hexdigest()
-            self.map_geometry=None
-            self.static_geometry=None
-        self.world, self.world_map = world, world_map
+                raise ValueError('Map mismatch %s != %s; dedicated server required' %
+                                 (current_name, target))
+            # Exactly one map-load command, not a hidden retry policy.
+            self.client.load_world(target)
+        deadline = time.monotonic() + float(readiness_timeout_s)
+        last = None
+        while True:
+            try:
+                world = self.client.get_world()
+                world_map = world.get_map()
+                name = world_map.name.rsplit('/', 1)[-1]
+                ident = (world_map.name, getattr(world, 'id', None))
+                row = {'name': name, 'world_id': ident[1]}
+                if name == target:
+                    digest = hashlib.sha256(world_map.to_opendrive().encode('utf-8')).hexdigest()
+                    row['live_sha256'] = digest
+                    if expected_sha256 is not None and digest != expected_sha256:
+                        row['status'] = 'sha_mismatch'
+                    else:
+                        row['status'] = 'ready'
+                        self.prepare_trace.append(row)
+                        # On an explicit load always invalidate the previous
+                        # geometry even if CARLA reused a world identifier.
+                        if (requested_load or self.world is None or
+                                getattr(self, 'map_identity', None) != ident or
+                                getattr(self, 'map_sha256', None) != digest):
+                            graph = self.grp_class(world_map, self.resolution)
+                            self.grp = graph
+                            self.map_identity = ident
+                            self.map_sha256 = digest
+                            self.map_geometry = None
+                            self.static_geometry = None
+                        self.world, self.world_map = world, world_map
+                        return
+                else:
+                    row['status'] = 'wrong_loaded_town'
+                last = row
+                if not self.prepare_trace or self.prepare_trace[-1] != row:
+                    self.prepare_trace.append(row)
+            except RuntimeError as exc:
+                last = {'status': 'rpc_transient_error', 'message': str(exc)[:300]}
+                if not self.prepare_trace or self.prepare_trace[-1] != last:
+                    self.prepare_trace.append(last)
+            if time.monotonic() >= deadline:
+                raise RuntimeError('CARLA map did not become ready; expected %s SHA=%s; last=%s' %
+                                   (target, expected_sha256, last))
+            time.sleep(0.5)
 
     def ensure_geometry(self):
         from .audit_physics_geometry import MapGeometry, static_boxes

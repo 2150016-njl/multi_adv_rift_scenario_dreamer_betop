@@ -76,7 +76,7 @@ def calibrate(plan_path,output,host,port,timeout,dedicated,config):
                     scene=json.loads(source.read_text(encoding='utf-8'));scene=scene.get('scene',scene)
                     progress('map_prepare',town=job['town'])
                     client.set_timeout(max(300.,timeout))  # Map load has a distinct bounded budget.
-                    engine.prepare(job['town']);world=engine.world
+                    engine.prepare(job['town'], expected_sha256=job['opendrive_sha256']);world=engine.world
                     client.set_timeout(timeout)
                     # Independently fingerprint the LIVE world and the cached engine
                     # reference. A Town11 name + Town15 hash must not be treated
@@ -122,7 +122,8 @@ def calibrate(plan_path,output,host,port,timeout,dedicated,config):
                                'snapshot_sha256':job['snapshot_sha256'],
                                'record_index':job['record_index'], 'town':job['town']})
 
-                    row.update(map_evidence=map_evidence,route_resolution_max_error_m=route_error,
+                    row.update(map_prepare_trace=getattr(engine,'prepare_trace',[]),
+                               map_evidence=map_evidence,route_resolution_max_error_m=route_error,
                                opendrive_sha256=engine.map_sha256,
                                snapshot_sha256=job['snapshot_sha256'])
                     if map_only:
@@ -207,6 +208,7 @@ def calibrate(plan_path,output,host,port,timeout,dedicated,config):
                         if world.get_snapshot().frame!=frame:aborted=True;raise RuntimeError('Unexpected frame advancement')
                         row.update(status='calibration_observed',physics='not_run',post_spawn_pose_corrections=False)
                 except Exception as exc:
+                    row['map_prepare_trace']=getattr(engine,'prepare_trace',[])
                     row.update(status='calibration_error');row['errors'].append('%s: %s'%(type(exc).__name__,exc))
                     with (output/'errors.log').open('a',encoding='utf-8') as error:error.write(str(row['errors'])+'\n')
                 finally:
