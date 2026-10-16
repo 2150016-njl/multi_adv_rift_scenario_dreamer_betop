@@ -1,0 +1,635 @@
+from __future__ import annotations
+
+import argparse
+import hashlib
+import math
+import sys
+import time
+from pathlib import Path
+from typing import Any
+
+from .common import ContractError, lane_uid_str, read_json, read_jsonl, require, sha256_bytes, write_json, write_jsonl, yaw_wrap
+
+
+# These are the exact RIFT BaseCBVRecog semantics currently in the repository.
+# They are used as a read-only oracle, never as a generator fallback.
+DEFAULT = {
+    "search_radius_m": 60.0,
+    "min_distance_m": 10.0,
+    "max_interaction_fov_deg": 150.0,
+    "max_interaction_dis_m": 90.0,
+    "min_interaction_dis_diff_m": 20.0,
+    "down_sample_step": 4,
+    "max_ego_route_len": 50,
+    "preview_m": 2.0,
+}
+
+
+def apply_rift_config(path: str | None, mode: str = "eval") -> dict[str, float]:
+    if not path:
+        return dict(DEFAULT)
+    import yaml
+    cfg = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+    require(isinstance(cfg, dict) and mode in cfg, f"RIFT config missing mode={mode}: {path}")
+    m = cfg[mode]
+    mapping = {
+        "search_radius": "search_radius_m",
+        "max_interaction_fov": "max_interaction_fov_deg",
+        "max_interaction_dis": "max_interaction_dis_m",
+        "min_interaction_dis_diff": "min_interaction_dis_diff_m",
+        "max_ego_route_len": "max_ego_route_len",
+        "down_sample_step": "down_sample_step",
+    }
+    for src, dst in mapping.items():
+        require(src in m, f"RIFT config {path}:{mode} missing {src}")
+        DEFAULT[dst] = float(m[src]) if dst.endswith("_m") or dst.endswith("_deg") else int(m[src])
+    return dict(DEFAULT)
+
+
+def add_python_paths(rift_root: str, carla_pythonapi: str | None) -> None:
+    for p in [rift_root, carla_pythonapi]:
+        if p:
+            sys.path.insert(0, str(Path(p).resolve()))
+
+
+def import_carla_and_grp(rift_root: str, carla_pythonapi: str | None):
+    add_python_paths(rift_root, carla_pythonapi)
+    import carla
+    from rift.scenario.tools.global_route_planner import GlobalRoutePlanner
+    return carla, GlobalRoutePlanner
+
+
+def normalize_map_name(name: str) -> str:
+    name = str(name).replace("\\", "/").rstrip("/")
+    return name.split("/")[-1]
+
+
+def vec2(loc: Any) -> tuple[float, float]:
+    return float(loc.x), float(loc.y)
+
+
+def distance2(a: Any, b: Any) -> float:
+    return math.hypot(float(a.x) - float(b.x), float(a.y) - float(b.y))
+
+
+def is_within_distance_ahead(target_transform: Any, ref_transform: Any,
+                             max_distance: float, max_fov_deg: float) -> bool:
+    # Same mathematical predicate as RIFT's imported helper.
+    target = target_transform.location
+    ref = ref_transform.location
+    dx = float(target.x) - float(ref.x)
+    dy = float(target.y) - float(ref.y)
+    norm = math.hypot(dx, dy)
+    if norm < 1e-6:
+        return True
+    if norm > max_distance:
+        return False
+    fx = math.cos(math.radians(float(ref_transform.rotation.yaw)))
+    fy = math.sin(math.radians(float(ref_transform.rotation.yaw)))
+    c = max(-1.0, min(1.0, (fx * dx + fy * dy) / norm))
+    return math.degrees(math.acos(c)) < max_fov_deg
+
+
+def carla_transform(carla: Any, row: dict[str, Any]) -> Any:
+    return carla.Transform(
+        carla.Location(float(row["x"]), float(row["y"]), float(row["z"])),
+        carla.Rotation(
+            pitch=float(row.get("pitch_deg", 0.0)),
+            yaw=float(row["yaw_deg"]),
+            roll=float(row.get("roll_deg", 0.0)),
+        ),
+    )
+
+
+def lane_match(a: Any, b: Any, s_tol: float = 0.05, pos_tol: float = 0.30) -> dict[str, Any]:
+    pos = distance2(a.transform.location, b.transform.location)
+    return {
+        "road_id_equal": int(a.road_id) == int(b.road_id),
+        "section_id_equal": int(a.section_id) == int(b.section_id),
+        "lane_id_equal": int(a.lane_id) == int(b.lane_id),
+        "s_abs_error_m": abs(float(a.s) - float(b.s)),
+        "position_error_m": pos,
+        "pass": (
+            int(a.road_id) == int(b.road_id)
+            and int(a.section_id) == int(b.section_id)
+            and int(a.lane_id) == int(b.lane_id)
+            and abs(float(a.s) - float(b.s)) <= s_tol
+            and pos <= pos_tol
+        ),
+    }
+
+
+def route_waypoints(carla_map: Any, scene: dict[str, Any]) -> tuple[list[Any], list[dict[str, Any]]]:
+    rows = scene.get("ego_route", [])
+    require(rows, "P1/P2 require ego_route; do not reconstruct it from the target")
+    out = []
+    checks = []
+    for i, r in enumerate(rows[:DEFAULT["max_ego_route_len"]]):
+        for k in ("x", "y", "z", "yaw_deg", "road_id", "section_id", "lane_id", "s"):
+            require(k in r, f"ego_route[{i}] missing {k}")
+        xodr_wp = carla_map.get_waypoint_xodr(int(r["road_id"]), int(r["lane_id"]), float(r["s"]))
+        require(xodr_wp is not None, f"ego_route[{i}] get_waypoint_xodr returned None")
+        expected = carla.Transform(
+            carla.Location(float(r["x"]), float(r["y"]), float(r["z"])),
+            carla.Rotation(yaw=float(r["yaw_deg"])),
+        )
+        # Also ask CARLA for the exact serialized location with
+        # project_to_road=False. This is not a repair path: both identities must
+        # agree, including section_id, or the route record is rejected.
+        exact_wp = carla_map.get_waypoint(
+            expected.location, project_to_road=False, lane_type=carla.LaneType.Driving
+        )
+        require(exact_wp is not None, f"ego_route[{i}] exact get_waypoint returned None")
+        require(
+            int(exact_wp.road_id) == int(r["road_id"])
+            and int(exact_wp.section_id) == int(r["section_id"])
+            and int(exact_wp.lane_id) == int(r["lane_id"]),
+            f"ego_route[{i}] exact lane identity mismatch"
+        )
+        wp = exact_wp
+        # get_waypoint_xodr does not take section_id in its public signature,
+        # so section identity is explicitly verified by the exact-location query.
+        check = lane_match(wp, wp, s_tol=0.0, pos_tol=0.0)
+        check["route_index"] = i
+        check["expected_road_id"] = int(r["road_id"])
+        check["expected_section_id"] = int(r["section_id"])
+        check["expected_lane_id"] = int(r["lane_id"])
+        check["actual_road_id"] = int(wp.road_id)
+        check["actual_section_id"] = int(wp.section_id)
+        check["actual_lane_id"] = int(wp.lane_id)
+        check["s_abs_error_m"] = abs(float(wp.s) - float(r["s"]))
+        check["position_error_m"] = distance2(wp.transform.location, expected.location)
+        check["yaw_error_deg"] = abs(((float(wp.transform.rotation.yaw) - float(r["yaw_deg"]) + 180) % 360) - 180)
+        check["xodr_exact_position_error_m"] = distance2(xodr_wp.transform.location, exact_wp.transform.location)
+        check["xodr_exact_yaw_error_deg"] = abs(
+            ((float(xodr_wp.transform.rotation.yaw) - float(exact_wp.transform.rotation.yaw) + 180) % 360) - 180
+        )
+        check["pass"] = (
+            int(wp.road_id) == int(r["road_id"])
+            and int(wp.section_id) == int(r["section_id"])
+            and int(wp.lane_id) == int(r["lane_id"])
+            and check["s_abs_error_m"] <= 0.05
+            and check["position_error_m"] <= 0.30
+            and check["yaw_error_deg"] <= 2.0
+            and check["xodr_exact_position_error_m"] <= 0.30
+            and check["xodr_exact_yaw_error_deg"] <= 2.0
+        )
+        checks.append(check)
+        require(check["pass"], f"ego_route[{i}] CARLA identity mismatch: {check}")
+        out.append(wp)
+    require(len(out) >= 2, "ego_route must contain at least 2 validated waypoints")
+    return out, checks
+
+
+def cumulative_route(route: list[Any]) -> dict[int, float]:
+    idxs = list(range(0, len(route), DEFAULT["down_sample_step"]))
+    if idxs[-1] != len(route) - 1:
+        idxs.append(len(route) - 1)
+    total = 0.0
+    out = {}
+    prev = route[idxs[0]].transform.location
+    for idx in idxs[1:]:
+        cur = route[idx].transform.location
+        total += float(prev.distance(cur))
+        out[idx] = total
+        prev = cur
+    return out
+
+
+def preview_waypoint(carla: Any, carla_map: Any, transform: Any):
+    fwd = transform.get_forward_vector().make_unit_vector()
+    p = transform.location
+    preview = carla.Location(
+        x=p.x + fwd.x * DEFAULT["preview_m"],
+        y=p.y + fwd.y * DEFAULT["preview_m"],
+        z=p.z + fwd.z * DEFAULT["preview_m"],
+    )
+    # Intentionally mirrors RIFT: project_to_road=None. Do not change to True.
+    return carla_map.get_waypoint(preview, project_to_road=None, lane_type=carla.LaneType.Driving)
+
+
+def exact_interaction(carla: Any, grp: Any, carla_map: Any, route: list[Any], actor: dict[str, Any]) -> dict[str, Any]:
+    tr = carla_transform(carla, actor)
+    pwp = preview_waypoint(carla, carla_map, tr)
+    result = {
+        "actor_id": actor.get("actor_id"),
+        "preview": None,
+        "targets_ahead": 0,
+        "best_distance_diff_m": None,
+        "selected_ego_route_index": None,
+        "selected_ego_distance_m": None,
+        "selected_cbv_distance_m": None,
+        "native_interaction": False,
+    }
+    if pwp is None:
+        result["failure"] = "no_preview_waypoint"
+        return result
+
+    result["preview"] = {
+        "road_id": int(pwp.road_id),
+        "section_id": int(pwp.section_id),
+        "lane_id": int(pwp.lane_id),
+        "s": float(pwp.s),
+        "x": float(pwp.transform.location.x),
+        "y": float(pwp.transform.location.y),
+        "z": float(pwp.transform.location.z),
+        "yaw_deg": float(pwp.transform.rotation.yaw),
+        "lane_width_m": float(pwp.lane_width),
+        "is_junction": bool(pwp.is_junction),
+    }
+
+    ego_dist = cumulative_route(route)
+    temp = DEFAULT["min_interaction_dis_diff_m"]
+
+    for idx, ed in ego_dist.items():
+        target = route[idx]
+        if not is_within_distance_ahead(
+            target.transform, pwp.transform,
+            DEFAULT["max_interaction_dis_m"],
+            DEFAULT["max_interaction_fov_deg"] / 2.0,
+        ):
+            continue
+        result["targets_ahead"] += 1
+        try:
+            trace, route_ids, cbv_distance = grp.trace_route(
+                pwp.transform.location, target.transform.location
+            )
+        except Exception as e:
+            continue
+        diff = abs(float(cbv_distance) - float(ed))
+        if result["best_distance_diff_m"] is None or diff < result["best_distance_diff_m"]:
+            result["best_distance_diff_m"] = float(diff)
+        if diff < temp:
+            temp = diff
+            result.update({
+                "selected_ego_route_index": int(idx),
+                "selected_ego_distance_m": float(ed),
+                "selected_cbv_distance_m": float(cbv_distance),
+                "native_interaction": True,
+                "selected_cbv_route_ids": route_ids,
+                "selected_cbv_route_lane_uids": [
+                    [int(w.road_id), int(w.section_id), int(w.lane_id)]
+                    for w, _ in trace
+                ],
+            })
+
+    if not result["native_interaction"]:
+        result["failure"] = "no_native_interaction"
+    return result
+
+
+
+class _NoopRoutePlanner:
+    def update_inter_info(self, *args, **kwargs):
+        return None
+
+
+def rift_reference_interaction(carla: Any, grp: Any, carla_map: Any, route: list[Any],
+                               actor: dict[str, Any]) -> dict[str, Any]:
+    """Run the repository's current BaseCBVRecog method as an independent parity oracle."""
+    try:
+        from rift.cbv.recognition.base_cbv import BaseCBVRecog
+    except Exception as e:
+        return {"status": "unavailable", "reason": f"rift_import:{type(e).__name__}:{e}"}
+    tr = carla_transform(carla, actor)
+    pwp = preview_waypoint(carla, carla_map, tr)
+    if pwp is None:
+        return {"status": "no_preview", "native_interaction": False}
+    ref = BaseCBVRecog({"desired_speed": 0.0}, logger=None)
+    ref._map = carla_map
+    ref.global_route_planner = grp
+    ref.route_planner = _NoopRoutePlanner()
+    ref.max_route_len = DEFAULT["max_ego_route_len"]
+    ref.max_interaction_dis = DEFAULT["max_interaction_dis_m"]
+    ref.max_interaction_fov = DEFAULT["max_interaction_fov_deg"]
+    ref.min_interaction_dis_diff = DEFAULT["min_interaction_dis_diff_m"]
+    ego_dist = cumulative_route(route)
+    wp = ref.find_interaction_waypoint(route, pwp, actor.get("actor_id", -1), ego_dist)
+    dbg = ref.last_interaction_debug.get(int(actor.get("actor_id", -1)), {})
+    return {
+        "status": "pass",
+        "native_interaction": wp is not None,
+        "selected_ego_route_index": dbg.get("selected_ego_route_index"),
+        "best_distance_diff_m": dbg.get("best_distance_diff"),
+    }
+
+def candidate_semantics(carla: Any, carla_map: Any, actor: dict[str, Any]) -> dict[str, Any]:
+    tr = carla_transform(carla, actor)
+    ego_loc = actor["_ego_location"]
+    dist = float(ego_loc.distance(tr.location))
+    pwp = preview_waypoint(carla, carla_map, tr)
+    out = {
+        "distance_m": dist,
+        "distance_pass": DEFAULT["min_distance_m"] < dist <= DEFAULT["search_radius_m"],
+        "preview_exists": pwp is not None,
+        "junction_heading_pass": True,
+    }
+    if pwp is not None and pwp.is_junction:
+        a = tr.get_forward_vector()
+        b = pwp.transform.get_forward_vector()
+        out["junction_heading_error_deg"] = float(a.get_vector_angle(b))
+        out["junction_heading_pass"] = out["junction_heading_error_deg"] <= 20.0
+    out["candidate_filter_pass"] = (
+        out["distance_pass"] and out["preview_exists"] and out["junction_heading_pass"]
+    )
+    return out
+
+
+def coord_roundtrip(carla: Any, ego: dict[str, Any], actor: dict[str, Any]) -> dict[str, Any]:
+    ego_tr = carla_transform(carla, ego)
+    a_tr = carla_transform(carla, actor)
+    p = a_tr.location
+    e = ego_tr.location
+    yaw = math.radians(float(ego_tr.rotation.yaw))
+    dx, dy, dz = float(p.x-e.x), float(p.y-e.y), float(p.z-e.z)
+    # CARLA world is left-handed; this is the v7 contract x-forward, y-right.
+    c, s = math.cos(yaw), math.sin(yaw)
+    lx = c*dx + s*dy
+    ly = -s*dx + c*dy
+    bx = c*lx - s*ly + e.x
+    by = s*lx + c*ly + e.y
+    actor_yaw = math.radians(float(a_tr.rotation.yaw))
+    local_yaw = yaw_wrap(actor_yaw - yaw)
+    world_yaw = yaw_wrap(local_yaw + yaw)
+    return {
+        "local_x_m": lx,
+        "local_y_m": ly,
+        "roundtrip_position_error_m": math.hypot(bx-p.x, by-p.y),
+        "roundtrip_z_error_m": abs((dz+e.z)-p.z),
+        "local_yaw_rad": local_yaw,
+        "roundtrip_yaw_error_rad": abs(yaw_wrap(world_yaw - actor_yaw)),
+    }
+
+
+def blueprint_measurement(world: Any, carla: Any) -> dict[str, Any]:
+    lib = world.get_blueprint_library()
+    try:
+        bp = lib.find("vehicle.tesla.model3")
+    except Exception as e:
+        return {"status": "fail", "reason": f"blueprint_not_found:{e}"}
+    sp = world.get_map().get_spawn_points()
+    require(sp, "CARLA map has no vehicle spawn points")
+    # Exactly one official spawn point, exactly one attempt. No retry.
+    actor = world.try_spawn_actor(bp, sp[0])
+    if actor is None:
+        return {"status": "fail", "reason": "blueprint_probe_spawn_rejected", "attempted_spawn_index": 0}
+    try:
+        bb = actor.bounding_box
+        return {
+            "status": "pass",
+            "type_id": actor.type_id,
+            "extent_xyz_m": [float(bb.extent.x), float(bb.extent.y), float(bb.extent.z)],
+            "box_size_lwh_m": [2*float(bb.extent.x), 2*float(bb.extent.y), 2*float(bb.extent.z)],
+            "offset_xyz_m": [float(bb.location.x), float(bb.location.y), float(bb.location.z)],
+        }
+    finally:
+        actor.destroy()
+
+
+def raw_sedan_spawn(world: Any, carla: Any, actor: dict[str, Any]) -> dict[str, Any]:
+    bp = world.get_blueprint_library().find("vehicle.tesla.model3")
+    tr = carla_transform(carla, actor)
+    actor_id = actor.get("actor_id")
+    spawned = world.try_spawn_actor(bp, tr)
+    if spawned is None:
+        return {
+            "actor_id": actor_id,
+            "status": "rejected",
+            "raw_pose_correction": False,
+            "reason": "CARLA_rejected_raw_pose",
+        }
+    try:
+        actual = spawned.get_transform()
+        return {
+            "actor_id": actor_id,
+            "status": "accepted",
+            "raw_pose_correction": False,
+            "position_error_m": distance2(actual.location, tr.location),
+            "yaw_error_deg": abs(((float(actual.rotation.yaw)-float(tr.rotation.yaw)+180)%360)-180),
+        }
+    finally:
+        spawned.destroy()
+
+
+
+def scene_occupancy_spawn(client: Any, world: Any, carla: Any, scene: dict[str, Any],
+                          target_actors: list[dict[str, Any]]) -> dict[str, Any]:
+    """One-shot background replay + raw sedan occupancy test; no repair/retry."""
+    if not scene.get("ego", {}).get("type_id"):
+        return {
+            "status": "unknown",
+            "reason": "ego_type_id_missing; refusing to invent an ego blueprint",
+            "background": [],
+            "targets": [],
+        }
+    target_ids = {a.get("actor_id") for a in target_actors}
+    ego_row = dict(scene["ego"])
+    ego_row["actor_id"] = "__ego__"
+    background = [ego_row] + [
+        a for a in scene.get("actors", [])
+        if a.get("actor_id") not in target_ids and a.get("type_id", "").startswith("vehicle.")
+    ]
+    lib = world.get_blueprint_library()
+    pending = []
+    rows = []
+    for a in background:
+        try:
+            bp = lib.find(str(a["type_id"]))
+        except Exception as e:
+            rows.append({"actor_id": a.get("actor_id"), "status": "missing_blueprint", "error": str(e)})
+            continue
+        pending.append((a, carla.command.SpawnActor(bp, carla_transform(carla, a))))
+    responses = client.apply_batch_sync([cmd for _, cmd in pending], False)
+    spawned_ids = []
+    incomplete = False
+    for (a, _), response in zip(pending, responses):
+        if response.error:
+            rows.append({"actor_id": a.get("actor_id"), "status": "spawn_rejected", "error": response.error})
+            incomplete = True
+        else:
+            rows.append({"actor_id": a.get("actor_id"), "status": "spawned"})
+            spawned_ids.append(response.actor_id)
+    if rows and any(x["status"] != "spawned" for x in rows):
+        client.apply_batch([carla.command.DestroyActor(x) for x in spawned_ids])
+        return {
+            "status": "unknown",
+            "reason": "background_scene_replay_incomplete",
+            "background": rows,
+            "targets": [],
+        }
+    target_results = []
+    for a in target_actors:
+        bp = lib.find("vehicle.tesla.model3")
+        spawned = world.try_spawn_actor(bp, carla_transform(carla, a))
+        if spawned is None:
+            target_results.append({"actor_id": a.get("actor_id"), "status": "rejected_in_scene", "raw_pose_correction": False})
+        else:
+            try:
+                target_results.append({"actor_id": a.get("actor_id"), "status": "accepted_in_scene", "raw_pose_correction": False})
+            finally:
+                spawned.destroy()
+    client.apply_batch([carla.command.DestroyActor(x) for x in spawned_ids])
+    return {"status": "complete", "background": rows, "targets": target_results}
+
+def audit_record(client: Any, carla: Any, grp_cls: Any, row: dict[str, Any], out_dir: Path) -> dict[str, Any]:
+    scene = read_json(Path(row["snapshot_path"]))
+    town = scene.get("town") or scene.get("map_name")
+    require(town, f"record {row.get('record_index')}: snapshot missing town")
+    world = client.load_world(str(town))
+    carla_map = world.get_map()
+    xodr_sha = sha256_bytes(carla_map.to_opendrive().encode("utf-8"))
+    expected_xodr = scene.get("opendrive_sha256") or scene.get("opendrive_sha256")
+    map_identity = {
+        "town_expected": town,
+        "town_actual": carla_map.name,
+        "town_pass": normalize_map_name(carla_map.name) == normalize_map_name(town),
+        "opendrive_sha256_actual": xodr_sha,
+        "opendrive_sha256_expected": expected_xodr,
+        "opendrive_pass": (expected_xodr is None or expected_xodr == xodr_sha),
+    }
+    route, route_checks = route_waypoints(carla_map, scene)
+    grp = grp_cls(carla_map, 2.0)
+
+    ego = scene["ego"]
+    ego_tr = carla_transform(carla, ego)
+    actors = scene.get("actors", [])
+    selected_ids = set(scene.get("target_actor_ids", []))
+    if not selected_ids:
+        selected_ids = {a.get("actor_id") for a in actors if a.get("is_target")}
+    target_actors = [dict(a) for a in actors if a.get("actor_id") in selected_ids]
+    for a in target_actors:
+        a["_ego_location"] = ego_tr.location
+
+    native_rows = []
+    for a in target_actors:
+        csem = candidate_semantics(carla, carla_map, a)
+        inter = exact_interaction(carla, grp, carla_map, route, a)
+        parity = rift_reference_interaction(carla, grp, carla_map, route, a)
+        rt = coord_roundtrip(carla, ego, a)
+        parity_ok = (
+            parity.get("status") != "pass"
+            or (
+                bool(parity.get("native_interaction")) == bool(inter["native_interaction"])
+                and parity.get("selected_ego_route_index") == inter.get("selected_ego_route_index")
+            )
+        )
+        native_rows.append({
+            "actor_id": a.get("actor_id"),
+            "candidate_semantics": csem,
+            "interaction": inter,
+            "rift_reference_parity": parity,
+            "rift_reference_parity_pass": parity_ok,
+            "coordinate_roundtrip": rt,
+            "native_positive": bool(csem["candidate_filter_pass"] and inter["native_interaction"]),
+        })
+
+    bp = blueprint_measurement(world, carla)
+    sedan_rows = [raw_sedan_spawn(world, carla, a) for a in target_actors]
+    scene_occupancy = scene_occupancy_spawn(client, world, carla, scene, target_actors)
+
+    record = {
+        "schema_version": "hv_v8_p1_record_v1",
+        "record_index": row["record_index"],
+        "scene_id": row["scene_id"],
+        "map_identity": map_identity,
+        "route_checks": route_checks,
+        "native_rows": native_rows,
+        "fixed_model3_blueprint": bp,
+        "fixed_model3_raw_pose_spawn": sedan_rows,
+        "fixed_model3_scene_occupancy": scene_occupancy,
+        "physics_ticks": 0,
+        "post_spawn_pose_correction": False,
+        "forbidden_fallbacks_used": [],
+    }
+    write_json(out_dir / f"record_{int(row['record_index']):04d}.json", record)
+    return record
+
+
+def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
+    coord = []
+    native = []
+    sedan = []
+    map_ok = []
+    for r in records:
+        map_ok.append(r["map_identity"]["town_pass"] and r["map_identity"]["opendrive_pass"])
+        for n in r["native_rows"]:
+            rt = n["coordinate_roundtrip"]
+            coord.append(
+                rt["roundtrip_position_error_m"] <= 1e-6
+                and rt["roundtrip_z_error_m"] <= 1e-6
+                and rt["roundtrip_yaw_error_rad"] <= 1e-9
+            )
+            native.append(n["native_positive"])
+        sedan += [x["status"] == "accepted" for x in r["fixed_model3_raw_pose_spawn"]]
+    parity = [
+        n["rift_reference_parity_pass"]
+        for r in records for n in r["native_rows"]
+        if n.get("rift_reference_parity", {}).get("status") == "pass"
+    ]
+    return {
+        "schema_version": "hv_v8_p1_summary_v1",
+        "records": len(records),
+        "map_identity_all_pass": bool(map_ok) and all(map_ok),
+        "coordinate_roundtrip_all_pass": bool(coord) and all(coord),
+        "rift_reference_parity_all_pass": bool(parity) and all(parity),
+        "historical_native_positive_count": sum(native),
+        "historical_native_rows": len(native),
+        "fixed_model3_raw_pose_spawn_accepted": sum(sedan),
+        "fixed_model3_raw_pose_spawn_rows": len(sedan),
+        "p1_pass": (
+            bool(map_ok) and all(map_ok)
+            and bool(coord) and all(coord)
+            and bool(parity) and all(parity)
+            and all(r["fixed_model3_blueprint"].get("status") == "pass" for r in records)
+        ),
+        "important": "Raw sedan rejection is a measured fact, not repaired. Native truth and sedan spawn are separate.",
+    }
+
+
+def main() -> None:
+    p = argparse.ArgumentParser()
+    p.add_argument("--manifest", required=True, help="JSONL with record_index, scene_id, snapshot_path")
+    p.add_argument("--rift-root", required=True)
+    p.add_argument("--rift-recognition-config")
+    p.add_argument("--rift-mode", default="eval")
+    p.add_argument("--carla-pythonapi")
+    p.add_argument("--host", default="127.0.0.1")
+    p.add_argument("--port", type=int, default=31120)
+    p.add_argument("--output", required=True)
+    p.add_argument("--limit", type=int)
+    args = p.parse_args()
+
+    try:
+        apply_rift_config(args.rift_recognition_config, args.rift_mode)
+        carla, grp = import_carla_and_grp(args.rift_root, args.carla_pythonapi)
+        client = carla.Client(args.host, args.port)
+        client.set_timeout(30.0)
+        rows = read_jsonl(Path(args.manifest))
+        require(rows, "P1 manifest is empty")
+        if args.limit:
+            rows = rows[:args.limit]
+        out = Path(args.output).resolve()
+        require(not out.exists(), f"Refuse overwrite: {out}")
+        out.mkdir(parents=True)
+
+        # Dedicated-server guard: do not run destructive load_world against an
+        # existing experiment service with vehicles.
+        current = client.get_world()
+        vehicle_count = len(current.get_actors().filter("vehicle.*"))
+        require(vehicle_count == 0,
+                f"Refuse P1 on non-empty CARLA world ({vehicle_count} vehicles). Use a dedicated server.")
+
+        records = []
+        for row in rows:
+            records.append(audit_record(client, carla, grp, row, out))
+        summary = summarize(records)
+        write_json(out / "summary.json", summary)
+        print(json.dumps(summary, ensure_ascii=False, indent=2))
+        raise SystemExit(0 if summary["p1_pass"] else 3)
+    except (ContractError, FileNotFoundError, ImportError) as e:
+        print(f"P1_FAIL {e}", file=sys.stderr)
+        raise SystemExit(2)
+
+
+if __name__ == "__main__":
+    main()

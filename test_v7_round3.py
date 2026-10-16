@@ -65,13 +65,45 @@ class StationGraphTests(unittest.TestCase):
     def test_real_pose_membership_flag(self):
         uid='1:0:1'; graph={'lanes':[lane(uid)],'edges':[]}
         c={'condition':{'directed_map':graph,'ego_world_pose':{'x':0.,'y':0.,'z':0.,'yaw_deg':0.}}}
-        actor={'pose':{'x':1.,'y':2.2,'z':0.,'yaw_deg':0.},
-               'road_geometry':{'preview_waypoint':{'road_id':1,'section_id':0,'lane_id':1}},
-               'native':{'interaction_waypoint':{'road_id':1,'section_id':0,'lane_id':1,'x':15.,'y':0.,'z':0.,'s':15.}}}
+        actor = {
+            'pose': {
+                'x': 1.,
+                'y': 2.2,
+                'z': 0.,
+                'yaw_deg': 0.
+            },
+            'road_geometry': {
+                'preview_waypoint': {
+                    'road_id': 1,
+                    'section_id': 0,
+                    'lane_id': 1,
+                    'x': 0.,
+                    'y': 0.,
+                    'z': 0.,
+                    'yaw_deg': 0.,
+                    's': 0.
+                }
+            },
+            'native': {
+                'interaction_waypoint': {
+                    'road_id': 1,
+                    'section_id': 0,
+                    'lane_id': 1,
+                    'x': 15.,
+                    'y': 0.,
+                    'z': 0.,
+                    'yaw_deg': 0.,
+                    's': 15.
+                }
+            }
+        }
         result=actor_station_audit(c,actor,anchor_match=['route-lane:'+uid])
         self.assertEqual(result['status'],'unknown')
         self.assertFalse(result['lateral_membership'])
-        self.assertEqual(result['reason'],'initial_lateral_or_heading_membership_unverified')
+        self.assertEqual(
+            result['reason'],
+            'initial_lateral_membership_failed'
+        )
 
     def test_map_normalization_does_not_modify_source(self):
         def p(s,x):return [x,0.,0.]
@@ -84,6 +116,63 @@ class StationGraphTests(unittest.TestCase):
         self.assertEqual(n,1)
         self.assertEqual(len(out['lanes'][0]['centerline']),2)
         self.assertEqual(len(a['lanes'][0]['centerline']),3)
+
+    def test_missing_preview_station_fails_closed(self):
+        uid = '1:0:1'
+        graph = {'lanes': [lane(uid)], 'edges': []}
+
+        c = {
+            'condition': {
+                'directed_map': graph,
+                'ego_world_pose': {
+                    'x': 0.,
+                    'y': 0.,
+                    'z': 0.,
+                    'yaw_deg': 0.
+                }
+            }
+        }
+
+        actor = {
+            'pose': {
+                'x': 1.,
+                'y': 0.,
+                'z': 0.,
+                'yaw_deg': 0.
+            },
+            'road_geometry': {
+                'preview_waypoint': {
+                    'road_id': 1,
+                    'section_id': 0,
+                    'lane_id': 1
+                }
+            },
+            'native': {
+                'interaction_waypoint': {
+                    'road_id': 1,
+                    'section_id': 0,
+                    'lane_id': 1,
+                    'x': 15.,
+                    'y': 0.,
+                    'z': 0.,
+                    'yaw_deg': 0.,
+                    's': 15.
+                }
+            }
+        }
+
+        result = actor_station_audit(
+            c,
+            actor,
+            anchor_match=['route-lane:' + uid]
+        )
+
+        self.assertEqual(result['status'], 'unknown')
+        self.assertEqual(
+            result['reason'],
+            'native_preview_station_unrepresentable'
+        )
+        self.assertNotIn('lateral_membership', result)
 
     def test_preview_to_native_trace_edge_is_checked(self):
         from v7.diagnostics import inspect_actor
