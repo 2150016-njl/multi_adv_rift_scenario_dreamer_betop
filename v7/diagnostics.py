@@ -151,6 +151,7 @@ def inspect_actor(condition,actor,anchors,approaches):
             'support_status':'unknown_map_support' if missing or path is None else
                 'supported_preliminary' if not failures else 'not_supported_by_current_export_or_candidates',
             'native_route_max_xy_residual_m':max(residuals) if residuals else None,
+            'native_trace_station_audit':station_audit.get('trace_audit'),
             'lane_chart_representability':'not_tested','fixed_sedan_geometry_compatible':None,
             'fixed_sedan_raw_spawn_accepted':None,
             'new_native_replay_status':'not_run','station_audit':station_audit}

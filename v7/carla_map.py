@@ -68,6 +68,15 @@ def export_directed_lanes(world_map, ego, route_waypoints, radius_m=100.,
             return
         if not (inside(source) or inside(dest)):
             return
+        # Keep the exact typed-transition endpoints in the exported lane
+        # samples. The old implementation only logged missing bins; it did not
+        # insert the endpoint, which could make station_to_progress() unable to
+        # represent a valid transition at the radius boundary.
+        for endpoint in (source, dest):
+            if inside(endpoint):
+                lane_key=_uid(endpoint)
+                endpoint_bin=int(math.floor(float(endpoint.s)/step_m))
+                buckets[lane_key][endpoint_bin]=endpoint
         key = (_uid(source), _uid(dest), kind,
                round(float(source.s), 2), round(float(dest.s), 2))
         transitions[key] = {'source': key[0], 'destination': key[1],
@@ -152,8 +161,8 @@ def export_directed_lanes(world_map, ego, route_waypoints, radius_m=100.,
             if lane_id in buckets:
                 # Existing same-bin sample is sufficient for lane coverage.
                 if int(math.floor(s / step_m)) not in buckets[lane_id]:
-                    # The transition is still preserved with its exact station
-                    # even if the coarse geometry omits this vertex.
+                    # Defensive diagnostic only; add_transition() normally
+                    # inserts all in-radius endpoints before this pass.
                     boundary.append({'source': row['source'], 'destination': row['destination'],
                                      'kind': 'transition_station_not_sampled',
                                      'source_s_m': row['source_s_m'],

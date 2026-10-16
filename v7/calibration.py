@@ -204,6 +204,9 @@ def calibrate(plan_path,output,host,port,timeout,dedicated,config):
                             row['fixed_sedan_labels'].append({'actor_id':attempt['source_actor_id'],
                                 'fixed_sedan_geometry_compatible':compatible,
                                 'fixed_sedan_raw_spawn_accepted':attempt['accepted'],
+                                'spawn_outcome':'accepted' if attempt['accepted'] else
+                                    'rejected_or_error_observed',
+                                'spawn_error':attempt.get('error'),
                                 'context_complete':fixed['context_complete']})
                         if world.get_snapshot().frame!=frame:aborted=True;raise RuntimeError('Unexpected frame advancement')
                         row.update(status='calibration_observed',physics='not_run',post_spawn_pose_corrections=False)
@@ -230,6 +233,9 @@ def calibrate(plan_path,output,host,port,timeout,dedicated,config):
         'identity_mismatch_records':sum(r.get('map_identity_probe',{}).get('classification') not in (None,
             'verified_same_live_map_and_expected_sha') for r in results),
         'run_mode':run_mode, 'map_exported_records':sum(r.get('status')=='map_exported' for r in results),
-        'meaning':'Map-only exports or GT/sedan calibration; no model evaluated; missing calibration unknown.'})
+        'fixed_sedan_target_rejections':sum(
+            1 for r in results for a in r.get('fixed_sedan_labels',[])
+            if a.get('fixed_sedan_raw_spawn_accepted') is False),
+        'meaning':'Map-only exports or GT/sedan calibration; no model evaluated; spawn rejection is observed evidence, not a fabricated collision label.'})
     if any(r['errors'] for r in results) or aborted or disagreements:
         raise SystemExit('Calibration incomplete/inconsistent; evidence preserved')

@@ -8,18 +8,31 @@ def lane_uid(point):
     return '%s:%s:%s' % (point['road_id'],point['section_id'],point['lane_id'])
 
 
-def project(line,point):
+def project(line,point,min_xy_segment_m=1.e-6):
+    """Project onto XY polyline while ignoring zero-length XY segments.
+
+    The returned ``segment_index`` is the index in the original input polyline,
+    so width/yaw arrays aligned to the original vertices remain usable.
+    """
     points=np.asarray(line,dtype=float);p=np.asarray(point,dtype=float)
     if len(points)<2:return None
-    delta=points[1:]-points[:-1];length=np.linalg.norm(delta[:,:2],axis=1)
-    t=np.clip(((p[:2]-points[:-1,:2])*delta[:,:2]).sum(axis=1)/np.maximum(length**2,1.e-15),0,1)
-    q=points[:-1]+t[:,None]*delta
-    distances=np.linalg.norm(q[:,:2]-p[:2],axis=1);i=int(np.argmin(distances))
-    return {'distance_xy_m':float(distances[i]),
-            'progress_m':float(np.r_[0,np.cumsum(length)][i]+t[i]*length[i]),
-            'projected_xyz':q[i].tolist(),
+    delta=points[1:]-points[:-1]
+    length=np.linalg.norm(delta[:,:2],axis=1)
+    valid=length>float(min_xy_segment_m)
+    if not np.any(valid):
+        return None
+    original=np.nonzero(valid)[0]
+    d=delta[valid];ell=length[valid];starts=points[:-1][valid]
+    t=np.clip(((p[:2]-starts[:,:2])*d[:,:2]).sum(axis=1)/np.maximum(ell**2,1.e-15),0,1)
+    q=starts+t[:,None]*d
+    distances=np.linalg.norm(q[:,:2]-p[:2],axis=1)
+    j=int(np.argmin(distances));i=int(original[j])
+    prefix=np.r_[0,np.cumsum(length)]
+    return {'distance_xy_m':float(distances[j]),
+            'progress_m':float(prefix[i]+t[j]*length[i]),
+            'projected_xyz':q[j].tolist(),
             'tangent_yaw_rad':float(np.arctan2(delta[i,1],delta[i,0])),
-            'segment_index':i,'segment_fraction':float(t[i])}
+            'segment_index':i,'segment_fraction':float(t[j])}
 
 
 class DirectedMapBuilder:
@@ -33,8 +46,18 @@ class DirectedMapBuilder:
             line=row['centerline'];width=row['width_m']
             if len(line)<2 or len(width)!=len(line) or min(width)<=0:
                 raise ValueError('Invalid lane samples')
+            if any(np.linalg.norm(np.asarray(b[:2])-np.asarray(a[:2]))<=1.e-6
+                   for a,b in zip(line,line[1:])):
+                raise ValueError('Zero-length XY segment remains in lane export: '+row['lane_uid'])
             local=world_to_local(ego,line)
             steps=np.linalg.norm(np.diff(np.asarray(local)[:,:2],axis=0),axis=1)
+            stations=row.get('s_samples_m')
+            direction=row.get('station_travel_direction')
+            if stations is not None:
+                if len(stations)!=len(line) or direction not in (-1,1):
+                    raise ValueError('Invalid station identity for lane '+row['lane_uid'])
+                if any((float(b)-float(a))*direction<=1.e-7 for a,b in zip(stations,stations[1:])):
+                    raise ValueError('Non-monotone OpenDRIVE station samples for '+row['lane_uid'])
             node={key:row[key] for key in ('lane_uid','road_id','section_id','lane_id','is_junction')}
             node.update(centerline_world_xyz=line,centerline_local_xyz=local,width_m=width,
                 successors=list(row.get('successors',[])),predecessors=list(row.get('predecessors',[])),
@@ -43,6 +66,8 @@ class DirectedMapBuilder:
                 yaw_samples_world_deg=row.get('yaw_samples_deg'),
                 station_travel_direction=row.get('station_travel_direction'),
                 max_station_gap_m=row.get('max_station_gap_m'),
+                station_span_m=(abs(float(row['s_samples_m'][-1])-float(row['s_samples_m'][0]))
+                                if row.get('s_samples_m') else None),
                 sample_identity_status='station_samples_unavailable_in_legacy_export'
                     if not row.get('s_samples_m') else 'sampled',
                 topology_source=row.get('topology_source'),

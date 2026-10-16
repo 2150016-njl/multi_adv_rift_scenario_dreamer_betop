@@ -97,6 +97,8 @@ def normalize_map(payload):
         lane['max_station_gap_m']=max(gaps)
         require(all(math.hypot(q[0]-p[0],q[1]-p[1])>=1e-4 for p,q in zip(lane['centerline'],lane['centerline'][1:])),
                 'Duplicate XY survived normalization')
+        require(all((b-a)*sign>1e-7 for a,b in zip(lane['s_samples_m'],lane['s_samples_m'][1:])),
+                'Station order changed during normalization '+str(lane['lane_uid']))
     payload['evidence']['normalization']={'algorithm':'drop_adjacent_xy_lt_0p0001m_keep_latest',
                                          'removed_vertices':removed,
                                          'derived_map':True,'synthetic_vertices':0}
@@ -234,8 +236,18 @@ def gate(a):
     both_supported=sum(all(r['station_audit']['status']=='supported' for r in v)
                        for v in by_record.values() if len(v)>=2)
     raw_status=Counter(r.get('station_audit',{}).get('status','missing') for r in raw)
+    trace_status=Counter((r.get('station_audit',{}).get('trace_audit') or {}).get('status','missing')
+                         for r in front)
+    lateral_fail=[{'record_index':r['record_index'],'actor_id':r['actor_id'],
+                   'lateral_distance_m':r.get('station_audit',{}).get('lateral_distance_m'),
+                   'half_width_m':r.get('station_audit',{}).get('half_width_m')}
+                  for r in front if r.get('station_audit',{}).get('lateral_membership') is False]
+    heading_fail=[{'record_index':r['record_index'],'actor_id':r['actor_id'],
+                   'heading_error_rad':r.get('station_audit',{}).get('heading_error_rad')}
+                  for r in front if r.get('station_audit',{}).get('heading_membership') is False]
     missing_rows=[{'record_index':r['record_index'],'actor_id':r['actor_id'],
-                  'reason':r['station_audit'].get('reason')}
+                  'reason':r['station_audit'].get('reason'),
+                  'trace_reason':(r.get('station_audit',{}).get('trace_audit') or {}).get('reason')}
                  for r in front if r['station_audit']['status']!='supported']
     missing_route=[{'record_index':r['record_index'],
                     'route_points_without_lane_match':r['route_points_without_lane_match']}
@@ -249,6 +261,10 @@ def gate(a):
             'preliminary_directed_support':preliminary,
             'strict_station_graph_statuses':dict(statuses),
             'strict_station_graph_supported':statuses['supported'],
+            'strict_trace_statuses':dict(trace_status),
+            'strict_trace_supported':trace_status['supported'],
+            'strict_lateral_failures':lateral_fail,
+            'strict_heading_failures':heading_fail,
             'scenes_with_at_least_one_station_supported':scene_supported,
             'double_scenes_both_station_supported':both_supported,
             'raw_front_station_graph_statuses':dict(raw_status),
@@ -257,6 +273,7 @@ def gate(a):
             'station_non_supported_rows':missing_rows,
             'limits':['Station graph uses GT solely in offline diagnostics, never in model conditions.',
                       'Station-monotone path is not continuous lane-chart, collision-free swept Model3, or dynamics certification.',
+                      'Strict P2 requires station support, native preview-to-trace representation, and raw-pose lateral/heading membership for all 110 front GT rows.',
                       'Unknown is neither negative training supervision nor proof that k=0.',
                       'P1/full native and raw spawn must be independently audited.']}
     write_json_new(a.output,result)
