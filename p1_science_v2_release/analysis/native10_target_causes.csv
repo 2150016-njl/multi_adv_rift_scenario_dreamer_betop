@@ -1,0 +1,11 @@
+﻿ordinal,record_index,town,actor_id,original_record_summary_p1_pass,rift_parity_status,candidate_filter_pass,junction_heading_error_deg,junction_heading_pass,candidate_distance_m,native_positive_status,independent_interaction,rift_reference_interaction,independent_ego_index,reference_ego_index,independent_best_distance_diff_m,reference_best_distance_diff_m,reasons
+24,1039,Town12,4735,False,fail,True,,True,10.083220481872559,pass,True,True,12,28,9.023659706115723,9.803359508514404,route_index_difference
+33,1279,Town13,10893,True,pass,False,nan,False,11.974303245544434,fail,True,True,28,28,4.036241054534912,4.036241054534912,candidate_heading_nan
+34,1284,Town13,10891,True,pass,False,nan,False,16.041311264038086,fail,True,True,48,48,16.537118434906006,16.537118434906006,candidate_heading_nan
+35,1289,Town13,10893,True,pass,False,nan,False,18.84478759765625,fail,True,True,24,24,10.984381437301636,10.984381437301636,candidate_heading_nan
+38,1349,Town15,11111,True,pass,True,,True,15.570526123046875,fail,False,False,,,20.61137890815735,20.61137890815735,historical_positive_vs_native_negative
+58,2376,Town04,573,False,fail,True,0.26646649837493896,True,14.443577766418457,pass,True,True,12,49,14.412453651428223,16.44802701473236,route_index_difference
+84,3417,Town13,9134,False,fail,True,,True,15.686969757080078,pass,True,True,8,18,16.000036239624023,18.00010061264038,route_index_difference
+85,3422,Town13,9143,False,fail,True,,True,13.038558006286621,pass,True,True,48,16,16.000035047531128,16.000036239624023,route_index_difference
+90,3490,Town13,9086,False,fail,True,,True,11.054291725158691,pass,True,True,12,36,12.000614643096924,12.684409499168396,route_index_difference
+93,3505,Town13,9086,False,fail,True,,True,11.483798027038574,pass,True,True,12,31,12.000545024871826,13.54428255558014,route_index_difference

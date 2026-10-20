@@ -1,0 +1,27 @@
+ordinal,record_index,actor_id,actor_lane,gt_anchor_lane,longitudinal_reachable,coarse_category,lane_change_legality,spatial_approach_coverage,p2_gt_approach_recalled
+6,90,11135,"[140, 0, -3]","[140, 0, -3]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+6,90,11141,"[140, 0, -2]","[140, 0, -3]",False,adjacent_lane_lateral_rule_not_evaluated,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+7,95,11135,"[140, 0, -3]","[140, 0, -3]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+7,95,11141,"[140, 0, -2]","[140, 0, -3]",False,adjacent_lane_lateral_rule_not_evaluated,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+8,100,11141,"[140, 0, -2]","[140, 0, -3]",False,adjacent_lane_lateral_rule_not_evaluated,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+8,100,11143,"[140, 0, -3]","[140, 0, -3]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+9,105,11135,"[140, 0, -3]","[140, 0, -3]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+9,105,11141,"[140, 0, -2]","[140, 0, -3]",False,adjacent_lane_lateral_rule_not_evaluated,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+10,110,11141,"[140, 0, -2]","[140, 0, -3]",False,adjacent_lane_lateral_rule_not_evaluated,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+10,110,11143,"[140, 0, -3]","[140, 0, -3]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+11,115,11141,"[140, 0, -2]","[140, 0, -3]",False,adjacent_lane_lateral_rule_not_evaluated,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+11,115,11143,"[140, 0, -3]","[140, 0, -3]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+38,1349,11105,"[137, 0, -2]","[137, 0, -2]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+38,1349,11111,"[137, 0, -2]","[137, 0, -2]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+38,1349,11110,"[137, 0, -1]","[137, 0, -2]",False,adjacent_lane_lateral_rule_not_evaluated,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+39,1354,11111,"[137, 0, -2]","[137, 0, -2]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+39,1354,11110,"[137, 0, -1]","[137, 0, -2]",False,adjacent_lane_lateral_rule_not_evaluated,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+39,1354,11105,"[137, 0, -2]","[137, 0, -2]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+40,1359,11111,"[137, 0, -2]","[137, 0, -2]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+40,1359,11110,"[137, 0, -1]","[137, 0, -2]",False,adjacent_lane_lateral_rule_not_evaluated,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+41,1364,11111,"[137, 0, -2]","[137, 0, -2]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+41,1364,11110,"[137, 0, -1]","[137, 0, -2]",False,adjacent_lane_lateral_rule_not_evaluated,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+42,1369,11110,"[137, 0, -1]","[137, 0, -2]",False,adjacent_lane_lateral_rule_not_evaluated,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+42,1369,11111,"[137, 0, -2]","[137, 0, -2]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+43,1374,11110,"[137, 0, -1]","[137, 0, -2]",False,adjacent_lane_lateral_rule_not_evaluated,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED
+43,1374,11111,"[137, 0, -2]","[137, 0, -2]",True,longitudinal_reachability_true,NOT_EVALUATED,NOT_EVALUATED,NOT_EVALUATED

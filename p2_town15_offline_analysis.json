@@ -1,0 +1,560 @@
+{
+  "source_schema": "p2_lane_topology_probe_v1",
+  "source_town": "Town15",
+  "source_sha256": "0908ce5156d1b3ff2a59a6a40b11188f7117147532f8eb8dec1fea2584f3eeb6",
+  "gt_target_count": 26,
+  "counts": {
+    "adjacent_lane_lateral_rule_not_evaluated": 12,
+    "longitudinal_reachability_true": 14
+  },
+  "adjacent_lane_nonreach_actor_id_groups": [
+    {
+      "actor_id": "11110",
+      "record_indices": [
+        1349,
+        1354,
+        1359,
+        1364,
+        1369,
+        1374
+      ],
+      "occurrences": 6
+    },
+    {
+      "actor_id": "11141",
+      "record_indices": [
+        90,
+        95,
+        100,
+        105,
+        110,
+        115
+      ],
+      "occurrences": 6
+    }
+  ],
+  "is_P2_recall": false,
+  "results": [
+    {
+      "ordinal": 6,
+      "record_index": 90,
+      "actor_id": "11135",
+      "actor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "gt_anchor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 6,
+      "record_index": 90,
+      "actor_id": "11141",
+      "actor_lane": [
+        140,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "longitudinal_reachable": false,
+      "coarse_category": "adjacent_lane_lateral_rule_not_evaluated",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 7,
+      "record_index": 95,
+      "actor_id": "11135",
+      "actor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "gt_anchor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 7,
+      "record_index": 95,
+      "actor_id": "11141",
+      "actor_lane": [
+        140,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "longitudinal_reachable": false,
+      "coarse_category": "adjacent_lane_lateral_rule_not_evaluated",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 8,
+      "record_index": 100,
+      "actor_id": "11141",
+      "actor_lane": [
+        140,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "longitudinal_reachable": false,
+      "coarse_category": "adjacent_lane_lateral_rule_not_evaluated",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 8,
+      "record_index": 100,
+      "actor_id": "11143",
+      "actor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "gt_anchor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 9,
+      "record_index": 105,
+      "actor_id": "11135",
+      "actor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "gt_anchor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 9,
+      "record_index": 105,
+      "actor_id": "11141",
+      "actor_lane": [
+        140,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "longitudinal_reachable": false,
+      "coarse_category": "adjacent_lane_lateral_rule_not_evaluated",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 10,
+      "record_index": 110,
+      "actor_id": "11141",
+      "actor_lane": [
+        140,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "longitudinal_reachable": false,
+      "coarse_category": "adjacent_lane_lateral_rule_not_evaluated",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 10,
+      "record_index": 110,
+      "actor_id": "11143",
+      "actor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "gt_anchor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 11,
+      "record_index": 115,
+      "actor_id": "11141",
+      "actor_lane": [
+        140,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "longitudinal_reachable": false,
+      "coarse_category": "adjacent_lane_lateral_rule_not_evaluated",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 11,
+      "record_index": 115,
+      "actor_id": "11143",
+      "actor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "gt_anchor_lane": [
+        140,
+        0,
+        -3
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 38,
+      "record_index": 1349,
+      "actor_id": "11105",
+      "actor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 38,
+      "record_index": 1349,
+      "actor_id": "11111",
+      "actor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 38,
+      "record_index": 1349,
+      "actor_id": "11110",
+      "actor_lane": [
+        137,
+        0,
+        -1
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": false,
+      "coarse_category": "adjacent_lane_lateral_rule_not_evaluated",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 39,
+      "record_index": 1354,
+      "actor_id": "11111",
+      "actor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 39,
+      "record_index": 1354,
+      "actor_id": "11110",
+      "actor_lane": [
+        137,
+        0,
+        -1
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": false,
+      "coarse_category": "adjacent_lane_lateral_rule_not_evaluated",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 39,
+      "record_index": 1354,
+      "actor_id": "11105",
+      "actor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 40,
+      "record_index": 1359,
+      "actor_id": "11111",
+      "actor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 40,
+      "record_index": 1359,
+      "actor_id": "11110",
+      "actor_lane": [
+        137,
+        0,
+        -1
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": false,
+      "coarse_category": "adjacent_lane_lateral_rule_not_evaluated",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 41,
+      "record_index": 1364,
+      "actor_id": "11111",
+      "actor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 41,
+      "record_index": 1364,
+      "actor_id": "11110",
+      "actor_lane": [
+        137,
+        0,
+        -1
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": false,
+      "coarse_category": "adjacent_lane_lateral_rule_not_evaluated",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 42,
+      "record_index": 1369,
+      "actor_id": "11110",
+      "actor_lane": [
+        137,
+        0,
+        -1
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": false,
+      "coarse_category": "adjacent_lane_lateral_rule_not_evaluated",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 42,
+      "record_index": 1369,
+      "actor_id": "11111",
+      "actor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 43,
+      "record_index": 1374,
+      "actor_id": "11110",
+      "actor_lane": [
+        137,
+        0,
+        -1
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": false,
+      "coarse_category": "adjacent_lane_lateral_rule_not_evaluated",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    },
+    {
+      "ordinal": 43,
+      "record_index": 1374,
+      "actor_id": "11111",
+      "actor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "gt_anchor_lane": [
+        137,
+        0,
+        -2
+      ],
+      "longitudinal_reachable": true,
+      "coarse_category": "longitudinal_reachability_true",
+      "lane_change_legality": "NOT_EVALUATED",
+      "spatial_approach_coverage": "NOT_EVALUATED",
+      "p2_gt_approach_recalled": "NOT_EVALUATED"
+    }
+  ],
+  "interpretation": "Adjacent-lane classification does not prove legal lane changes, a continuous approach, or a safe initial spawn."
+}

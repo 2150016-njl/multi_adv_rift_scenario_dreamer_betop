@@ -1,0 +1,85 @@
+{
+  "schema_version": "p1_record100_calibration_ledger_v1",
+  "interpretation": "measured raw spawn rejections are negative evidence; unknown occupancy is never treated as legal",
+  "record_index": 100,
+  "scene_id": "RouteScenario_24333_idx27_rep0_frame145",
+  "original_manifest_95_pass": false,
+  "this_record_native_calibrated": {
+    "map_verified": true,
+    "route_verified": true,
+    "target_selection_verified": true,
+    "native_parity_verified": true,
+    "coordinate_roundtrip_summary_pass": true,
+    "all_verified": true
+  },
+  "source_reported_p1_pass": true,
+  "source_summary_is_not_physical_feasibility_pass": true,
+  "agents_count": 8,
+  "selected_target_count": 2,
+  "expected_background_actor_ids": [
+    "__ego__",
+    "11138",
+    "11134",
+    "11139",
+    "11140",
+    "11142",
+    "11133"
+  ],
+  "observed_background_actor_ids": [
+    "__ego__"
+  ],
+  "missing_from_occupancy_replay": [
+    "11133",
+    "11134",
+    "11138",
+    "11139",
+    "11140",
+    "11142"
+  ],
+  "occupancy_population_contract_verified": false,
+  "occupancy_status": "unknown",
+  "occupancy_reason": "background_scene_replay_incomplete",
+  "occupancy_full_scene_feasible": null,
+  "model3_generation_positive_examples_from_this_record": [],
+  "actor_calibrations": [
+    {
+      "actor_id": "11141",
+      "historical_type_id": "vehicle.carlamotors.carlacola",
+      "historical_rift_parity_status": "pass",
+      "raw_model3_spawn_calibration_status": "rejected_observed",
+      "raw_model3_spawn_observed_status": "rejected",
+      "qualified_as_proven_full_scene_model3_positive": false,
+      "full_scene_feasibility_status": "unknown"
+    },
+    {
+      "actor_id": "11143",
+      "historical_type_id": "vehicle.seat.leon",
+      "historical_rift_parity_status": "pass",
+      "raw_model3_spawn_calibration_status": "rejected_observed",
+      "raw_model3_spawn_observed_status": "rejected",
+      "qualified_as_proven_full_scene_model3_positive": false,
+      "full_scene_feasibility_status": "unknown"
+    }
+  ],
+  "independent_physical_controls": "not_in_this_uploaded_evidence_package; no unverified controls imported",
+  "diagnostic_modified_pose_may_not_become_GT": true,
+  "source_audit_sha256": "34178e62ec0327768135d1882a0d8fd5d78ed12260cc2db1d176e4762f67d7e5",
+  "sources": {
+    "snapshot": {
+      "path": "/mnt/data/p1_v4_repair_analysis/data/hv_init/rift_labeled_phase7_v2_uncovered_routes_seed0_7/worker0_seed0/route27_env0_RouteScenario_24333_idx27_rep0_frame145.json",
+      "sha256": "37bd5c64865372a4627b9a7c9d53f03bbe4b8cb2b3dc7ff8979a3f0d203447c7"
+    },
+    "record": {
+      "path": "/mnt/data/p1_v4_repair_analysis/data/hv_init/v7/p1_route140_real_record100_20261018_141926_1174/record_0100.json",
+      "sha256": "53968ac98e5b41663247aedaad951e9d86273a714a7fe471d056f77930d1b6e8"
+    },
+    "summary": {
+      "path": "/mnt/data/p1_v4_repair_analysis/data/hv_init/v7/p1_route140_real_record100_20261018_141926_1174/summary.json",
+      "sha256": "e56324a0868d046de2ef568f4b2029a62a89bb2e60cd4e9126954052f4f6fee3"
+    },
+    "frozen_source": {
+      "path": "/mnt/data/p1_v4_repair_analysis/data/hv_init/v7/p1_frozen_capsule_route140_20261018_141003_2150/hv_v8/p1_native_audit.py",
+      "sha256": "34178e62ec0327768135d1882a0d8fd5d78ed12260cc2db1d176e4762f67d7e5"
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "archive_sha256": "9d51e25dccaae1743153df87c55acbf310c9a8733081ec23f5e6117ba110571e",
+  "frozen_source_sha256": "b6036d51d849d0e0aa46c1dc35754e4be9f81ec35dd504146f6cf877ec88a6bb",
+  "manifest_sha256": "92c16bec23132d44a28de9d1d97894ba2e50ea9bb2f1e53fa41fbe5182664c56",
+  "executed_records": 95,
+  "written_records": 81,
+  "route_earliest_fatal_count": 14,
+  "route_witness_source_xodr_pass_count": 14,
+  "route_witness_cluster_counts": {
+    "Town11:2555→2526": 8,
+    "Town13:13020→13048": 6
+  },
+  "route_points_in_written": 3650,
+  "written_native_subgate_passed": 71,
+  "written_original_summary_p1_pass": 75,
+  "target_native_status_counts": {
+    "pass": 182,
+    "fail": 4
+  },
+  "target_rift_parity_status_counts": {
+    "pass": 180,
+    "fail": 6
+  },
+  "parity_disagreement_record_ids": [
+    1039,
+    2376,
+    3417,
+    3422,
+    3490,
+    3505
+  ],
+  "native_nonpositive_record_ids": [
+    1279,
+    1284,
+    1289,
+    1349
+  ],
+  "raw_model3_spawn_status_counts": {
+    "accepted": 123,
+    "rejected": 63
+  },
+  "raw_model3_accepted_max_xyz_error_m": 0.00048828125,
+  "full_scene_occupancy_status_counts": {
+    "unknown": 81
+  },
+  "full_scene_occupancy_reason_counts": {
+    "nonempty_world_refuse_spawns": 53,
+    "background_scene_replay_incomplete": 28
+  },
+  "full_scene_background_spawn_result_counts": {
+    "spawn_rejected": 252,
+    "spawned": 93
+  },
+  "full_scene_target_attempt_count": 0,
+  "source_identity_flagged_records": 18,
+  "global_P1_pass": false,
+  "p2_gt_approach_recall_available": false
+}

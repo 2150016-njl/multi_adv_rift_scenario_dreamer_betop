@@ -1,0 +1,32 @@
+{
+  "execution_counts": {
+    "record_failed_without_result": 14,
+    "record_written": 81
+  },
+  "ledger_sha256": "d9cbed0b39ee718fc2eaa59527d7db535f1dfa69487fdd1449f3e32e525fe4c1",
+  "model3_training_ready": false,
+  "native_subgate_verified": 71,
+  "observed_records": 95,
+  "physics_full_scene_positive_proven": 0,
+  "reference_parity_native_statuses": [
+    {
+      "count": 6,
+      "native_status": "pass",
+      "parity": "fail"
+    },
+    {
+      "count": 4,
+      "native_status": "fail",
+      "parity": "pass"
+    },
+    {
+      "count": 176,
+      "native_status": "pass",
+      "parity": "pass"
+    }
+  ],
+  "run": "/mnt/data/analysis_runtime/evidence",
+  "schema": "p1_science_v2_traceable_summary",
+  "scientific_P1_pass": false,
+  "written_records": 81
+}

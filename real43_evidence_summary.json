@@ -1,0 +1,24 @@
+{
+  "source_uploaded_archive_sha256": "b2ba407039796952454695dd3c9696039ddce266f1c6de9e8ff6d9024484f4f6",
+  "records_scanned": 43,
+  "records_expected": 95,
+  "points_scanned": 1969,
+  "point_status_counts": {
+    "verified_xodr_and_exact": 1945,
+    "verified_xodr_road_end_exception": 24
+  },
+  "towns_completed": [
+    "Town12",
+    "Town15"
+  ],
+  "towns_not_scanned": [
+    "Town11",
+    "Town13",
+    "Town04"
+  ],
+  "failure_town_switch": "Town15->Town11",
+  "actual_map_at_failure": "Town15",
+  "expected_map_at_failure": "Town11",
+  "p1_scientific_acceptance": "NOT_PASSED",
+  "note": "Anomalies empty for scanned points only. Town15 per-town counts missing in saved partial summary due persistence timing."
+}

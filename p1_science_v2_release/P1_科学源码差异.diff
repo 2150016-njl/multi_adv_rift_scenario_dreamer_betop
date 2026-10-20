@@ -1,0 +1,624 @@
+--- parent_b6036d.../p1_native_audit.py
++++ candidate_62b4bb.../p1_native_audit.py
+@@ -9,6 +9,7 @@
+ from typing import Any
+ 
+ from .p1_world_guard import load_verified_world, assert_same_episode_map
++from .p1_science_contract_v2 import route_waypoints_v2
+ 
+ from .common import (
+     ContractError,
+@@ -171,27 +172,12 @@
+     return ("pass" if passed else "fail"), passed
+ 
+ 
+-def native_truth_status(
+-    candidate: dict[str, Any],
+-    interaction: dict[str, Any],
+-) -> tuple[str, bool | None]:
+-    """
+-    Incomplete native evaluation is UNKNOWN, never NEGATIVE.
+-
+-    Returns:
+-        ("pass", True)
+-        ("fail", False)
+-        ("unknown", None)
+-    """
+-    if interaction.get("status") != "complete":
+-        return "unknown", None
+-
+-    passed = bool(
+-        candidate["candidate_filter_pass"]
+-        and interaction["native_interaction"]
+-    )
+-
+-    return ("pass" if passed else "fail"), passed
++def native_truth_status(candidate: dict[str, Any], interaction: dict[str, Any]) -> tuple[str,bool|None]:
++    if interaction.get('status')!='complete' or candidate.get('candidate_filter_pass') is None:
++        return 'unknown',None
++    passed=bool(candidate['candidate_filter_pass'] and interaction.get('native_interaction') is True)
++    return ('pass' if passed else 'fail'),passed
++
+ 
+ 
+ def apply_rift_config(
+@@ -319,51 +305,19 @@
+     )
+ 
+ 
+-def is_within_distance_ahead(
+-    target_transform: Any,
+-    ref_transform: Any,
+-    max_distance: float,
+-    max_fov_deg: float,
+-) -> bool:
+-    # Same mathematical predicate as RIFT's imported helper.
+-    target = target_transform.location
+-    ref = ref_transform.location
+-
+-    dx = float(target.x) - float(ref.x)
+-    dy = float(target.y) - float(ref.y)
+-
+-    norm = math.hypot(dx, dy)
+-
+-    if norm < 1e-6:
+-        return True
+-
+-    if norm > max_distance:
++def is_within_distance_ahead(target_transform: Any, ref_transform: Any,
++                             max_distance: float, max_fov_deg: float) -> bool:
++    # Exact RIFT utils.misc helper geometry: 3D distance, CARLA vector angle
++    # (radians), degrees conversion. Zero vector/NaN never treated as ahead.
++    target_loc=target_transform.location
++    ref_loc=ref_transform.location
++    relative=target_loc-ref_loc
++    if target_loc.distance(ref_loc)>max_distance:
+         return False
+-
+-    fx = math.cos(
+-        math.radians(
+-            float(ref_transform.rotation.yaw)
+-        )
+-    )
+-
+-    fy = math.sin(
+-        math.radians(
+-            float(ref_transform.rotation.yaw)
+-        )
+-    )
+-
+-    c = max(
+-        -1.0,
+-        min(
+-            1.0,
+-            (fx * dx + fy * dy) / norm,
+-        ),
+-    )
+-
+-    return (
+-        math.degrees(math.acos(c))
+-        < max_fov_deg
+-    )
++    forward=ref_transform.rotation.get_forward_vector()
++    angle_deg=math.degrees(forward.get_vector_angle(relative))
++    return angle_deg < max_fov_deg
++
+ 
+ 
+ def carla_transform(
+@@ -432,359 +386,11 @@
+ 
+ 
+ # P1_ROUTE_CARLA_SCOPE_FIX_V1
+-def route_waypoints(
+-    carla: Any,
+-    carla_map: Any,
+-    scene: dict[str, Any],
+-) -> tuple[
+-    list[Any],
+-    list[dict[str, Any]],
+-]:
+-    rows = scene.get("ego_route", [])
+-
+-    # Read road lengths from the same runtime OpenDRIVE used by CARLA. This
+-    # is used only to classify an exact road-end XODR lookup miss.
+-    import xml.etree.ElementTree as _p1_ET
+-
+-    _p1_road_lengths = {}
+-    _p1_opendrive_error = None
+-    try:
+-        _p1_root = _p1_ET.fromstring(carla_map.to_opendrive())
+-        for _p1_road in _p1_root.findall("road"):
+-            _p1_road_lengths[int(_p1_road.attrib["id"])] = float(
+-                _p1_road.attrib["length"]
+-            )
+-    except Exception as _p1_exc:
+-        _p1_opendrive_error = repr(_p1_exc)
+-
+-    require(
+-        rows,
+-        "P1/P2 require ego_route; "
+-        "do not reconstruct it from the target",
+-    )
+-
+-    out = []
+-    checks = []
+-
+-    for i, r in enumerate(
+-        rows[: int(DEFAULT["max_ego_route_len"])]
+-    ):
+-        for k in (
+-            "x",
+-            "y",
+-            "z",
+-            "yaw_deg",
+-            "road_id",
+-            "section_id",
+-            "lane_id",
+-            "s",
+-        ):
+-            require(
+-                k in r,
+-                f"ego_route[{i}] missing {k}",
+-            )
+-
+-        xodr_wp = carla_map.get_waypoint_xodr(
+-            int(r["road_id"]),
+-            int(r["lane_id"]),
+-            float(r["s"]),
+-        )
+-
+-        # Construct the serialized transform before classifying an XODR miss.
+-        # Do not modify r["s"] or substitute a nearby waypoint.
+-        expected = carla.Transform(
+-            carla.Location(
+-                float(r["x"]),
+-                float(r["y"]),
+-                float(r["z"]),
+-            ),
+-            carla.Rotation(
+-                yaw=float(r["yaw_deg"])
+-            ),
+-        )
+-
+-        # Exact serialized-location lookup.
+-        # This is validation, not repair.
+-        exact_wp = carla_map.get_waypoint(
+-            expected.location,
+-            project_to_road=False,
+-            lane_type=carla.LaneType.Driving,
+-        )
+-
+-        require(
+-            exact_wp is not None,
+-            "ego_route[%d] exact get_waypoint "
+-            "returned None" % i,
+-        )
+-
+-        require(
+-            (
+-                int(exact_wp.road_id)
+-                == int(r["road_id"])
+-                and int(exact_wp.section_id)
+-                == int(r["section_id"])
+-                and int(exact_wp.lane_id)
+-                == int(r["lane_id"])
+-            ),
+-            (
+-                f"ego_route[{i}] exact lane "
+-                "identity mismatch"
+-            ),
+-        )
+-
+-        # Classify only the proven road-end boundary case. The map lookup
+-        # remains visibly failed in the audit output; this is not an XODR pass.
+-        xodr_road_length_m = _p1_road_lengths.get(int(r["road_id"]))
+-        xodr_boundary_verified = False
+-        xodr_endpoint_delta_m = None
+-        exact_s_error_m = abs(float(exact_wp.s) - float(r["s"]))
+-        exact_position_error_m = exact_wp.transform.location.distance(
+-            expected.location
+-        )
+-        exact_yaw_error_deg = abs((
+-            float(exact_wp.transform.rotation.yaw)
+-            - float(expected.rotation.yaw) + 180.0
+-        ) % 360.0 - 180.0)
+-
+-        if xodr_wp is None:
+-            if xodr_road_length_m is not None:
+-                xodr_endpoint_delta_m = (
+-                    float(r["s"]) - float(xodr_road_length_m)
+-                )
+-
+-            require(
+-                xodr_road_length_m is not None
+-                and abs(xodr_endpoint_delta_m) <= 1e-4
+-                and exact_s_error_m <= 1e-4
+-                and exact_position_error_m <= 0.05
+-                and exact_yaw_error_deg <= 0.5,
+-                (
+-                    f"ego_route[{i}] get_waypoint_xodr returned None; "
+-                    "not a verified road-end boundary: "
+-                    f"road_length={xodr_road_length_m}, "
+-                    f"s_minus_road_end={xodr_endpoint_delta_m}, "
+-                    f"exact_s_error={exact_s_error_m}, "
+-                    f"exact_position_error_m={exact_position_error_m}, "
+-                    f"exact_yaw_error_deg={exact_yaw_error_deg}"
+-                ),
+-            )
+-            xodr_boundary_verified = True
+-
+-        wp = exact_wp
+-
+-        check = lane_match(
+-            wp,
+-            wp,
+-            s_tol=0.0,
+-            pos_tol=0.0,
+-        )
+-
+-        check["route_index"] = i
+-
+-        check["xodr_found"] = xodr_wp is not None
+-        check["xodr_lookup_status"] = (
+-            "ok" if xodr_wp is not None
+-            else "verified_road_end_boundary"
+-        )
+-        check["xodr_endpoint_exception_verified"] = xodr_boundary_verified
+-        check["xodr_road_length_m"] = xodr_road_length_m
+-        check["xodr_s_minus_road_end_m"] = xodr_endpoint_delta_m
+-        check["xodr_exact_s_error_m"] = exact_s_error_m
+-        check["xodr_exact_position_error_m"] = exact_position_error_m
+-        check["xodr_exact_yaw_error_deg"] = exact_yaw_error_deg
+-        check["xodr_opendrive_parse_error"] = _p1_opendrive_error
+-
+-        check["expected_road_id"] = int(
+-            r["road_id"]
+-        )
+-        check["expected_section_id"] = int(
+-            r["section_id"]
+-        )
+-        check["expected_lane_id"] = int(
+-            r["lane_id"]
+-        )
+-
+-        check["actual_road_id"] = int(
+-            wp.road_id
+-        )
+-        check["actual_section_id"] = int(
+-            wp.section_id
+-        )
+-        check["actual_lane_id"] = int(
+-            wp.lane_id
+-        )
+-
+-        check["s_abs_error_m"] = abs(
+-            float(wp.s) - float(r["s"])
+-        )
+-
+-        check["position_error_m"] = distance2(
+-            wp.transform.location,
+-            expected.location,
+-        )
+-
+-        check["yaw_error_deg"] = abs(
+-            (
+-                (
+-                    float(
+-                        wp.transform.rotation.yaw
+-                    )
+-                    - float(r["yaw_deg"])
+-                    + 180.0
+-                )
+-                % 360.0
+-            )
+-            - 180.0
+-        )
+-
+-        if xodr_wp is not None:
+-            check[
+-                "xodr_exact_position_error_m"
+-            ] = distance2(
+-                xodr_wp.transform.location,
+-                exact_wp.transform.location,
+-            )
+-        else:
+-            # XODR lookup failed; keep the comparison explicitly unavailable.
+-            check["xodr_exact_position_error_m"] = None
+-
+-        if xodr_wp is not None:
+-            check[
+-                "xodr_exact_yaw_error_deg"
+-            ] = abs(
+-                (
+-                    (
+-                        float(
+-                            xodr_wp.transform.rotation.yaw
+-                        )
+-                        - float(
+-                            exact_wp.transform.rotation.yaw
+-                        )
+-                        + 180.0
+-                    )
+-                    % 360.0
+-                )
+-                - 180.0
+-            )
+-        else:
+-            # XODR lookup failed; keep the comparison explicitly unavailable.
+-            check["xodr_exact_yaw_error_deg"] = None
+-
+-        # P1_ROUTE140_XODR_SOURCE_ANCHOR_V1
+-        # Preserve the independent exact-location probe, including its measured
+-        # s deviation. A CARLA location lookup is not the source waypoint.
+-        check["exact_location_s_abs_error_m"] = check["s_abs_error_m"]
+-        check["exact_location_xyz_error_m"] = float(
+-            exact_wp.transform.location.distance(expected.location)
+-        )
+-        check["exact_location_s_over_005"] = bool(
+-            check["s_abs_error_m"] > 0.05
+-        )
+-
+-        if xodr_wp is not None:
+-            check["xodr_source_road_equal"] = (
+-                int(xodr_wp.road_id) == int(r["road_id"])
+-            )
+-            check["xodr_source_section_equal"] = (
+-                int(xodr_wp.section_id) == int(r["section_id"])
+-            )
+-            check["xodr_source_lane_equal"] = (
+-                int(xodr_wp.lane_id) == int(r["lane_id"])
+-            )
+-            check["xodr_source_s_abs_error_m"] = abs(
+-                float(xodr_wp.s) - float(r["s"])
+-            )
+-            check["xodr_source_xyz_error_m"] = float(
+-                xodr_wp.transform.location.distance(expected.location)
+-            )
+-            check["xodr_source_yaw_error_deg"] = abs(
+-                (float(xodr_wp.transform.rotation.yaw)
+-                 - float(r["yaw_deg"]) + 180.0) % 360.0 - 180.0
+-            )
+-            xodr_source_anchor_pass = bool(
+-                check["xodr_source_road_equal"]
+-                and check["xodr_source_section_equal"]
+-                and check["xodr_source_lane_equal"]
+-                and check["xodr_source_s_abs_error_m"] <= 1e-4
+-                and check["xodr_source_xyz_error_m"] <= 0.05
+-                and check["xodr_source_yaw_error_deg"] <= 0.5
+-            )
+-        else:
+-            # None remains None; only the earlier verified endpoint may pass.
+-            check["xodr_source_road_equal"] = None
+-            check["xodr_source_section_equal"] = None
+-            check["xodr_source_lane_equal"] = None
+-            check["xodr_source_s_abs_error_m"] = None
+-            check["xodr_source_xyz_error_m"] = None
+-            check["xodr_source_yaw_error_deg"] = None
+-            xodr_source_anchor_pass = False
+-
+-        check["xodr_source_anchor_pass"] = bool(xodr_source_anchor_pass)
+-        check["route_reference_kind"] = (
+-            "xodr_original_s" if xodr_wp is not None
+-            else "verified_road_end_exact"
+-        )
+-        # Exact-location query is a lane-membership/cross-check only; its s
+-        # is not substituted for the serialized historical route's s.
+-        exact_location_membership_pass = bool(
+-            int(exact_wp.road_id) == int(r["road_id"])
+-            and int(exact_wp.section_id) == int(r["section_id"])
+-            and int(exact_wp.lane_id) == int(r["lane_id"])
+-            and check["position_error_m"] <= 0.30
+-            and check["exact_location_xyz_error_m"] <= 0.30
+-            and check["yaw_error_deg"] <= 2.0
+-        )
+-        check["exact_location_membership_pass"] = exact_location_membership_pass
+-        route_identity_pass = bool(
+-            exact_location_membership_pass
+-            and (
+-                xodr_source_anchor_pass if xodr_wp is not None
+-                else xodr_boundary_verified
+-            )
+-        )
+-
+-        check["route_identity_pass"] = route_identity_pass
+-
+-        if xodr_wp is not None:
+-            xodr_position_error = check["xodr_exact_position_error_m"]
+-            xodr_yaw_error = check["xodr_exact_yaw_error_deg"]
+-            xodr_comparison_pass = (
+-                xodr_position_error is not None
+-                and xodr_position_error <= 0.30
+-                and xodr_yaw_error is not None
+-                and xodr_yaw_error <= 2.0
+-            )
+-            check["xodr_exact_comparison_status"] = (
+-                "pass" if xodr_comparison_pass else "fail"
+-            )
+-        else:
+-            xodr_comparison_pass = bool(xodr_boundary_verified)
+-            check["xodr_exact_comparison_status"] = (
+-                "not_evaluable_verified_endpoint_exception"
+-                if xodr_boundary_verified else "unknown"
+-            )
+-
+-        check["pass"] = bool(route_identity_pass and xodr_comparison_pass)
+-
+-        checks.append(check)
+-
+-        require(
+-            check["pass"],
+-            f"ego_route[{i}] CARLA identity "
+-            f"mismatch: {check}",
+-        )
+-
+-        # Preserve the original serialized route geometry in native replay.
+-        # No snap, projection, GT adjustment or candidate substitution.
+-        out.append(xodr_wp if xodr_wp is not None else exact_wp)
+-
+-    require(
+-        len(out) >= 2,
+-        "ego_route must contain at least "
+-        "2 validated waypoints",
+-    )
+-
+-    return out, checks
++def route_waypoints(carla: Any, carla_map: Any, scene: dict[str, Any]):
++    # Native geometry chosen from independently verified historical OpenDRIVE
++    # identity; exact xyz inverse lookup is preserved as a non-unique probe.
++    return route_waypoints_v2(carla,carla_map,scene)
++
+ 
+ 
+ def cumulative_route(
+@@ -934,7 +540,7 @@
+             ],
+             DEFAULT[
+                 "max_interaction_fov_deg"
+-            ] / 2.0,
++            ] // 2,
+         ):
+             continue
+ 
+@@ -1139,75 +745,40 @@
+     }
+ 
+ 
+-def candidate_semantics(
+-    carla: Any,
+-    carla_map: Any,
+-    actor: dict[str, Any],
+-) -> dict[str, Any]:
+-    tr = carla_transform(
+-        carla,
+-        actor,
+-    )
+-
+-    ego_loc = actor["_ego_location"]
+-
+-    dist = float(
+-        ego_loc.distance(
+-            tr.location
+-        )
+-    )
+-
+-    pwp = preview_waypoint(
+-        carla,
+-        carla_map,
+-        tr,
+-    )
+-
+-    out = {
+-        "distance_m": dist,
+-        "distance_pass": (
+-            DEFAULT["min_distance_m"]
+-            < dist
+-            <= DEFAULT["search_radius_m"]
+-        ),
+-        "preview_exists": (
+-            pwp is not None
+-        ),
+-        "junction_heading_pass": True,
+-    }
+-
+-    if (
+-        pwp is not None
+-        and pwp.is_junction
+-    ):
+-        a = tr.get_forward_vector()
+-        b = (
+-            pwp.transform
+-            .get_forward_vector()
+-        )
+-
+-        out[
+-            "junction_heading_error_deg"
+-        ] = float(
+-            a.get_vector_angle(b)
+-        )
+-
+-        out[
+-            "junction_heading_pass"
+-        ] = (
+-            out[
+-                "junction_heading_error_deg"
+-            ]
+-            <= 20.0
+-        )
+-
+-    out["candidate_filter_pass"] = (
+-        out["distance_pass"]
+-        and out["preview_exists"]
+-        and out["junction_heading_pass"]
+-    )
+-
++def candidate_semantics(carla: Any, carla_map: Any,
++                        actor: dict[str, Any]) -> dict[str, Any]:
++    tr=carla_transform(carla,actor)
++    dist=float(actor['_ego_location'].distance(tr.location))
++    wp=preview_waypoint(carla,carla_map,tr)
++    out={'distance_m':dist,'distance_pass':bool(math.isfinite(dist) and
++          DEFAULT['min_distance_m'] < dist <= DEFAULT['search_radius_m']),
++         'preview_exists':wp is not None,'junction_heading_pass':True,
++         'heading_numeric_status':'not_required'}
++    if wp is not None and wp.is_junction:
++        a=tr.get_forward_vector();b=wp.transform.get_forward_vector()
++        rad=float(a.get_vector_angle(b))
++        out['junction_heading_angle_rad']=rad if math.isfinite(rad) else None
++        out['junction_forward_vector']=[float(a.x),float(a.y),float(a.z)]
++        out['road_forward_vector']=[float(b.x),float(b.y),float(b.z)]
++        if not math.isfinite(rad):
++            out['heading_numeric_status']='unknown_nonfinite'
++            out['junction_heading_error_deg']=None
++            out['junction_heading_pass']=None
++        else:
++            deg=math.degrees(rad)
++            out['junction_heading_error_deg']=deg
++            out['heading_numeric_status']='finite'
++            # RIFT source uses "if angle > 20: continue". Equal 20 passes.
++            out['junction_heading_pass']=bool(deg<=20.0)
++    if out['junction_heading_pass'] is None:
++        out['candidate_filter_pass']=None
++        out['candidate_filter_status']='unknown_numeric'
++    else:
++        out['candidate_filter_pass']=bool(out['distance_pass'] and
++                                          out['preview_exists'] and out['junction_heading_pass'])
++        out['candidate_filter_status']='evaluated'
+     return out
++
+ 
+ 
+ def coord_roundtrip(
+@@ -1562,10 +1133,9 @@
+         if actual_pose is None:
+             reason = "no_post_spawn_transform_observed"
+         else:
+-            position_error = math.hypot(
+-                actual_pose["x"] - expected["x"],
+-                actual_pose["y"] - expected["y"],
+-            )
++            position_error = math.sqrt(sum((actual_pose[a]-expected[a])**2 for a in ('x','y','z')))
++            pitch_error = abs((actual_pose['pitch']-expected['pitch']+180.0)%360.0-180.0)
++            roll_error = abs((actual_pose['roll']-expected['roll']+180.0)%360.0-180.0)
+             yaw_error = abs(
+                 (
+                     actual_pose["yaw"] - expected["yaw"] + 180.0
+@@ -1583,7 +1153,7 @@
+                     "all_zero_actual_pose_after_snapshot_wait; "
+                     "not counted as accepted"
+                 )
+-            elif position_error <= 0.30 and yaw_error <= 2.0:
++            elif position_error <= 0.30 and yaw_error <= 2.0 and pitch_error <= 2.0 and roll_error <= 2.0:
+                 pose_status = "pass"
+                 status = "accepted"
+                 reason = None
+@@ -1612,6 +1182,9 @@
+             "snapshot_wait_errors": wait_errors,
+             "position_error_m": position_error,
+             "yaw_error_deg": yaw_error,
++            "pitch_error_deg": (pitch_error if actual_pose is not None else None),
++            "roll_error_deg": (roll_error if actual_pose is not None else None),
++            "full_xyz_pose_validation": True,
+             "position_tolerance_m": 0.30,
+             "yaw_tolerance_deg": 2.0,
+             "reason": reason,
